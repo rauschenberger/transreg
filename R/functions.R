@@ -1,25 +1,43 @@
+
+#' @export
+#' 
+#' @title
+#' Penalised regression with multiple sets of prior coefficients
+#' 
+#' @description
+#' Implements penalised regression with multiple sets of prior coefficients 
+#' 
 #' @param y
-#' target: vector of length n
+#' target: vector of length \eqn{n}
 #' @param X
-#' features: matrix with n rows and p columns
+#' features: matrix with \eqn{n} rows and \eqn{p} columns
 #' @param prior
-#' prior coefficients: matrix with p rows and k columns
+#' prior coefficients: matrix with \eqn{p} rows and \eqn{k} columns
 #' @param family
-#' "gaussian", "binomial", "poisson"
+#' character "gaussian", "binomial", or "poisson"
 #' @param alpha
 #' elastic net mixing parameter (0=ridge, 1=lasso)
 #' @param foldid
-#' fold identifiers: vector of length n with entries from 1 to nfolds
+#' fold identifiers: vector of length \eqn{n} with entries from 1 to \code{nfolds}
 #' @param nfolds
 #' number of folds: integer
 #' @param scale
-#' "exp" for exponential scaling (3 parameters), "iso" for isotonic scaling (1+p parameters)
+#' "exp" for exponential scaling (3 parameters),
+#' "iso" for isotonic scaling (1+p parameters)
 #' @param sign
 #' sign discovery procedure: logical
 #' @param switch
 #' choose between positive and negative weights for each source: logical
 #' @param select
 #' select from sources: logical
+#' 
+#' @seealso
+#' Methods for objects of class \code{cornet}
+#' include ...
+#' 
+#' @examples
+#' NA
+#' 
 transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,scale="iso",sign=FALSE,switch=TRUE,select=TRUE){
   
   # family <- "gaussian"; alpha <- 1; foldid <- NULL; nfolds <- 10; scale <- "exp"; sign <- FALSE; switch <- TRUE; select <- TRUE
@@ -110,10 +128,22 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   return(object)
 }
 
+#' @export
+#' 
+#' @title
+#' Predict
+#' 
+#' @description
+#' Predicts outcome
+#' 
 #' @param object
 #' object of class 'transreg'
 #' @param newx
 #' features: matrix with m rows (samples) and p columns (variables)
+#' 
+#' @examples
+#' ...
+#' 
 predict.transreg <- function(object,newx){
   one <- newx %*% object$base$prior$beta # original (harmonise with transreg)
   #one <- object$base$prior$alpha + newx %*% object$base$prior$beta # trial 2022-01-04 (see above)
@@ -123,11 +153,24 @@ predict.transreg <- function(object,newx){
   return(y_hat)
 }
 
+#' @export
+#' 
+#' @title Calculate residuals
+#' 
+#' @description
+#' Calculates residuals from observed outcome
+#' and predicted values (Gaussian family)
+#' or predicted probablities (binomial family).
+#' 
 #' @inheritParams transreg
 #' @param y_hat
 #' predicted values: vector of length n, or matrix with n rows and k columns
 #' @param family
 #' "gaussian" or "binomial"
+#' 
+#' @examples
+#' NA
+#' 
 residuals <- function(y,y_hat,family){
   if(length(y_hat)==1){y_hat <- matrix(y_hat,nrow=length(y),ncol=1)}
   if(family=="gaussian"){
@@ -145,7 +188,17 @@ residuals <- function(y,y_hat,family){
   return(res)
 }
 
+#' @title 
+#' Sign discovery
+#' 
+#' @description
+#' Assigns signs to prior weights to obtain prior coefficients
+#' 
 #' @inheritParams transreg
+#' 
+#' @examples
+#' NA
+#' 
 sign.disc <- function(y,X,prior,family,foldid=NULL,nfolds=10){
   cond <- apply(prior,2,function(x) any(x>0) & all(x>=0))
   if(any(cond)){
@@ -166,7 +219,19 @@ sign.disc <- function(y,X,prior,family,foldid=NULL,nfolds=10){
   return(prior)
 }
 
+#' @title 
+#' 
+#' Exponential scaling
+#' 
+#' @description
+#' 
+#' 
 #' @inheritParams transreg
+#' @param plot logical
+#' 
+#' @examples
+#' NA
+#' 
 exp.multiple <- function(y,X,prior,family,select,plot=TRUE){
   
   #message("Exponential scaling ...")
@@ -229,7 +294,20 @@ exp.multiple <- function(y,X,prior,family,select,plot=TRUE){
   return(list(alpha=alpha,beta=beta,gamma=gamma,tau=tau))
 }
 
+#' @title 
+#' Isotonic scaling
+#' 
+#' @description 
+#' Performs isotonic scaling. This function is for comparison only.
+#'
 #' @inheritParams transreg
+#' 
+#' @seealso
+#' iso.fast.single
+#' 
+#' @examples 
+#' NA
+#' 
 iso.single <- function(y,X,prior,family){
   
   message("Isotonic scaling ...")
@@ -294,7 +372,17 @@ iso.single <- function(y,X,prior,family){
 }
 
 # with sign constraints (glmnet)
+#' @title 
+#' Isotonic scaling
+#' 
+#' @description 
+#' Performs isotonic scaling
+#' 
 #' @inheritParams transreg
+#' 
+#' @examples
+#' NA
+#' 
 iso.fast.single <- function(y,X,prior,family){
   n <- length(y)
   p <- nrow(prior)
@@ -333,7 +421,18 @@ iso.fast.single <- function(y,X,prior,family){
 }
 
 # Speed up this function by only examining the "negative prior" if the "positive prior" is insignificant? Or do some pre-screening based on correlation, and then decide which one to run first and which one to run second (i.e. only if the first one fits poorly).
+
+#' @title 
+#' Isotonic scaling
+#' 
+#' @description
+#' Performs isotonic scaling
+#' 
 #' @inheritParams transreg
+#' 
+#' @examples 
+#' NA
+#' 
 iso.multiple <- function(y,X,prior,family,switch=TRUE,select=TRUE){
   
   k <- ncol(prior)
@@ -422,6 +521,15 @@ iso.multiple <- function(y,X,prior,family,switch=TRUE,select=TRUE){
   return(list(alpha=alpha0,beta=beta0)) # was alpha=NULL # trial 2022-01-04
 }
 
+#' @export
+#' 
+#' @title 
+#' Cross-validation
+#' 
+#' @description
+#' Performs external \eqn{k}-fold cross-validation
+#' to estimate the predictive performance of different methods
+#' 
 #' @inheritParams transreg
 #' @param target
 #' list with slot x (feature matrix with n rows and p columns) and slot y (target vector of length n)
@@ -429,6 +537,10 @@ iso.multiple <- function(y,X,prior,family,switch=TRUE,select=TRUE){
 #' list of k lists, each with slot x (feature matrix with m_i rows and p columns) and slot y (target vector of length m_i)
 #' @param partitions, monotone: for GRridge
 #' @param alpha.prior: number between 0 (lasso) and 1 (ridge), character "p-value", or NULL (alpha.prior=alpha, but if alpha=1 then alpha.prior=0.95)
+#' 
+#' @examples
+#' NA
+#' 
 cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale,sign,select,switch,foldid.ext=NULL,nfolds.ext=10,foldid.int=NULL,nfolds.int=10,type.measure="deviance",alpha.prior=NULL,partitions=NULL,monotone=NULL){
   
   if(is.null(source)==is.null(prior)){
@@ -675,6 +787,12 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale,
 
 # CONTINUE HERE: cv.transfer function (so far only used for single split, error if other fold identifiers than 0 and 1?)
 
+#' @title
+#' Simulation
+#' 
+#' @description 
+#' Simulates data
+#' 
 #' @param p
 #' number of features
 #' @param n.target
@@ -691,6 +809,10 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale,
 #' base for decreasing correlation structure for correlation between features
 #' @param w
 #' weight between signal and noise
+#' 
+#' @examples
+#' NA
+#' 
 .simulate <- function(p=1000,n.target=100,n.source=150,k=3,family="gaussian",prop=0.01,rho.beta=0.95,rho.x=0.95,w=0.5){
   
   target <- source <- list()
