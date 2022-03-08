@@ -1,12 +1,15 @@
 
-#--- slow versus fast isotonic scaling ---
-
 n <- 100; p <- 1000
 X <- matrix(stats::rnorm(n*p),nrow=n,ncol=p)
 beta <- stats::rnorm(p)
+y <- X %*% beta
+
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#- - - slow and fast isotonic scaling- - - - - - - - - - - - - - - - - - - - - -
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 prior1 <- beta + stats::rnorm(p,sd=0.1)
 prior2 <- beta + stats::rnorm(p,sd=0.1)
-y <- X %*% beta
 
 slow <- iso.slow.single(y=y,X=X,prior=matrix(prior1,ncol=1),family="gaussian")$beta
 fast <- iso.fast.single(y=y,X=X,prior=matrix(prior1,ncol=1),family="gaussian")$beta
@@ -31,7 +34,9 @@ testthat::test_that("correlation (slow, fast)",{
   testthat::expect_true(cond1&cond2)
 })
 
-#--- equivalence predicted values ---
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#- - - equivalence predicted values- - - - - - - - - - - - - - - - - - - - - - -
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 for(scale in c("exp","iso")){
   
@@ -69,4 +74,24 @@ for(scale in c("exp","iso")){
   
 }
 
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#- - - prior re-scaling- - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+family <- "gaussian"
+prior <- object <- list()
+prior$original <- prior1
+prior$modified <- -stats::runif(1)*prior1
+
+for(i in seq_along(prior)){
+  set.seed(2)
+  object[[i]] <- transreg(y=y,X=X,prior=prior[[i]],family=family,scale=scale)
+}
+pred <- predict(object,newx=X)
+
+testthat::test_that("prior re-scaling",{
+  cond1 <- mean(pred[[1]])-mean(pred[[2]])<0.01
+  cond2 <- stats::cor(pred[[1]],pred[[2]])>0.99
+  testthat::expect_true(cond1&cond2)
+})
 
