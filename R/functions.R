@@ -156,7 +156,7 @@ predict.transreg <- function(object,newx,...){
 }
 
 #' @export
-#' 
+#'
 #' @title Calculate residuals
 #' 
 #' @description
