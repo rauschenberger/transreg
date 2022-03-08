@@ -1,4 +1,5 @@
 
+set.seed(1)
 n <- 100; p <- 1000
 X <- matrix(stats::rnorm(n*p),nrow=n,ncol=p)
 beta <- stats::rnorm(p)
@@ -87,7 +88,9 @@ for(i in seq_along(prior)){
   set.seed(2)
   object[[i]] <- transreg(y=y,X=X,prior=prior[[i]],family=family,scale=scale)
 }
-pred <- predict(object,newx=X)
+pred <- list()
+pred[[1]] <- predict(object[[1]],newx=X)
+pred[[2]] <- predict(object[[2]],newx=X)
 
 testthat::test_that("prior re-scaling",{
   cond1 <- mean(pred[[1]])-mean(pred[[2]])<0.01
