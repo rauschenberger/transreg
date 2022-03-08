@@ -310,7 +310,7 @@ exp.multiple <- function(y,X,prior,family,select,plot=TRUE){
 #' @examples 
 #' NA
 #' 
-iso.single <- function(y,X,prior,family){
+iso.slow.single <- function(y,X,prior,family){
   
   message("Isotonic scaling ...")
   
@@ -442,7 +442,7 @@ iso.multiple <- function(y,X,prior,family,switch=TRUE,select=TRUE){
   #ALPHA <- rep(NA,times=ncol(prior))
   #BETA <- matrix(NA,nrow=nrow(prior),ncol=ncol(prior))
   
-  prior0 <- iso.fast.single(y=y,X=X,prior=+prior,family=family) # was iso.single
+  prior0 <- iso.fast.single(y=y,X=X,prior=+prior,family=family) # was iso.slow.single
   alpha0 <- prior0$alpha; beta0 <- prior0$beta
   fit0 <- joinet:::.mean.function(alpha0 + X %*% beta0,family=family)
   
@@ -468,7 +468,7 @@ iso.multiple <- function(y,X,prior,family,switch=TRUE,select=TRUE){
   pval0 <- apply(res0,2,function(x) stats::wilcox.test(x=x,y=res,paired=TRUE,alternative="less")$p.value)
   
   if(switch){
-    prior1 <- iso.fast.single(y=y,X=X,prior=-prior,family=family) # was iso.single
+    prior1 <- iso.fast.single(y=y,X=X,prior=-prior,family=family) # was iso.slow.single
     alpha1 <- prior1$alpha; beta1 <- prior1$beta
     fit1 <- joinet:::.mean.function(alpha1 + X %*% beta1,family=family)
     
