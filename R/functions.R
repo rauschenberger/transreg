@@ -109,7 +109,7 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
     y_hat[foldid==i,k+2] <- base$fit.preval[base$foldid==i,base$lambda==base$lambda.1se]
     
     #part <- glmnet::glmnet(y=y0,x=X0,family=family,alpha=alpha) # trial
-    #Y_hat[foldid==i,] <- predict(part,s=full$lambda,newx=X1) # trial
+    #Y_hat[foldid==i,] <- stats::predict(part,s=full$lambda,newx=X1) # trial
     #int[foldid==i,] <- rep(coef(part,s=full$lambda)["(Intercept)",],each=sum(foldid==i)) # trial
     
   }
@@ -140,16 +140,18 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
 #' object of class 'transreg'
 #' @param newx
 #' features: matrix with m rows (samples) and p columns (variables)
+#' @param ...
+#' not applicable
 #' 
 #' @examples
-#' ...
+#' NA
 #' 
-predict.transreg <- function(object,newx){
+predict.transreg <- function(object,newx,...){
   one <- newx %*% object$base$prior$beta # original (harmonise with transreg)
   #one <- object$base$prior$alpha + newx %*% object$base$prior$beta # trial 2022-01-04 (see above)
-  two <- predict(object$base,s=c(object$base$lambda.min,object$base$lambda.1se),newx=newx) # was s="lambda.min"
+  two <- stats::predict(object$base,s=c(object$base$lambda.min,object$base$lambda.1se),newx=newx) # was s="lambda.min"
   #two <- newx %*% coef(object$base,s="lambda.min")[-1] # trial (harmonise with transreg)
-  y_hat <- predict(object$meta,s="lambda.min",newx=cbind(one,two),type="response")
+  y_hat <- stats::predict(object$meta,s="lambda.min",newx=cbind(one,two),type="response")
   return(y_hat)
 }
 
@@ -224,7 +226,7 @@ sign.disc <- function(y,X,prior,family,foldid=NULL,nfolds=10){
 #' Exponential scaling
 #' 
 #' @description
-#' 
+#' Performs exponential scaling
 #' 
 #' @inheritParams transreg
 #' @param plot logical
@@ -253,8 +255,8 @@ exp.multiple <- function(y,X,prior,family,select,plot=TRUE){
       eta <- X %*% temp
       # Use simple linear/logistic/Poisson regression of y on eta, and extract fitted values. This should solve the scaling issue. => But be aware of negative coefficients!
       glm <- stats::glm(y~eta,family=family)
-      coefs[i,] <- coef(glm)
-      pred[,i] <- fitted(glm)
+      coefs[i,] <- stats::coef(glm)
+      pred[,i] <- stats::fitted(glm)
     }
     cvm <- palasso:::.loss(y=y,fit=pred,family=family,type.measure="deviance")[[1]]
     id.min <- which.min(cvm)
@@ -363,7 +365,7 @@ iso.single <- function(y,X,prior,family){
       beta.r <- result$getValue(beta)
       BETA[,i] <- beta.r[order(order)]
     }
-    #post <- coef(stats::glm(y~X,family="binomial"))
+    #post <- stats::coef(stats::glm(y~X,family="binomial"))
     #cbind(post,c(alpha.r,posterior[,i]))
   }
   
@@ -411,7 +413,7 @@ iso.fast.single <- function(y,X,prior,family){
     #Xcs <- cbind(A,B) # original
     times <- c(sum(sign==-1),sum(sign==0),sum(sign==+1)) # was c(sum(!cond),sum(cond)) 
     inc <- glmnet::glmnet(y=y,x=Xcs,family="gaussian",alpha=0,lambda=0,lower.limits=rep(c(-Inf,0,0),times=times),upper.limits=rep(c(0,0,Inf),times=times))
-    coef <- coef(inc)
+    coef <- stats::coef(inc)
     ALPHA[i] <- coef[1]
     beta <- coef[-1]
     new <- c(rev(cumsum(rev(beta[sign<0]))),cumsum(beta[sign>=0])) # was !cond and cond
@@ -535,8 +537,16 @@ iso.multiple <- function(y,X,prior,family,switch=TRUE,select=TRUE){
 #' list with slot x (feature matrix with n rows and p columns) and slot y (target vector of length n)
 #' @param source
 #' list of k lists, each with slot x (feature matrix with m_i rows and p columns) and slot y (target vector of length m_i)
-#' @param partitions, monotone: for GRridge
-#' @param alpha.prior: number between 0 (lasso) and 1 (ridge), character "p-value", or NULL (alpha.prior=alpha, but if alpha=1 then alpha.prior=0.95)
+#' @param partitions monotone: for GRridge
+#' @param alpha.prior number between 0 (lasso) and 1 (ridge), character "p-value", or NULL (alpha.prior=alpha, but if alpha=1 then alpha.prior=0.95)
+#' @param z prior weights
+#' @param foldid.ext external fold identifiers
+#' @param nfolds.ext number of external folds
+#' @param foldid.int internal fold identifiers
+#' @param nfolds.int number of internal folds
+#' @param type.measure character
+#' @param alpha.prior alpha for source regression
+#' @param monotone logical
 #' 
 #' @examples
 #' NA
@@ -632,7 +642,7 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale,
       } else {
         object <- glmnet::cv.glmnet(y=source[[i]]$y,x=source[[i]]$x,family=family,alpha=alpha.prior,foldid=foldid.source) # was alpha=ifelse(alpha==1,0.95,alpha) # added scale()
         # Why not always ridge regression for prior?
-        prior[,i] <- as.numeric(coef(object,s="lambda.min"))[-1]
+        prior[,i] <- as.numeric(stats::coef(object,s="lambda.min"))[-1]
       }
     }
     
@@ -681,7 +691,7 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale,
     set.seed(seed) # trial
     start <- Sys.time()
     object <- glmnet::cv.glmnet(y=y0,x=X0,family=family,foldid=foldid,alpha=alpha)
-    pred[foldid.ext==i,"glmnet"] <- as.numeric(predict(object,newx=X1,s="lambda.min",type="response"))
+    pred[foldid.ext==i,"glmnet"] <- as.numeric(stats::predict(object,newx=X1,s="lambda.min",type="response"))
     end <- Sys.time()
     time["glmnet"] <-  time["glmnet"]+difftime(time1=end,time2=start,units="secs")
     
@@ -691,7 +701,7 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale,
       start <- Sys.time()
       object <- tryCatch(glmtrans::glmtrans(target=list(x=X0,y=y0),source=source,alpha=alpha,family=family,nfolds=nfolds.int),error=function(x) NULL)
       if(!is.null(object)){
-        pred[foldid.ext==i,"glmtrans"] <- predict(object,newx=X1,type="response")
+        pred[foldid.ext==i,"glmtrans"] <- stats::predict(object,newx=X1,type="response")
       }
       end <- Sys.time()
       time["glmtrans"] <-  time["glmtrans"]+difftime(time1=end,time2=start,units="secs")
@@ -701,7 +711,7 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale,
     set.seed(seed) # trial
     start <- Sys.time()
     object <- transreg(y=y0,X=X0,prior=prior,family=family,foldid=foldid,alpha=alpha,scale=scale,sign=sign,switch=switch,select=select)
-    pred[foldid.ext==i,"transreg"] <- predict(object,newx=X1)
+    pred[foldid.ext==i,"transreg"] <- stats::predict(object,newx=X1)
     end <- Sys.time()
     time["transreg"] <- time["transreg"]+difftime(time1=end,time2=start,units="secs")
     
@@ -737,7 +747,7 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale,
       start <- Sys.time()
       object <- tryCatch(fwelnet::cv.fwelnet(x=X0,y=y0,z=z,family=family,foldid=foldid,alpha=alpha),error=function(x) NULL)
       if(!is.null(object)){
-        pred[foldid.ext==i,"fwelnet"] <- predict(object,xnew=X1,s="lambda.min",type="response")
+        pred[foldid.ext==i,"fwelnet"] <- stats::predict(object,xnew=X1,s="lambda.min",type="response")
       }
       end <- Sys.time()
       time["fwelnet"] <- time["fwelnet"]+difftime(time1=end,time2=start,units="secs")
@@ -750,7 +760,7 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale,
       # cond <- !duplicated(t(X0))
       # object <- tryCatch(xtune::xtune(Y=y0,X=X0[,cond],Z=z[cond,],family=model,method=method),error=function(x) NULL)
       # if(!is.null(object)){
-      #   temp <- predict(object,newX=X1[,cond],type="response")
+      #   temp <- stats::predict(object,newX=X1[,cond],type="response")
       #   #temp <- joinet:::.mean.function(temp,family=family) # trial!
       #   # It is possible that xtune 0.10 returns the linear predictors and not the predicted probabilities!
       #   pred[foldid.ext==i,"xtune"] <- temp
@@ -799,6 +809,8 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale,
 #' sample size for target data set
 #' @param n.source
 #' sample size(s) for source data set(s), scalar or vector of length k
+#' @param family
+#' "Gaussian", "binomial" or "poisson"
 #' @param k
 #' number of source data sets
 #' @param prop

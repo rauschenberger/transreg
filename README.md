@@ -31,7 +31,7 @@ remotes::install_github("rauschenberger/transreg")
 
 ## Reference
 
-Armin Rauschenberger, Mark A van de Wiel, and Enrico Glaab (2020). "Penalised regression with multiple sets of prior coefficients". *Manuscript in preparation.*
+Armin Rauschenberger, Mark A van de Wiel, and Enrico Glaab (2022). "Penalised regression with multiple sets of prior coefficients". *Manuscript in preparation.*
 
 <!--
 [![CRAN
