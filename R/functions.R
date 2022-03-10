@@ -412,7 +412,8 @@ iso.fast.single <- function(y,X,prior,family){
     }
     #Xcs <- cbind(A,B) # original
     times <- c(sum(sign==-1),sum(sign==0),sum(sign==+1)) # was c(sum(!cond),sum(cond)) 
-    inc <- glmnet::glmnet(y=y,x=Xcs,family="gaussian",alpha=0,lambda=0,lower.limits=rep(c(-Inf,0,0),times=times),upper.limits=rep(c(0,0,Inf),times=times))
+    # Bug fix on 2022-03-10: replaced family="gaussian" by family=family
+    inc <- glmnet::glmnet(y=y,x=Xcs,family=family,alpha=0,lambda=0,lower.limits=rep(c(-Inf,0,0),times=times),upper.limits=rep(c(0,0,Inf),times=times))
     coef <- stats::coef(inc)
     ALPHA[i] <- coef[1]
     beta <- coef[-1]
@@ -444,6 +445,7 @@ iso.multiple <- function(y,X,prior,family,switch=TRUE,select=TRUE){
   
   prior0 <- iso.fast.single(y=y,X=X,prior=+prior,family=family) # was iso.slow.single
   alpha0 <- prior0$alpha; beta0 <- prior0$beta
+  # beta0[beta0==min(beta0)] <- sort(beta0,decreasing=FALSE)[2] # hack (trial)
   fit0 <- joinet:::.mean.function(alpha0 + X %*% beta0,family=family)
   
   res <- residuals(y=y,y_hat=mean(y),family=family)
