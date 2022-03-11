@@ -255,7 +255,10 @@ exp.multiple <- function(y,X,prior,family,select,plot=TRUE){
       eta <- X %*% temp
       # Use simple linear/logistic/Poisson regression of y on eta, and extract fitted values. This should solve the scaling issue. => But be aware of negative coefficients!
       glm <- stats::glm(y~eta,family=family)
-      coefs[i,] <- stats::coef(glm)
+      #coefs[i,] <- stats::coef(glm) # original
+      temp <- stats::coef(glm)
+      coefs[i,1] <- temp["(Intercept)"] # trial
+      coefs[i,2] <- ifelse(is.na(temp["eta"]),0,temp["eta"]) # trial
       pred[,i] <- stats::fitted(glm)
     }
     cvm <- palasso:::.loss(y=y,fit=pred,family=family,type.measure="deviance")[[1]]
