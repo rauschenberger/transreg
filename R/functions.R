@@ -36,7 +36,10 @@
 #' include ...
 #' 
 #' @examples
-#' NA
+#' n <- 100; p <- 500
+#' X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
+#' beta <- rnorm(p)*rbinom(n=p,size=1,prob=0.2)
+#' y <- X %*% beta
 #' 
 transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,scale="iso",sign=FALSE,switch=TRUE,select=TRUE){
   
@@ -45,6 +48,7 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   if(is.vector(prior)){
     prior <- matrix(prior,ncol=1)
   }
+  prior[is.na(prior)] <- 0 # allows for missing prior coefficients
   if(all(y %in% c(0,1)) != (family=="binomial")){stop("Check 'family' of 'y'.")}
   if(length(y)!=nrow(X)){stop("Entries in 'y' must match rows in 'X'.")}
   if(ncol(X)!=nrow(prior)){stop("Columns in 'X' must match rows in 'prior'.")}
