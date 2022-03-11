@@ -796,8 +796,11 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale,
     
   }
   
-  loss <- palasso:::.loss(y=target$y[foldid.ext!=0],fit=pred[foldid.ext!=0,],
-                          family=family,type.measure=type.measure)[[1]]
+  #loss <- palasso:::.loss(y=target$y[foldid.ext!=0],fit=pred[foldid.ext!=0,],
+  #                        family=family,type.measure=type.measure)[[1]]
+  
+  loss <- apply(pred,2,function(x) starnet:::.loss(y=target$y[foldid.ext!=0],x=x[foldid.ext!=0],
+                          family=family,type.measure=type.measure))
   
   attributes(loss)$time <- time
   
