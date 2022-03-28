@@ -674,7 +674,7 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale,
     nfolds.ext <- max(foldid.ext)
   }
   
-  names <- c("mean","glmnet","glmtrans"[!is.null(source)],"transreg","GRridge"[trial],"NoGroups"[trial],"fwelnet"[trial2],"xtune"[trial2],"CoRF"[trial2])
+  names <- c("mean","glmnet","glmtrans"[!is.null(source)],"transreg","GRridge"[trial],"NoGroups"[trial],"fwelnet"[trial2],"xtune"[trial2],"CoRF"[trial2],"ecpc"[trial2])
   pred <- matrix(data=NA,nrow=length(target$y),ncol=length(names),dimnames=list(NULL,names))
   time <- rep(0,time=length(names)); names(time) <- names
   
@@ -760,6 +760,16 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale,
       }
       end <- Sys.time()
       time["fwelnet"] <- time["fwelnet"]+difftime(time1=end,time2=start,units="secs")
+
+      # ecpc
+      set.seed(seed)
+      start <- Sys.time()
+      object <- ecpc::ecpc(Y=y0,X=X1,Z=list(z),X2=X1,fold=nfolds.int)
+      if(!is.null(object)){
+        pred[foldid.ext==i,"ecpc"] <- object$Ypred
+      }
+      end <- Sys.time()
+      time["ecpc"] <- time["ecpc"]+difftime(time1=end,time2=start,units="secs")
       
       # # xtune
       # set.seed(seed)
@@ -776,7 +786,7 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale,
       # }
       # end <- Sys.time()
       # time["xtune"] <- time["xtune"]+difftime(time1=end,time2=start,units="secs")
-      # 
+
       # # CoRF
       # set.seed(seed)
       # CoData <- as.data.frame(z)
@@ -791,7 +801,7 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale,
       # }
       # end <- Sys.time()
       # time["CoRF"] <- time["CoRF"]+difftime(time1=end,time2=start,units="secs")
-      # 
+
     }
     
   }
