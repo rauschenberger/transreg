@@ -764,7 +764,7 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale,
       # ecpc
       set.seed(seed)
       start <- Sys.time()
-      object <- ecpc::ecpc(Y=y0,X=X1,Z=list(z),X2=X1,fold=nfolds.int)
+      object <- tryCatch(ecpc::ecpc(Y=y0,X=X0,Z=list(as.numeric(z)),X2=X1,fold=nfolds.int),error=function(x) NULL)
       if(!is.null(object)){
         pred[foldid.ext==i,"ecpc"] <- object$Ypred
       }
