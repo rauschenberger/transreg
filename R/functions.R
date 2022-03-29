@@ -562,6 +562,20 @@ iso.multiple <- function(y,X,prior,family,switch=TRUE,select=TRUE){
 #' 
 cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale,sign,select,switch,foldid.ext=NULL,nfolds.ext=10,foldid.int=NULL,nfolds.int=10,type.measure="deviance",alpha.prior=NULL,partitions=NULL,monotone=NULL){
   
+  if(FALSE){
+    if(!exists("source")){source <- NULL}
+    if(!exists("prior")){prior <- NULL}
+    if(!exists("z")){z <- NULL}
+    if(!exists("foldid.ext")){foldid.ext <- NULL}
+    if(!exists("nfolds.ext")){nfolds.ext <- 10}
+    if(!exists("foldid.int")){foldid.int <- NULL}
+    if(!exists("nfolds.int")){nfolds.int <- 10}
+    if(!exists("type.measure")){type.measure <- "deviance"}
+    if(!exists("alpha.prior")){alpha.prior <- NULL}
+    if(!exists("partitions")){partitions <- NULL}
+    if(!exists("monotone")){monotone <- NULL}
+  }
+  
   if(is.null(source)==is.null(prior)){
     stop("Provide either \"source\" or \"prior\".",call.=FALSE)
   }
@@ -754,6 +768,7 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale,
       # fwelnet
       set.seed(seed)
       start <- Sys.time()
+      #if(is.vector(z)){z <- as.matrix(z,ncol=1)}
       object <- tryCatch(fwelnet::cv.fwelnet(x=X0,y=y0,z=z,family=family,foldid=foldid,alpha=alpha),error=function(x) NULL)
       if(!is.null(object)){
         pred[foldid.ext==i,"fwelnet"] <- stats::predict(object,xnew=X1,s="lambda.min",type="response")
@@ -764,7 +779,12 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale,
       # ecpc
       set.seed(seed)
       start <- Sys.time()
-      object <- tryCatch(ecpc::ecpc(Y=y0,X=X0,Z=list(as.numeric(z)),X2=X1,fold=nfolds.int),error=function(x) NULL)
+      if(is.vector(z)){
+        Z <- list(as.numeric(z))
+      } else {
+        Z <- as.list(as.data.frame(z))
+      }
+      object <- tryCatch(ecpc::ecpc(Y=y0,X=X0,Z=Z,X2=X1,fold=nfolds.int),error=function(x) NULL)
       if(!is.null(object)){
         pred[foldid.ext==i,"ecpc"] <- object$Ypred
       }
