@@ -128,7 +128,8 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   meta <- glmnet::cv.glmnet(y=y,x=y_hat,foldid=foldid,alpha=1,family=family,lower.limits=0)
   
   # start alternative approach
-  trial <- glmnet::cv.glmnet(y=y,x=cbind(y_hat[,1:k],X),alpha=alpha,family=family,lower.limits=rep(c(0,-Inf),times=c(k,p)))
+  trial <- glmnet::cv.glmnet(y=y,x=cbind(y_hat[,1:k],X),alpha=alpha,family=family,lower.limits=rep(c(0,-Inf),times=c(k,p)),
+                             penalty.factor=rep(c(0,1),times=c(k,p)))
   # end alternative approach
   
   object <- list(base=base,meta=meta,scale=scale,trial=trial)
