@@ -127,7 +127,11 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   base$prior <- prior.ext
   meta <- glmnet::cv.glmnet(y=y,x=y_hat,foldid=foldid,alpha=1,family=family,lower.limits=0)
   
-  object <- list(base=base,meta=meta,scale=scale)
+  # start alternative approach
+  trial <- glmnet::cv.glmnet(y=y,x=cbind(y_hat[,1:k],X),alpha=alpha,family=family,lower.limits=rep(c(0,-Inf),times=c(k,p)))
+  # end alternative approach
+  
+  object <- list(base=base,meta=meta,scale=scale,trial=trial)
   class(object) <- "transreg"
   return(object)
 }
@@ -156,6 +160,12 @@ predict.transreg <- function(object,newx,...){
   two <- stats::predict(object$base,s=c(object$base$lambda.min,object$base$lambda.1se),newx=newx) # was s="lambda.min"
   #two <- newx %*% coef(object$base,s="lambda.min")[-1] # trial (harmonise with transreg)
   y_hat <- stats::predict(object$meta,s="lambda.min",newx=cbind(one,two),type="response")
+  return(y_hat)
+}
+
+predict.trial <- function(object,newx,...){
+  one <- newx %*% object$base$prior$beta
+  y_hat <- stats::predict(object$trial,s="lambda.min",newx=cbind(one,newx),type="response")
   return(y_hat)
 }
 
@@ -688,7 +698,7 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale,
     nfolds.ext <- max(foldid.ext)
   }
   
-  names <- c("mean","glmnet","glmtrans"[!is.null(source)],"transreg","GRridge"[trial],"NoGroups"[trial],"fwelnet"[trial2],"xtune"[trial2],"CoRF"[trial2],"ecpc"[trial2])
+  names <- c("mean","glmnet","glmtrans"[!is.null(source)],"transreg","transreg.trial","GRridge"[trial],"NoGroups"[trial],"fwelnet"[trial2],"xtune"[trial2],"CoRF"[trial2],"ecpc"[trial2])
   pred <- matrix(data=NA,nrow=length(target$y),ncol=length(names),dimnames=list(NULL,names))
   time <- rep(0,time=length(names)); names(time) <- names
   
@@ -737,6 +747,9 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale,
     pred[foldid.ext==i,"transreg"] <- stats::predict(object,newx=X1)
     end <- Sys.time()
     time["transreg"] <- time["transreg"]+difftime(time1=end,time2=start,units="secs")
+    
+    # transreg trial
+    pred[foldid.ext==i,"transreg.trial"] <- predict.trial(object,newx=X1)
     
     # GRridge
     if(trial){
