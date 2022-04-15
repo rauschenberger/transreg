@@ -130,6 +130,16 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   # start alternative approach
   trial <- glmnet::cv.glmnet(y=y,x=cbind(y_hat[,1:k],X),alpha=alpha,family=family,lower.limits=rep(c(0,-Inf),times=c(k,p)),
                              penalty.factor=rep(c(0,1),times=c(k,p)))
+  # tune weight here (penalty factor = inverse weight):
+  # weight between 0 and 1 for meta-features, weight 1 for original features
+  #weight <- seq(from=0,to=1,length.out=6)
+  #trials <- list()
+  #for(i in seq_along(weight)){
+  #  trials[[i]] <- glmnet::cv.glmnet(y=y,x=cbind(y_hat[,1:k],X),alpha=alpha,family=family,lower.limits=rep(c(0,-Inf),times=c(k,p)),
+  #                                   penalty.factor=rep(c(1/weight[i],1),times=c(k,p)))
+  #}
+  #cvm <- sapply(trials,function(x) min(x$cvm))
+  #trial <- trials[[which.min(cvm)]]
   # end alternative approach
   
   object <- list(base=base,meta=meta,scale=scale,trial=trial)
