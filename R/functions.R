@@ -128,21 +128,26 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   meta <- glmnet::cv.glmnet(y=y,x=y_hat,foldid=foldid,alpha=1,family=family,lower.limits=0)
   
   # start alternative approach
-  trial <- glmnet::cv.glmnet(y=y,x=cbind(y_hat[,1:k],X),alpha=alpha,family=family,lower.limits=rep(c(0,-Inf),times=c(k,p)),
-                             penalty.factor=rep(c(0,1),times=c(k,p)))
+  #trial <- glmnet::cv.glmnet(y=y,x=cbind(y_hat[,1:k],X),alpha=alpha,family=family,lower.limits=rep(c(0,-Inf),times=c(k,p)),
+  #                           penalty.factor=rep(c(0,1),times=c(k,p)))
   # tune weight here (penalty factor = inverse weight):
   # weight between 0 and 1 for meta-features, weight 1 for original features
-  #weight <- seq(from=0,to=1,length.out=6)
-  #trials <- list()
-  #for(i in seq_along(weight)){
-  #  trials[[i]] <- glmnet::cv.glmnet(y=y,x=cbind(y_hat[,1:k],X),alpha=alpha,family=family,lower.limits=rep(c(0,-Inf),times=c(k,p)),
-  #                                   penalty.factor=rep(c(1/weight[i],1),times=c(k,p)))
-  #}
-  #cvm <- sapply(trials,function(x) min(x$cvm))
-  #trial <- trials[[which.min(cvm)]]
+  pf <- seq(from=0,to=1,length.out=6)
+  trials <- list()
+  for(i in seq_along(pf)){
+    trials[[i]] <- glmnet::cv.glmnet(y=y,x=cbind(y_hat[,1:k],X),alpha=alpha,family=family,lower.limits=rep(c(0,-Inf),times=c(k,p)),
+                                     penalty.factor=rep(c(pf[i],1),times=c(k,p)),foldid=foldid)
+  }
+  # try: weight <- seq(from=0.5,to=1,length.out=6)
+  # try: penalty.factor=c(1/(1-weight[i]),1/weight[i])
+  cvm <- sapply(trials,function(x) min(x$cvm))
+  cat("min cvm:",cvm)
+  tryCatch(expr=plot(x=pf,y=cvm),error=function(x) NULL)
+  trial <- trials[[which(pf==0)]]
+  test <- trials[[which.min(cvm)]]
   # end alternative approach
   
-  object <- list(base=base,meta=meta,scale=scale,trial=trial)
+  object <- list(base=base,meta=meta,scale=scale,trial=trial,test=test)
   class(object) <- "transreg"
   return(object)
 }
@@ -177,6 +182,12 @@ predict.transreg <- function(object,newx,...){
 predict.trial <- function(object,newx,...){
   one <- newx %*% object$base$prior$beta
   y_hat <- stats::predict(object$trial,s="lambda.min",newx=cbind(one,newx),type="response")
+  return(y_hat)
+}
+
+predict.test <- function(object,newx,...){
+  one <- newx %*% object$base$prior$beta
+  y_hat <- stats::predict(object$test,s="lambda.min",newx=cbind(one,newx),type="response")
   return(y_hat)
 }
 
@@ -709,7 +720,7 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale,
     nfolds.ext <- max(foldid.ext)
   }
   
-  names <- c("mean","glmnet","glmtrans"[!is.null(source)],"transreg","transreg.trial","GRridge"[trial],"NoGroups"[trial],"fwelnet"[trial2],"xtune"[trial2],"CoRF"[trial2],"ecpc"[trial2])
+  names <- c("mean","glmnet","glmtrans"[!is.null(source)],"transreg","transreg.trial","transreg.test","GRridge"[trial],"NoGroups"[trial],"fwelnet"[trial2],"xtune"[trial2],"CoRF"[trial2],"ecpc"[trial2])
   pred <- matrix(data=NA,nrow=length(target$y),ncol=length(names),dimnames=list(NULL,names))
   time <- rep(0,time=length(names)); names(time) <- names
   
@@ -761,6 +772,7 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale,
     
     # transreg trial
     pred[foldid.ext==i,"transreg.trial"] <- predict.trial(object,newx=X1)
+    pred[foldid.ext==i,"transreg.test"] <- predict.test(object,newx=X1)
     
     # GRridge
     if(trial){
