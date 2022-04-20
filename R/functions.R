@@ -96,10 +96,10 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   
   # start trial nested cv
   # fit glmnet on meta-features and features, using all data
-  temp <- X %*% prior.ext$beta
-  full <- glmnet::glmnet(y=y,x=cbind(temp,X),alpha=alpha,family=family,lower.limits=rep(c(0,-Inf),times=c(k,p)),
-                    penalty.factor=rep(c(0,1),times=c(k,p)))
-  pred <- matrix(NA,nrow=n,ncol=length(full$lambda))
+  #temp <- X %*% prior.ext$beta
+  #full <- glmnet::glmnet(y=y,x=cbind(temp,X),alpha=alpha,family=family,lower.limits=rep(c(0,-Inf),times=c(k,p)),
+  #                  penalty.factor=rep(c(0,1),times=c(k,p)))
+  #pred <- matrix(NA,nrow=n,ncol=length(full$lambda))
   # end trial nested cv
   
   y_hat <- matrix(NA,nrow=n,ncol=k+2) # was ncol=k+1
