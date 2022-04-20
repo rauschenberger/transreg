@@ -45,6 +45,17 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   
   # family <- "gaussian"; alpha <- 1; foldid <- NULL; nfolds <- 10; scale <- "exp"; sign <- FALSE; switch <- TRUE; select <- TRUE
   
+  if(FALSE){
+    if(!exists("family")){family <- "gaussian"}
+    if(!exists("alpha")){alpha <- 1}
+    if(!exists("foldid")){foldid <- NULL}
+    if(!exists("nfolds")){nfolds <- 10}
+    if(!exists("scale")){scale <- "iso"}
+    if(!exists("sign")){sign <- FALSE}
+    if(!exists("switch")){switch <- TRUE}
+    if(!exists("select")){select <- TRUE}
+  }
+  
   if(is.vector(prior)){
     prior <- matrix(prior,ncol=1)
   }
@@ -83,6 +94,14 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
     stop("Invalid scale.",call.=FALSE)
   }
   
+  # start trial nested cv
+  # fit glmnet on meta-features and features, using all data
+  temp <- X %*% prior.ext$beta
+  full <- glmnet::glmnet(y=y,x=cbind(temp,X),alpha=alpha,family=family,lower.limits=rep(c(0,-Inf),times=c(k,p)),
+                    penalty.factor=rep(c(0,1),times=c(k,p)))
+  pred <- matrix(NA,nrow=n,ncol=length(full$lambda))
+  # end trial nested cv
+  
   y_hat <- matrix(NA,nrow=n,ncol=k+2) # was ncol=k+1
   for(i in seq_len(nfolds)){
     y0 <- y[foldid!=i]
@@ -116,6 +135,14 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
     #Y_hat[foldid==i,] <- stats::predict(part,s=full$lambda,newx=X1) # trial
     #int[foldid==i,] <- rep(coef(part,s=full$lambda)["(Intercept)",],each=sum(foldid==i)) # trial
     
+    # start trial nested cv
+    # fit glmnet on meta-features and features, using included folds
+    temp <- X0 %*% prior.int$beta
+    sub <- glmnet::glmnet(y=y0,x=cbind(temp,X0),alpha=alpha,family=family,lower.limits=rep(c(0,-Inf),times=c(k,p)),
+                           penalty.factor=rep(c(0,1),times=c(k,p)))
+    temp <- X1 %*% prior.int$beta
+    pred[foldid==i,] <- predict(sub,newx=cbind(temp,X1),s=full$lambda)
+    # end trial nested cv
   }
   
   #cvm <- palasso:::.loss(y=y,fit=joinet:::.mean.function(Y_hat,family=family),family=family,type.measure="deviance",foldid=foldid)[[1]] # trial
@@ -127,12 +154,12 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   base$prior <- prior.ext
   meta <- glmnet::cv.glmnet(y=y,x=y_hat,foldid=foldid,alpha=1,family=family,lower.limits=0)
   
-  # start alternative approach
+  # start alternative meta-features
   #trial <- glmnet::cv.glmnet(y=y,x=cbind(y_hat[,1:k],X),alpha=alpha,family=family,lower.limits=rep(c(0,-Inf),times=c(k,p)),
   #                           penalty.factor=rep(c(0,1),times=c(k,p)))
   # tune weight here (penalty factor = inverse weight):
   # weight between 0 and 1 for meta-features, weight 1 for original features
-  pf <- seq(from=0,to=1,length.out=6)
+  pf <- 0 #seq(from=0,to=1,length.out=6)
   trials <- list()
   for(i in seq_along(pf)){
     trials[[i]] <- glmnet::cv.glmnet(y=y,x=cbind(y_hat[,1:k],X),alpha=alpha,family=family,lower.limits=rep(c(0,-Inf),times=c(k,p)),
@@ -144,8 +171,26 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   cat("min cvm:",cvm)
   tryCatch(expr=plot(x=pf,y=cvm),error=function(x) NULL)
   trial <- trials[[which(pf==0)]]
+  # end alternative meta-features
+  
+  # start alternative tune pf
   test <- trials[[which.min(cvm)]]
-  # end alternative approach
+  # end alternative tune pf
+  
+  # start alternative no cv
+  #temp <- X %*% prior.ext$beta
+  #test <- glmnet::cv.glmnet(y=y,x=cbind(temp,X),alpha=alpha,family=family,lower.limits=rep(c(0,-Inf),times=c(k,p)),
+  #                                 penalty.factor=rep(c(0,1),times=c(k,p)),foldid=foldid)
+  # end alternative no cv
+  
+  # start trial nested cv
+  #loss <- apply(pred,2,function(x) starnet:::.loss(y=y,x=x,family=family,type.measure="deviance"))
+  #lambda.min <- full$lambda[which.min(loss)]
+  #test <- list(glmnet.fit=full,lambda.min=lambda.min)
+  #class(test) <- "cv.glmnet"
+  # temp <- X %*% prior.ext$beta
+  # predict(test,newx=cbind(temp,X),s="lambda.min")
+  # end trial nested cv
   
   object <- list(base=base,meta=meta,scale=scale,trial=trial,test=test)
   class(object) <- "transreg"
@@ -931,6 +976,13 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale,
     # target
     #beta[,4] <- beta[,4] # should not change
   }
+  
+  if(FALSE){
+    warning("Remove the following line:")
+    Sigma <- 0*Sigma
+    diag(Sigma) <- 1
+  }
+  
   cond <- mvtnorm::rmvnorm(n=p,mean=mu,sigma=Sigma)>stats::qnorm(1-prop)
   beta[cond==0] <- 0
   
