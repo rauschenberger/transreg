@@ -137,11 +137,11 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
     
     # start trial nested cv
     # fit glmnet on meta-features and features, using included folds
-    temp <- X0 %*% prior.int$beta
-    sub <- glmnet::glmnet(y=y0,x=cbind(temp,X0),alpha=alpha,family=family,lower.limits=rep(c(0,-Inf),times=c(k,p)),
-                           penalty.factor=rep(c(0,1),times=c(k,p)))
-    temp <- X1 %*% prior.int$beta
-    pred[foldid==i,] <- predict(sub,newx=cbind(temp,X1),s=full$lambda)
+    #temp <- X0 %*% prior.int$beta
+    #sub <- glmnet::glmnet(y=y0,x=cbind(temp,X0),alpha=alpha,family=family,lower.limits=rep(c(0,-Inf),times=c(k,p)),
+    #                       penalty.factor=rep(c(0,1),times=c(k,p)))
+    #temp <- X1 %*% prior.int$beta
+    #pred[foldid==i,] <- predict(sub,newx=cbind(temp,X1),s=full$lambda)
     # end trial nested cv
   }
   
@@ -637,7 +637,7 @@ iso.multiple <- function(y,X,prior,family,switch=TRUE,select=TRUE){
 #' @examples
 #' NA
 #' 
-cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale,sign,select,switch,foldid.ext=NULL,nfolds.ext=10,foldid.int=NULL,nfolds.int=10,type.measure="deviance",alpha.prior=NULL,partitions=NULL,monotone=NULL){
+cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso",sign=FALSE,select=TRUE,switch=TRUE,foldid.ext=NULL,nfolds.ext=10,foldid.int=NULL,nfolds.int=10,type.measure="deviance",alpha.prior=NULL,partitions=NULL,monotone=NULL){
   
   if(FALSE){
     if(!exists("source")){source <- NULL}
@@ -655,6 +655,19 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale,
   
   if(is.null(source)==is.null(prior)){
     stop("Provide either \"source\" or \"prior\".",call.=FALSE)
+  }
+  
+  if(!is.list(target)||is.null(names(target))){stop("Expect argument target as list with slots x and y.")}
+  #names(target) <- tolower(names(target))
+  if(!any(names(target) %in% c("y","x"))){stop("Expect argument target as list with slots x and y.")}
+  
+  if(!is.null(source)){
+  if(!is.list(source)){stop("Expect argument source as list of lists.")}
+  for(i in seq_along(source)){
+    if(!is.list(source[[i]])||is.null(names(source[[i]]))){stop("Expect argument source as list of lists with slots x and y.")}
+    #names(source[[i]]) <- tolower(names(source[[i]]))
+    if(!any(names(source[[i]]) %in% c("y","x"))){stop("Expect argument source as list of lists with slots x and y.")}
+  }
   }
   
   if(is.vector(prior)){
