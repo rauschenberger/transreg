@@ -262,6 +262,21 @@ coef.transreg <- function(object,...){
   return(list(alpha=alpha_star,beta=beta_star))
 }
 
+coef.trial <- function(object,...){
+  gamma <- object$base$prior$beta
+  meta <- coef(object$trial,s="lambda.min")
+  k <- ncol(object$base$prior$beta)
+  p <- nrow(object$base$prior$beta)
+  alpha_star <- meta[1]
+  omega <- meta[2:(k+1)]
+  betas <- meta[-c(1:(k+1))]
+  beta_star <- rep(NA,times=p)
+  for(i in seq_len(p)){
+    beta_star[i] <- sum(omega*gamma[i,]) + betas[i]
+  }
+  return(list(alpha=alpha_star,beta=beta_star))
+}
+
 #predict.test <- function(object,newx,...){
 #  one <- newx %*% object$base$prior$beta
 #  y_hat <- stats::predict(object$test,s="lambda.min",newx=cbind(one,newx),type="response")
