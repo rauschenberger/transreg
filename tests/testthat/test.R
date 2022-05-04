@@ -78,6 +78,22 @@ for(scale in c("exp","iso")){
     testthat::expect_true(cond1&cond2)
   })
   
+  # alternative approach
+  
+  #if(scale=="exp"){next} # implement this
+  
+  y_hat1 <- predict.trial(object,newx=X)
+  coef <- coef.trial(object=object)
+  alpha_star <- coef$alpha
+  beta_star <- coef$beta
+  y_hat2 <- joinet:::.mean.function(alpha_star + X %*% beta_star,family=family)
+  
+  testthat::test_that("correlation (pred, coef)",{
+    cond1 <- mean(y_hat1)-mean(y_hat2) < 0.01
+    cond2 <- stats::cor(y_hat1,y_hat2) > 0.99
+    testthat::expect_true(cond1&cond2)
+  })
+  
 }
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
