@@ -239,6 +239,29 @@ predict.trial <- function(object,newx,...){
   return(y_hat)
 }
 
+coef.transreg <- function(object,...){
+  beta <- coef(object$base,s=c(object$meta$lambda.min,object$meta$lambda.1se))
+  omega <- as.numeric(coef(object$meta,s=object$meta$lambda.min))
+  names <- paste0("source",seq_len(ncol(object$base$prior$beta)))
+  names(omega) <- c("(Intercept)",names,"lambda.min","lambda.1se")
+  
+  p <- nrow(beta)-1
+  alpha_star <- omega["(Intercept)"] + omega["lambda.min"]*beta["(Intercept)","s1"] + omega["lambda.1se"]*beta["(Intercept)","s2"]
+  beta_star <- rep(NA,times=p)
+
+  if(object$scale=="exp"){
+    for(j in seq_len(p)){
+      beta_star[j] <- sum(omega[names]*object$base$prior$theta*sign(object$base$z[j,])*abs(object$base$z[j,])^object$base$prior$tau) + omega["lambda.min"]*beta[1+j,"s1"] + omega["lambda.1se"]*beta[1+j,"s2"]
+    }
+  }
+  if(object$scale=="iso"){
+    for(j in seq_len(p)){
+      beta_star[j] <- sum(omega[names]*object$base$prior$beta[j,]) + omega["lambda.min"]*beta[1+j,"s1"] + omega["lambda.1se"]*beta[1+j,"s2"]
+    }
+  }
+  return(list(alpha=alpha_star,beta=beta_star))
+}
+
 #predict.test <- function(object,newx,...){
 #  one <- newx %*% object$base$prior$beta
 #  y_hat <- stats::predict(object$test,s="lambda.min",newx=cbind(one,newx),type="response")
@@ -337,7 +360,7 @@ exp.multiple <- function(y,X,prior,family,select,plot=TRUE){
   
   n <- nrow(X); p <- ncol(X); k <- ncol(prior)
   
-  alpha <- gamma <- pvalue <- sign <- tau <- rep(NA,times=k)
+  alpha <- theta <- pvalue <- sign <- tau <- rep(NA,times=k)
   beta <- matrix(NA,nrow=p,ncol=k)
   
   # This should be done with training data, within cross-validation loop, for each set of prior information. Also consider more complex transformations.
@@ -362,7 +385,7 @@ exp.multiple <- function(y,X,prior,family,select,plot=TRUE){
     id.min <- which.min(cvm)
     
     alpha[j] <- coefs[id.min,1]
-    gamma[j] <- coefs[id.min,2]
+    theta[j] <- coefs[id.min,2]
     beta[,j] <- coefs[id.min,2]*sign(prior[,j])*abs(prior[,j])^exp[id.min]
     sign[j] <- sign(coefs[id.min,2])
     tau[j] <- exp[id.min]
@@ -393,7 +416,7 @@ exp.multiple <- function(y,X,prior,family,select,plot=TRUE){
     message(ifelse(remove,".",ifelse(sign==1,"+","-")))
   }
   
-  return(list(alpha=alpha,beta=beta,gamma=gamma,tau=tau))
+  return(list(alpha=alpha,beta=beta,theta=theta,tau=tau))
 }
 
 #' @title 
