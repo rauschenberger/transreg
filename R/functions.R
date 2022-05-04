@@ -244,21 +244,12 @@ coef.transreg <- function(object,...){
   omega <- as.numeric(coef(object$meta,s=object$meta$lambda.min))
   names <- paste0("source",seq_len(ncol(object$base$prior$beta)))
   names(omega) <- c("(Intercept)",names,"lambda.min","lambda.1se")
-  
   p <- nrow(beta)-1
   alpha_star <- omega["(Intercept)"] + omega["lambda.min"]*beta["(Intercept)","s1"] + omega["lambda.1se"]*beta["(Intercept)","s2"]
   beta_star <- rep(NA,times=p)
-
-  #if(object$scale=="exp"){
-  #  for(j in seq_len(p)){
-  #    beta_star[j] <- sum(omega[names]*object$base$prior$theta*sign(object$base$z[j,])*abs(object$base$z[j,])^object$base$prior$tau) + omega["lambda.min"]*beta[1+j,"s1"] + omega["lambda.1se"]*beta[1+j,"s2"]
-  #  }
-  #}
-  #if(object$scale=="iso"){
-    for(j in seq_len(p)){
-      beta_star[j] <- sum(omega[names]*object$base$prior$beta[j,]) + omega["lambda.min"]*beta[1+j,"s1"] + omega["lambda.1se"]*beta[1+j,"s2"]
-    }
-  #}
+  for(j in seq_len(p)){
+    beta_star[j] <- sum(omega[names]*object$base$prior$beta[j,]) + omega["lambda.min"]*beta[1+j,"s1"] + omega["lambda.1se"]*beta[1+j,"s2"]
+  }
   return(list(alpha=alpha_star,beta=beta_star))
 }
 

@@ -45,32 +45,12 @@ for(scale in c("exp","iso")){
   
   prior <- cbind(prior1,prior2)
   object <- transreg(y=y,X=X,prior=prior,family=family,scale=scale)
+  
+  # old approach
+  
   y_hat1 <- predict(object,newx=X)
-  
-  # beta <- coef(object$base,s=c(object$meta$lambda.min,object$meta$lambda.1se))
-  # omega <- as.numeric(coef(object$meta,s=object$meta$lambda.min))
-  # names <- paste0("source",seq_len(ncol(prior)))
-  # names(omega) <- c("(Intercept)",names,"lambda.min","lambda.1se")
-  # 
-  # alpha_star <- omega["(Intercept)"] + omega["lambda.min"]*beta["(Intercept)","s1"] + omega["lambda.1se"]*beta["(Intercept)","s2"]
-  # beta_star <- rep(NA,times=p)
-  # 
-  # if(scale=="exp"){
-  #   for(j in seq_len(p)){
-  #     beta_star[j] <- sum(omega[names]*object$base$prior$theta*sign(object$base$z[j,])*abs(object$base$z[j,])^object$base$prior$tau) + omega["lambda.min"]*beta[1+j,"s1"] + omega["lambda.1se"]*beta[1+j,"s2"]
-  #   }
-  # }
-  # if(scale=="iso"){
-  #   for(j in seq_len(p)){
-  #     beta_star[j] <- sum(omega[names]*object$base$prior$beta[j,]) + omega["lambda.min"]*beta[1+j,"s1"] + omega["lambda.1se"]*beta[1+j,"s2"]
-  #   }
-  # }
-  
   coef <- coef.transreg(object=object)
-  alpha_star <- coef$alpha
-  beta_star <- coef$beta
-  
-  y_hat2 <- joinet:::.mean.function(alpha_star + X %*% beta_star,family=family)
+  y_hat2 <- joinet:::.mean.function(coef$alpha + X %*% coef$beta,family=family)
   
   testthat::test_that("correlation (pred, coef)",{
     cond1 <- mean(y_hat1)-mean(y_hat2) < 0.01
@@ -78,15 +58,11 @@ for(scale in c("exp","iso")){
     testthat::expect_true(cond1&cond2)
   })
   
-  # alternative approach
-  
-  #if(scale=="exp"){next} # implement this
+  # new approach
   
   y_hat1 <- predict.trial(object,newx=X)
   coef <- coef.trial(object=object)
-  alpha_star <- coef$alpha
-  beta_star <- coef$beta
-  y_hat2 <- joinet:::.mean.function(alpha_star + X %*% beta_star,family=family)
+  y_hat2 <- joinet:::.mean.function(coef$alpha + X %*% coef$beta,family=family)
   
   testthat::test_that("correlation (pred, coef)",{
     cond1 <- mean(y_hat1)-mean(y_hat2) < 0.01
