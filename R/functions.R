@@ -682,7 +682,7 @@ iso.multiple <- function(y,X,prior,family,switch=TRUE,select=TRUE){
 #' @examples
 #' NA
 #' 
-cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso",sign=FALSE,select=TRUE,switch=TRUE,foldid.ext=NULL,nfolds.ext=10,foldid.int=NULL,nfolds.int=10,type.measure="deviance",alpha.prior=NULL,partitions=NULL,monotone=NULL){
+cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso",sign=FALSE,select=TRUE,switch=TRUE,foldid.ext=NULL,nfolds.ext=10,foldid.int=NULL,nfolds.int=10,type.measure="deviance",alpha.prior=NULL,partitions=NULL,monotone=NULL,prs=TRUE){
   
   if(FALSE){
     if(!exists("source")){source <- NULL}
@@ -696,6 +696,7 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
     if(!exists("alpha.prior")){alpha.prior <- NULL}
     if(!exists("partitions")){partitions <- NULL}
     if(!exists("monotone")){monotone <- NULL}
+    if(!exists("prs")){prs <- FALSE}
   }
   
   if(is.null(source)==is.null(prior)){
@@ -823,7 +824,7 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
     nfolds.ext <- max(foldid.ext)
   }
   
-  names <- c("mean","glmnet","glmtrans"[!is.null(source)],"transreg","transreg.trial","GRridge"[trial],"NoGroups"[trial],"fwelnet"[trial2],"xtune"[trial2],"CoRF"[trial2],"ecpc"[trial2]) # "transreg.test"
+  names <- c("mean","glmnet","glmtrans"[!is.null(source)],"transreg","transreg.trial","GRridge"[trial],"NoGroups"[trial],"fwelnet"[trial2],"xtune"[trial2],"CoRF"[trial2],"ecpc"[trial2],"prs"[prs]) # "transreg.test"
   pred <- matrix(data=NA,nrow=length(target$y),ncol=length(names),dimnames=list(NULL,names))
   time <- rep(0,time=length(names)); names(time) <- names
   
@@ -876,6 +877,16 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
     # transreg trial
     pred[foldid.ext==i,"transreg.trial"] <- predict.trial(object,newx=X1)
     #pred[foldid.ext==i,"transreg.test"] <- predict.test(object,newx=X1)
+    
+    # PRS
+    if(prs){
+      set.seed(seed)
+      start <- Sys.time()
+      glm <- stats::glm(formula=y0 ~ x,family=family,data=data.frame(x=X0 %*% prior))
+      pred[foldid.ext==i,"prs"] <- predict(glm,newdata=data.frame(x=X1 %*% prior),type="response")
+      end <- Sys.time()
+      time["prs"] <- time["prs"] + difftime(time1=end,time2=start,units="secs")
+    }
     
     # GRridge
     if(trial){
