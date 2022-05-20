@@ -372,6 +372,9 @@ exp.multiple <- function(y,X,prior,family,select,plot=TRUE){
   # This should be done with training data, within cross-validation loop, for each set of prior information. Also consider more complex transformations.
   
   exp <- c(0,exp(seq(from=log(0.01),to=log(50),length.out=100)))
+  #warning("Delete next line!")
+  #exp <- c(0,exp(seq(from=log(0.2),to=log(5),length.out=100)))
+  #exp <- c(1,1)
   
   for(j in seq_len(k)){
     coefs <- matrix(NA,nrow=length(exp),ncol=2)
@@ -824,7 +827,8 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
     nfolds.ext <- max(foldid.ext)
   }
   
-  names <- c("mean","glmnet","glmtrans"[!is.null(source)],"transreg","transreg.trial","GRridge"[trial],"NoGroups"[trial],"fwelnet"[trial2],"xtune"[trial2],"CoRF"[trial2],"ecpc"[trial2],"prs"[prs]) # "transreg.test"
+  temp <- paste0(rep(c("transreg_","transreg_"),each=length(scale)),scale,rep(c("_lp","_mf"),each=length(scale)))
+  names <- c("mean","glmnet","glmtrans"[!is.null(source)],temp,"GRridge"[trial],"NoGroups"[trial],"fwelnet"[trial2],"xtune"[trial2],"CoRF"[trial2],"ecpc"[trial2],"prs"[prs]) # "transreg.test"
   pred <- matrix(data=NA,nrow=length(target$y),ncol=length(names),dimnames=list(NULL,names))
   time <- rep(0,time=length(names)); names(time) <- names
   
@@ -867,16 +871,17 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
     }
     
     # transreg
-    set.seed(seed) # trial
-    start <- Sys.time()
-    object <- transreg(y=y0,X=X0,prior=prior,family=family,foldid=foldid,alpha=alpha,scale=scale,sign=sign,switch=switch,select=select)
-    pred[foldid.ext==i,"transreg"] <- stats::predict(object,newx=X1)
-    end <- Sys.time()
-    time["transreg"] <- time["transreg"]+difftime(time1=end,time2=start,units="secs")
-    
-    # transreg trial
-    pred[foldid.ext==i,"transreg.trial"] <- predict.trial(object,newx=X1)
-    #pred[foldid.ext==i,"transreg.test"] <- predict.test(object,newx=X1)
+    for(j in seq_along(scale)){
+      set.seed(seed) # trial
+      start <- Sys.time()
+      object <- transreg(y=y0,X=X0,prior=prior,family=family,foldid=foldid,alpha=alpha,scale=scale[j],sign=sign,switch=switch,select=select)
+      pred[foldid.ext==i,paste0("transreg_",scale[j],"_lp")] <- stats::predict(object,newx=X1)
+      end <- Sys.time()
+      time["transreg"] <- time["transreg"]+difftime(time1=end,time2=start,units="secs")
+      # transreg trial
+      pred[foldid.ext==i,paste0("transreg_",scale[j],"_mf")] <- predict.trial(object,newx=X1)
+      #pred[foldid.ext==i,"transreg.test"] <- predict.test(object,newx=X1)
+    }
     
     # PRS
     if(prs){
