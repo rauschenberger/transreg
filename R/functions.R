@@ -23,7 +23,8 @@
 #' number of folds: integer
 #' @param scale
 #' "exp" for exponential scaling (3 parameters),
-#' "iso" for isotonic scaling (1+p parameters)
+#' "iso" for isotonic scaling (1+p parameters),
+#' "sam" for shape-constrained additive scaling
 #' @param sign
 #' sign discovery procedure: logical
 #' @param switch
@@ -40,6 +41,7 @@
 #' X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
 #' beta <- rnorm(p)*rbinom(n=p,size=1,prob=0.2)
 #' y <- X %*% beta
+#' object <- transreg(y=y,X=X,prior=beta,scale="sam")
 #' 
 transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,scale="iso",sign=FALSE,switch=TRUE,select=TRUE){
   
@@ -90,6 +92,8 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
     prior.ext <- exp.multiple(y=y,X=X,prior=prior.ext,family=family,select=select)
   } else if(scale=="iso"){
     prior.ext <- iso.multiple(y=y,X=X,prior=prior.ext,family=family,switch=switch,select=select)
+  } else if(scale=="sam"){
+    prior.ext <- sam.multiple(y=y,X=X,prior=prior.ext,family=family,switch=switch,select=select,base=base)
   } else {
     stop("Invalid scale.",call.=FALSE)
   }
@@ -119,6 +123,8 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
       prior.int <- exp.multiple(y=y0,X=X0,prior=prior.int,family=family,select=select)
     } else if(scale=="iso"){
       prior.int <- iso.multiple(y=y0,X=X0,prior=prior.int,family=family,switch=switch,select=select)
+    } else if(scale=="sam"){
+      prior.int <- sam.multiple(y=y0,X=X0,prior=prior.int,family=family,switch=switch,select=select,base=base)
     } else {
       stop("Invalid scale.",call.=FALSE)
     }
@@ -649,7 +655,7 @@ iso.multiple <- function(y,X,prior,family,switch=TRUE,select=TRUE){
     #warning("Temporary line:")
     #remove <- pmin(colMeans(res0),colMeans(res1)) >= mean(res) # trial
     #prior[,remove] <- 0 # changed from 1 (mistake!?) to 0 # original
-    alpha0[remove] <- 0 # correction
+    alpha0[remove] <- 0 # correction # 2022-01-27: Why remove intercept???
     beta0[,remove] <- 0 # correction
     message(ifelse(remove,".",ifelse(cond,"+","-")))
   }
@@ -657,6 +663,62 @@ iso.multiple <- function(y,X,prior,family,switch=TRUE,select=TRUE){
   return(list(alpha=alpha0,beta=beta0)) # was alpha=NULL # trial 2022-01-04
 }
 
+sam.multiple <- function(y,X,prior,family,switch=TRUE,select=TRUE,base){
+  
+  #if(!is.null(base)){
+  #  stop("Implement this.")
+  #}
+  #glmnet <- glmnet::cv.glmnet(y=y,x=X,family=family,alpha=0)
+  
+  warning("temporary (faster) solution")
+  # rewrite cv.glmnet to keep not only y_hat but also beta_hat for each cv iteration
+  glmnet <- base
+  
+  alpha <- coef(glmnet,s="lambda.min")[1]
+  coef <- coef(glmnet,s="lambda.min")[-1]
+  p <- ncol(X)
+  k <- ncol(prior)
+  beta <- inc <- dec <- matrix(NA,nrow=p,ncol=k)
+  res.inc <- res.dec <- matrix(NA,nrow=length(y),ncol=k)
+  
+  res <- residuals(y=y,y_hat=mean(y),family=family)
+  
+  for(i in seq_len(k)){
+    scam <- scam::scam(coef~s(prior[,i],bs="mpi"))
+    inc[,i] <- fitted(scam)
+    fit <- joinet:::.mean.function(alpha + X %*% inc[,i],family=family)
+    res.inc[,i] <- residuals(y=y,y_hat=fit,family=family)
+  }
+  
+  if(switch){
+    for(i in seq_len(k)){
+      scam <- scam::scam(coef~s(prior[,i],bs="mpd"))
+      dec[,i] <- fitted(scam)
+      fit <- joinet:::.mean.function(alpha + X %*% dec[,i],family=family)
+      res.dec[,i] <- residuals(y=y,y_hat=fit,family=family)
+    }
+  }
+  
+  pval.inc <- apply(res.inc,2,function(x) stats::wilcox.test(x=x,y=res,paired=TRUE,alternative="less")$p.value)
+  pval.dec <- apply(res.dec,2,function(x) stats::wilcox.test(x=x,y=res,paired=TRUE,alternative="less")$p.value)
+  
+  alpha <- rep(alpha,times=k)
+  for(i in seq_len(k)){
+    if(pval.inc[i]<pval.dec[i]){
+      beta[,i] <- inc[,i]
+    } else {
+      beta[,i] <- dec[,i]
+    }
+  }
+  
+  if(select){
+     beta[,pmin(pval.inc,pval.dec)>0.05/k] <- 0
+     # Decide between nominal and adjused 5% level!
+  }
+  
+  return(list(alpha=alpha,beta=beta))
+}
+  
 #' @export
 #' 
 #' @title 
@@ -807,7 +869,7 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
         prior[,i] <- as.numeric(stats::coef(object,s="lambda.min"))[-1]
       }
     }
-    
+    z <- abs(prior) # temporary
   } else {
     k <- ncol(prior)
   } # end if(!is.null(source))
@@ -887,7 +949,7 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
     if(prs){
       set.seed(seed)
       start <- Sys.time()
-      glm <- stats::glm(formula=y0 ~ x,family=family,data=data.frame(x=X0 %*% prior))
+      glm <- stats::glm(formula=y0 ~ .,family=family,data=data.frame(x=X0 %*% prior)) # was y~x
       pred[foldid.ext==i,"prs"] <- predict(glm,newdata=data.frame(x=X1 %*% prior),type="response")
       end <- Sys.time()
       time["prs"] <- time["prs"] + difftime(time1=end,time2=start,units="secs")
@@ -931,7 +993,7 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
       end <- Sys.time()
       time["fwelnet"] <- time["fwelnet"]+difftime(time1=end,time2=start,units="secs")
 
-      # ecpc
+      # ecpc - default
       set.seed(seed)
       start <- Sys.time()
       if(is.vector(z)){
