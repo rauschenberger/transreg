@@ -700,14 +700,19 @@ sam.multiple <- function(y,X,prior,family,switch=TRUE,select=TRUE,base){
   }
   
   pval.inc <- apply(res.inc,2,function(x) stats::wilcox.test(x=x,y=res,paired=TRUE,alternative="less")$p.value)
-  pval.dec <- apply(res.dec,2,function(x) stats::wilcox.test(x=x,y=res,paired=TRUE,alternative="less")$p.value)
   
+  if(switch){
+    pval.dec <- apply(res.dec,2,function(x) stats::wilcox.test(x=x,y=res,paired=TRUE,alternative="less")$p.value)
+  } else {
+    pval.dec <- 1
+  }
+    
   alpha <- rep(alpha,times=k)
   for(i in seq_len(k)){
-    if(pval.inc[i]<pval.dec[i]){
-      beta[,i] <- inc[,i]
-    } else {
+    if(switch && pval.dec[i]<pval.inc[i]){
       beta[,i] <- dec[,i]
+    } else {
+      beta[,i] <- inc[,i]
     }
   }
   
