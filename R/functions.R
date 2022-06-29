@@ -1,4 +1,37 @@
 
+.multiridge <- function(X,Y,family){
+  rm(list=setdiff(ls(),c("X","Y","family")))
+  XXblocks <- multiridge::createXXblocks(datablocks=X)
+  init <- multiridge::fastCV2(XXblocks=XXblocks,Y=Y)
+  folds <- multiridge::CVfolds(Y=Y)
+  final <- multiridge::optLambdasWrap(penaltiesinit=init$lambdas,
+                                      XXblocks=XXblocks,Y=Y,folds=folds)
+  XXT <- multiridge::SigmaFromBlocks(XXblocks=XXblocks,penalties=final$optpen)
+  object <- multiridge::IWLSridge(XXT=XXT,Y=Y,model=ifelse(family=="gaussian","linear",ifelse(family=="binomial","logistic",NA)))
+  object$family <- family
+  object$penalties <- final$optpen
+  object$datablocks <- X
+  class(object) <- "multiridge"
+  return(object)
+}
+
+predict.multiridge <- function(object,newx){
+  rm(list=setdiff(ls(),c("object","newx")))
+  XXblocks <- multiridge::createXXblocks(datablocks=object$datablocks,datablocksnew=newx)
+  Sigmanew <- multiridge::SigmaFromBlocks(XXblocks=XXblocks,penalties=object$penalties)
+  eta <- multiridge::predictIWLS(IWLSfit=object,Sigmanew=Sigmanew)
+  y_hat <- starnet:::.mean.function(eta,family=object$family)
+  return(y_hat)
+}
+
+coef.multiridge <- function(object){
+  rm(list=setdiff(ls(),c("object")))
+  Xblocks <- multiridge::createXblocks(datablocks=object$datablocks)
+  beta <- multiridge::betasout(object,Xblocks=Xblocks,penalties=object$penalties)
+  return(beta)
+}
+
+
 #' @export
 #' 
 #' @title
@@ -43,7 +76,7 @@
 #' y <- X %*% beta
 #' object <- transreg(y=y,X=X,prior=beta,scale="sam")
 #' 
-transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,scale="iso",sign=FALSE,switch=TRUE,select=TRUE){
+transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,scale="iso",sign=FALSE,switch=TRUE,select=TRUE,multiridge=FALSE){
   
   # family <- "gaussian"; alpha <- 1; foldid <- NULL; nfolds <- 10; scale <- "exp"; sign <- FALSE; switch <- TRUE; select <- TRUE
   
@@ -56,6 +89,7 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
     if(!exists("sign")){sign <- FALSE}
     if(!exists("switch")){switch <- TRUE}
     if(!exists("select")){select <- TRUE}
+    if(!exists("multiridge")){multiridge <- FALSE}
   }
   
   if(is.vector(prior)){
@@ -158,12 +192,22 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   #y_hat[,k+1] <- Y_hat[,id]-int[,id] # trial (harmonise with predict.transreg)
   
   base$prior <- prior.ext
+  #--- linear predictor stacking ---
   meta <- glmnet::cv.glmnet(y=y,x=y_hat,foldid=foldid,alpha=1,family=family,lower.limits=0)
   
-  # start alternative meta-features
-  trial <- glmnet::cv.glmnet(y=y,x=cbind(y_hat[,1:k],X),alpha=alpha,family=family,
-                             lower.limits=rep(c(0,-Inf),times=c(k,p)),
-                             penalty.factor=rep(c(0,1),times=c(k,p)),foldid=foldid)
+  #--- meta-feature stacking ---
+  if(multiridge){
+    test <- .multiridge(X=list(y_hat[,1:k,drop=FALSE],X),Y=y,family=family)
+    # (y=y,x=cbind(y_hat[,1:k],X),alpha=alpha,family=family,
+    # lower.limits=rep(c(0,-Inf),times=c(k,p)),
+    # penalty.factor=rep(c(0,1),times=c(k,p)),foldid=foldid)
+    trial <- NULL
+  } else {
+    trial <- glmnet::cv.glmnet(y=y,x=cbind(y_hat[,1:k],X),alpha=alpha,family=family,
+                               lower.limits=rep(c(0,-Inf),times=c(k,p)),
+                               penalty.factor=rep(c(0,1),times=c(k,p)),foldid=foldid)
+    test <- NULL
+  }
   
   #trial <- glmnet::cv.glmnet(y=y,x=cbind(y_hat[,1:k],X),alpha=alpha,family=family,lower.limits=rep(c(0,-Inf),times=c(k,p)),
   #                           penalty.factor=rep(c(0,1),times=c(k,p)))
@@ -207,7 +251,7 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   #                                 penalty.factor=rep(c(0,1),times=c(k+2,p)),foldid=foldid)
   # end alternative triple
   
-  object <- list(base=base,meta=meta,scale=scale,trial=trial) # test=test
+  object <- list(base=base,meta=meta,scale=scale,trial=trial,test=test)
   class(object) <- "transreg"
   return(object)
 }
@@ -242,6 +286,12 @@ predict.transreg <- function(object,newx,...){
 predict.trial <- function(object,newx,...){
   one <- newx %*% object$base$prior$beta
   y_hat <- stats::predict(object$trial,s="lambda.min",newx=cbind(one,newx),type="response")
+  return(y_hat)
+}
+
+predict.test <- function(object,newx,...){
+  one <- newx %*% object$base$prior$beta
+  y_hat <- predict(object$test,newx=list(one,newx))
   return(y_hat)
 }
 
@@ -752,7 +802,7 @@ sam.multiple <- function(y,X,prior,family,switch=TRUE,select=TRUE,base){
 #' @examples
 #' NA
 #' 
-cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso",sign=FALSE,select=TRUE,switch=TRUE,foldid.ext=NULL,nfolds.ext=10,foldid.int=NULL,nfolds.int=10,type.measure="deviance",alpha.prior=NULL,partitions=NULL,monotone=NULL,prs=TRUE){
+cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso",sign=FALSE,select=TRUE,switch=TRUE,foldid.ext=NULL,nfolds.ext=10,foldid.int=NULL,nfolds.int=10,type.measure="deviance",alpha.prior=NULL,partitions=NULL,monotone=NULL,prs=TRUE,multiridge=FALSE){
   
   if(FALSE){
     if(!exists("source")){source <- NULL}
@@ -767,6 +817,7 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
     if(!exists("partitions")){partitions <- NULL}
     if(!exists("monotone")){monotone <- NULL}
     if(!exists("prs")){prs <- FALSE}
+    if(!exists("multiridge")){multiridge <- FALSE}
   }
   
   if(is.null(source)==is.null(prior)){
@@ -941,13 +992,16 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
     for(j in seq_along(scale)){
       set.seed(seed) # trial
       start <- Sys.time()
-      object <- transreg(y=y0,X=X0,prior=prior,family=family,foldid=foldid,alpha=alpha,scale=scale[j],sign=sign,switch=switch,select=select)
+      object <- transreg(y=y0,X=X0,prior=prior,family=family,foldid=foldid,alpha=alpha,scale=scale[j],sign=sign,switch=switch,select=select,multiridge=multiridge)
       pred[foldid.ext==i,paste0("transreg_",scale[j],"_lp")] <- stats::predict(object,newx=X1)
       end <- Sys.time()
       time["transreg"] <- time["transreg"]+difftime(time1=end,time2=start,units="secs")
       # transreg trial
-      pred[foldid.ext==i,paste0("transreg_",scale[j],"_mf")] <- predict.trial(object,newx=X1)
-      #pred[foldid.ext==i,"transreg.test"] <- predict.test(object,newx=X1)
+      if(multiridge){
+        pred[foldid.ext==i,paste0("transreg_",scale[j],"_mf")] <- predict.test(object,newx=X1)
+      } else {
+        pred[foldid.ext==i,paste0("transreg_",scale[j],"_mf")] <- predict.trial(object,newx=X1)
+      }
     }
     
     # PRS
