@@ -102,13 +102,18 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   if(scale=="exp" & !switch){warning("Ignoring 'switch=FALSE'.")}
   if(all(prior>=0) & !sign){warning("Consider sign discovery procedure.")}
   
-  if(is.null(foldid)){
-    foldid <- palasso:::.folds(y=y,nfolds=nfolds)
-  }
+  #if(is.null(foldid)){
+  #  foldid <- palasso:::.folds(y=y,nfolds=nfolds) # old
+  #  #foldid <- .folds(y=y,nfolds=nfolds)$foldid # new
+  #}
+  #nfolds <- max(foldid)
+  
+  #--- start new ---
+  foldid <- .folds(y=y,nfolds=nfolds,foldid=foldid)$foldid
+  #--- end new ---
   
   n <- nrow(X); p <- ncol(X)
   k <- ncol(prior)
-  nfolds <- max(foldid)
   
   base <- glmnet::cv.glmnet(y=y,x=X,family=family,alpha=alpha,nlambda=100,keep=TRUE,foldid=foldid)
   
@@ -718,11 +723,11 @@ sam.multiple <- function(y,X,prior,family,switch=TRUE,select=TRUE,base){
   #if(!is.null(base)){
   #  stop("Implement this.")
   #}
-  #glmnet <- glmnet::cv.glmnet(y=y,x=X,family=family,alpha=0)
+  glmnet <- glmnet::cv.glmnet(y=y,x=X,family=family,alpha=0)
   
-  warning("temporary (faster) solution")
+  #warning("temporary (faster) solution")
   # rewrite cv.glmnet to keep not only y_hat but also beta_hat for each cv iteration
-  glmnet <- base
+  #glmnet <- base
   
   alpha <- coef(glmnet,s="lambda.min")[1]
   coef <- coef(glmnet,s="lambda.min")[-1]
@@ -907,7 +912,10 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
     p <- ncol(target$x)
     prior <- matrix(NA,nrow=p,ncol=k)
     for(i in seq_len(k)){
-      foldid.source <- palasso:::.folds(source[[i]]$y,nfolds=10)
+      #foldid.source <- palasso:::.folds(source[[i]]$y,nfolds=10)
+      #--- start new ---
+      foldid.source <- .folds(y=source[[i]]$y,nfolds=10)
+      #--- end new ---
       #temp <- scale(source[[i]]$x)
       #temp[is.na(temp)] <- 0
       if(is.character(alpha.prior) & alpha.prior=="p-value"){
@@ -925,7 +933,7 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
         prior[,i] <- as.numeric(stats::coef(object,s="lambda.min"))[-1]
       }
     }
-    z <- abs(prior) # temporary
+    #z <- abs(prior) # activate this for ecpc and fwelnet!
   } else {
     k <- ncol(prior)
   } # end if(!is.null(source))
@@ -939,11 +947,17 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
   #}
   
   #--- fold identifiers ---
-  if(is.null(foldid.ext)){
-    foldid.ext <- palasso:::.folds(y=target$y,nfolds=nfolds.ext)
-  } else {
-    nfolds.ext <- max(foldid.ext)
-  }
+  #if(is.null(foldid.ext)){
+  #  foldid.ext <- palasso:::.folds(y=target$y,nfolds=nfolds.ext)
+  #} else {
+  #  nfolds.ext <- max(foldid.ext)
+  #}
+  
+  #--- start new ---
+  folds <- .folds(y=target$y,nfolds.ext=nfolds.ext,nfolds.int=nfolds.int,foldid.ext=foldid.ext,foldid.int=foldid.int)
+  foldid.ext <- folds$foldid.ext
+  foldid.int <- folds$foldid.int
+  #--- end new ---
   
   temp <- paste0(rep(c("transreg_","transreg_"),each=length(scale)),scale,rep(c("_lp","_mf"),each=length(scale)))
   names <- c("mean","glmnet","glmtrans"[!is.null(source)],temp,"GRridge"[trial],"NoGroups"[trial],"fwelnet"[trial2],"xtune"[trial2],"CoRF"[trial2],"ecpc"[trial2],"prs"[prs]) # "transreg.test"
@@ -955,11 +969,16 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
     y0 <- target$y[foldid.ext!=i]
     X0 <- target$x[foldid.ext!=i,]
     X1 <- target$x[foldid.ext==i,]
-    if(is.null(foldid.int)){
-      foldid <- palasso:::.folds(y=y0,nfolds=nfolds.int)
-    } else {
-      foldid <- foldid.int[foldid.ext!=i]
-    }
+    
+    #if(is.null(foldid.int)){
+    #  foldid <- palasso:::.folds(y=y0,nfolds=nfolds.int)
+    #} else {
+    #  foldid <- foldid.int[foldid.ext!=i]
+    #}
+    
+    #--- start new ---
+    foldid <- foldid.int[foldid.ext!=i]
+    #--- end new ---
     
     # mean
     set.seed(seed)
@@ -1060,7 +1079,18 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
       } else {
         Z <- as.list(as.data.frame(z))
       }
-      object <- tryCatch(ecpc::ecpc(Y=y0,X=X0,Z=Z,X2=X1,fold=nfolds.int),error=function(x) NULL)
+      #--- original ---
+      #object <- tryCatch(ecpc::ecpc(Y=y0,X=X0,Z=Z,X2=X1,fold=nfolds.int),error=function(x) NULL)
+      #--- splines start ---
+      co.Z <- co.S <- co.C <- list()
+      for(j in seq_len(k)){
+        name <- paste0("Z",j)
+        co.Z[[name]] <- ecpc::createZforSplines(values=Z[[j]])
+        co.S[[name]] <- list(ecpc::createS(orderPen=2,G=ncol(co.Z[[name]])))
+        co.C[[name]] <- ecpc::createCon(G=ncol(co.Z[[name]]),shape="positive+monotone.i")
+      }
+      object <- tryCatch(ecpc::ecpc(Y=y0,X=X0,Z=co.Z,paraPen=co.S,paraCon=co.C,X2=X1,fold=nfolds.int),error=function(x) NULL)
+      #--- splines end ---
       if(!is.null(object)){
         pred[foldid.ext==i,"ecpc"] <- object$Ypred
       }
@@ -1208,4 +1238,58 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
   #foldid.ext <- rep(c(0,1),times=c(n0,n1))
   
   return(list(source=source,target=target,beta=beta))
+}
+
+.folds <- function(y,nfolds=NULL,nfolds.ext=NULL,nfolds.int=NULL,foldid=NULL,foldid.ext=NULL,foldid.int=NULL){
+  #nfolds <- NULL; nfolds.ext <- nfolds.int <- 10; foldid <- foldid.int <- foldid.ext <- NULL
+  if(is.null(nfolds.int)!=is.null(nfolds.ext)|is.null(nfolds.ext)==is.null(nfolds)){
+    stop("Provide either nfolds.ext and nfolds.int or nfolds.")
+  }
+  if(!is.null(foldid) && !all.equal(seq_len(nfolds),sort(unique(foldid)))){
+    stop("nfolds and foldid are not compatible")
+  }
+  if(!is.null(foldid.ext) && !all.equal(seq_len(nfolds.ext),sort(unique(foldid.ext)))){
+    stop("nfolds.ext and foldid.ext are not compatible")
+  }
+  if(!is.null(foldid.int) && !all.equal(seq_len(nfolds.int),sort(unique(foldid.int)))){
+    stop("nfolds.int and foldid.int are not compatible")
+  }
+  nfolds <- list(all=nfolds,ext=nfolds.ext,int=nfolds.int)
+  foldid <- list(all=foldid,ext=foldid.ext,int=foldid.int)
+  for(i in c("all","ext","int")){
+    if(is.null(nfolds[[i]])|!is.null(foldid[[i]])){next}
+    if(all(y %in% c(0,1))){
+      foldid[[i]] <- rep(x=NA,times=length(y))
+      for(j in c(0,1)){
+        if(i!="int"){
+          foldid[[i]][y==j] <- rep(x=seq_len(nfolds[[i]]),length.out=sum(y==j))
+        } else {
+          quotient <- floor(sum(y==j)/nfolds[[i]])
+          remainder <- sum(y==j)%%nfolds[[i]]
+          foldid[[i]][y==j] <- rep(seq_len(nfolds[[i]]),times=rep(c(quotient+1,quotient),times=c(remainder,nfolds[[i]]-remainder)))
+        }
+      }
+    } else {
+      if(i!="int"){
+        foldid[[i]] <- rep(x=seq_len(nfolds[[i]]),length.out=length(y))
+      } else {
+        quotient <- floor(length(y)/nfolds[[i]])
+        remainder <- length(y)%%nfolds[[i]]
+        foldid[[i]] <- rep(seq_len(nfolds[[i]]),times=rep(c(quotient+1,quotient),times=c(remainder,nfolds[[i]]-remainder)))
+      }
+    }
+  }
+  # permute
+  if(all(y %in% c(0,1))){
+    for(j in c(0,1)){
+      order <- sample(seq_len(sum(y==j)))
+      for(i in c("all","ext","int")){
+        foldid[[i]][y==j] <- foldid[[i]][y==j][order]
+      }
+    }
+  } else {
+    order <- sample(seq_along(y))
+    foldid <- lapply(foldid,function(x) x[order])
+  }
+  return(list(foldid=foldid[["all"]],foldid.ext=foldid[["ext"]],foldid.int=foldid[["int"]]))
 }
