@@ -1189,9 +1189,28 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
   #loss <- palasso:::.loss(y=target$y[foldid.ext!=0],fit=pred[foldid.ext!=0,],
   #                        family=family,type.measure=type.measure)[[1]]
   
-  loss <- apply(pred,2,function(x) starnet:::.loss(y=target$y[foldid.ext!=0],x=x[foldid.ext!=0],
-                          family=family,type.measure=type.measure))
+  #loss <- apply(pred,2,function(x) starnet:::.loss(y=target$y[foldid.ext!=0],x=x[foldid.ext!=0],
+  #                        family=family,type.measure=type.measure))
+  # The line above was the original output!
   
+  pred <- pred[,colMeans(is.na(pred))!=1]
+  loss <- list()
+  for(i in seq_along(type.measure)){
+    loss[[type.measure[i]]] <- apply(pred,2,function(x) starnet:::.loss(y=target$y[foldid.ext!=0],x=x[foldid.ext!=0],
+                                              family=family,type.measure=type.measure[i],foldid=foldid.int[foldid.ext!=0]))
+  }
+  
+  #if(FALSE){
+  #  # to delete
+  #  weights <- table(foldid.int[foldid.ext!=0])
+  #  cvraw <- rep(x = NA, times = length(weights))
+  #  for(k in seq_along(weights)) {
+  #    cvraw[k] <- starnet:::glmnet.auc(y=target$y[foldid.int[foldid.ext!=0]==k],prob=pred[foldid.int[foldid.ext!=0]==k,1])
+  #  }
+  #  stats::weighted.mean(x = cvraw, w = weights, na.rm = TRUE)
+  #  
+  #}
+
   attributes(loss)$time <- time
   
   return(loss)
