@@ -133,6 +133,9 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
     prior.ext <- iso.multiple(y=y,X=X,prior=prior.ext,family=family,switch=switch,select=select)
   } else if(scale=="sam"){
     prior.ext <- sam.multiple(y=y,X=X,prior=prior.ext,family=family,switch=switch,select=select,base=base)
+  } else if(scale=="com"){
+    prior.ext <- com.multiple(y=y,X=X,prior=prior.ext,family=family,select=select,switch=switch)
+    k <- ncol(prior.ext$beta)
   } else {
     stop("Invalid scale.",call.=FALSE)
   }
@@ -164,6 +167,9 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
       prior.int <- iso.multiple(y=y0,X=X0,prior=prior.int,family=family,switch=switch,select=select)
     } else if(scale=="sam"){
       prior.int <- sam.multiple(y=y0,X=X0,prior=prior.int,family=family,switch=switch,select=select,base=base)
+    } else if(scale=="com"){
+      prior.int <- com.multiple(y=y0,X=X0,prior=prior.int,family=family,select=select,switch=switch)
+      k <- ncol(prior.int$beta)
     } else {
       stop("Invalid scale.",call.=FALSE)
     }
@@ -778,6 +784,50 @@ sam.multiple <- function(y,X,prior,family,switch=TRUE,select=TRUE,base){
   
   return(list(alpha=alpha,beta=beta))
 }
+
+# combining based on the lowest residuals makes no sense as isotonic calibration
+# will always get closer to the observed values than exponential calibration
+com.multiple <- function(y,X,prior,family,select=FALSE,switch=FALSE){
+  if(select|switch){warning("Argument select/switch not implemented.")}
+  n <- length(y); p <- ncol(X); q <- ncol(prior)
+  alpha <- numeric() # rep(NA,times=q)
+  beta <- numeric() # matrix(NA,nrow=p,ncol=q)
+  for(i in seq_len(q)){
+    model <- list()
+    model$a <- iso.fast.single(y=y,X=X,prior=prior[,i,drop=FALSE],family=family)
+    model$b <- iso.fast.single(y=y,X=X,prior=-prior[,i,drop=FALSE],family=family)
+    model$c <- exp.multiple(y=y,X=X,prior=prior[,i,drop=FALSE],family=family,select=FALSE)
+    y_hat <- matrix(data=NA,nrow=n,ncol=length(model))
+    for(j in seq_along(model)){
+      eta <- model[[j]]$alpha + X %*% model[[j]]$beta
+      y_hat[,j] <- joinet:::.mean.function(eta,family=family)
+    }
+    loss <- apply(y_hat,2,function(x) starnet:::.loss(y=y,x=x,family=family,type.measure="deviance"))
+    #--- selection among all (makes no sense) ---
+    #id <- which.min(loss)
+    #alpha <- c(alpha,model[[id]]$alpha)
+    #beta <- cbind(model[[id]]$beta)
+    #--- select sign of iso, combine iso and exp ---
+    id <- which.min(loss[c(1,2)])
+    alpha <- c(alpha,model[[id]]$alpha,model$c$alpha)
+    beta <- cbind(beta,model[[id]]$beta,model$c$beta)
+    #--- equal weight for iso and exp ---
+    #id <- which.min(loss[c(1,2)])
+    #alpha <- c(alpha,0.5*model[[id]]$alpha + 0.5*model$c$alpha)
+    #beta <- cbind(beta,0.5*model[[id]]$beta + 0.5*model$c$beta)
+    #--- tune weight for iso and exp ---
+    #id <- which.min(loss[c(1,2)])
+    #w <- seq(from=0,to=1,by=0.2)
+    #alpha <- c(alpha,w*model[[id]]$alpha + (1-w)*model$c$alpha)
+    #beta <- cbind(beta,w*model[[id]]$beta + (1-w)*model$c$beta)
+    #for(j in seq_along(w)){
+    #  alpha <- c(alpha,w[j]*model[[id]]$alpha + (1-w[i])*model$c$alpha)
+    #  beta <- cbind(beta,w[j]*model[[id]]$beta + (1-w[i])*model$c$beta) 
+    #}
+    warning("temporary version com.multiple")
+  }
+  return(list(alpha=alpha,beta=beta))
+}
   
 #' @export
 #' 
@@ -823,6 +873,10 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
     if(!exists("monotone")){monotone <- NULL}
     if(!exists("prs")){prs <- FALSE}
     if(!exists("multiridge")){multiridge <- FALSE}
+  }
+  
+  if(!is.null(z) && any(z<0)){
+    stop("Prior weights (argument \"z\") must be non-negative.")
   }
   
   if(is.null(source)==is.null(prior)){
@@ -914,7 +968,7 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
     for(i in seq_len(k)){
       #foldid.source <- palasso:::.folds(source[[i]]$y,nfolds=10)
       #--- start new ---
-      foldid.source <- .folds(y=source[[i]]$y,nfolds=10)
+      foldid.source <- .folds(y=source[[i]]$y,nfolds=10)$foldid
       #--- end new ---
       #temp <- scale(source[[i]]$x)
       #temp[is.na(temp)] <- 0
@@ -1248,10 +1302,10 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
   if(!is.null(foldid) && !all.equal(seq_len(nfolds),sort(unique(foldid)))){
     stop("nfolds and foldid are not compatible")
   }
-  if(!is.null(foldid.ext) && !all.equal(seq_len(nfolds.ext),sort(unique(foldid.ext)))){
+  if(!is.null(foldid.ext) && nfolds.ext!=max(foldid.ext)){
     stop("nfolds.ext and foldid.ext are not compatible")
   }
-  if(!is.null(foldid.int) && !all.equal(seq_len(nfolds.int),sort(unique(foldid.int)))){
+  if(!is.null(foldid.int) && nfolds.int!=max(foldid.int)){
     stop("nfolds.int and foldid.int are not compatible")
   }
   nfolds <- list(all=nfolds,ext=nfolds.ext,int=nfolds.int)
@@ -1264,18 +1318,28 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
         if(i!="int"){
           foldid[[i]][y==j] <- rep(x=seq_len(nfolds[[i]]),length.out=sum(y==j))
         } else {
-          quotient <- floor(sum(y==j)/nfolds[[i]])
-          remainder <- sum(y==j)%%nfolds[[i]]
-          foldid[[i]][y==j] <- rep(seq_len(nfolds[[i]]),times=rep(c(quotient+1,quotient),times=c(remainder,nfolds[[i]]-remainder)))
+          if(nfolds.ext==1){
+            foldid[[i]][foldid$ext==1] <- NA
+            foldid[[i]][foldid$ext==0 & y==j] <- rep(x=seq_len(nfolds[[i]]),length.out=sum(foldid$ext==0 & y==j))
+          } else {
+            quotient <- floor(sum(y==j)/nfolds[[i]])
+            remainder <- sum(y==j)%%nfolds[[i]]
+            foldid[[i]][y==j] <- rep(seq_len(nfolds[[i]]),times=rep(c(quotient+1,quotient),times=c(remainder,nfolds[[i]]-remainder)))
+          }
         }
       }
     } else {
       if(i!="int"){
         foldid[[i]] <- rep(x=seq_len(nfolds[[i]]),length.out=length(y))
       } else {
-        quotient <- floor(length(y)/nfolds[[i]])
-        remainder <- length(y)%%nfolds[[i]]
-        foldid[[i]] <- rep(seq_len(nfolds[[i]]),times=rep(c(quotient+1,quotient),times=c(remainder,nfolds[[i]]-remainder)))
+        if(nfolds.ext==1){
+          foldid[[i]][foldid$ext==1] <- NA
+          foldid[[i]][foldid$ext==0] <- rep(x=seq_len(nfolds[[i]]),length.out=sum(foldid$ext==0))
+        } else {
+          quotient <- floor(length(y)/nfolds[[i]])
+          remainder <- length(y)%%nfolds[[i]]
+          foldid[[i]] <- rep(seq_len(nfolds[[i]]),times=rep(c(quotient+1,quotient),times=c(remainder,nfolds[[i]]-remainder)))
+        }
       }
     }
   }
