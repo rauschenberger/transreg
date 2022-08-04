@@ -1,8 +1,8 @@
 Package: transreg
-Title: Penalised regression with multiple sets of prior coefficients
+Title: Penalised regression with multiple sets of prior effects
 Version: 0.0.1
 Authors@R: person("Armin","Rauschenberger",,"armin.rauschenberger@uni.lu",role=c("aut","cre"),comment=c(ORCID="0000-0001-6498-4801"))
-Description: Improves the predictive performance of ridge and lasso regression exploiting (potentially conflicting) prior information on the importance and direction of effects.
+Description: Improves the predictive performance of ridge and lasso regression exploiting one or more sources of prior information on the importance and direction of effects.
 Imports: glmnet, joinet, palasso
 Suggests: knitr, testthat, rmarkdown
 Enhances: GRridge, fwelnet, glmtrans, mvtnorm, CVXR

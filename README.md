@@ -8,9 +8,9 @@ status](https://ci.appveyor.com/api/projects/status/github/rauschenberger/transr
 Status](https://codecov.io/github/rauschenberger/transreg/coverage.svg?branch=master)](https://codecov.io/github/rauschenberger/transreg)
 -->
 
-## Scope
+## Penalised regression with multiple sets of prior coefficients
 
-Penalised regression with multiple sets of prior coefficients
+Improves the predictive performance of ridge and lasso regression exploiting one or more sources of prior information on the importance and direction of effects.
 
 ## Installation
 
@@ -18,7 +18,7 @@ Install the current release from
 [CRAN](https://CRAN.R-project.org/package=transreg):
 
 ``` r
-install.packages("transreg")
+#install.packages("transreg") # not yet released!
 ```
 
 or the latest development version from
@@ -31,7 +31,7 @@ remotes::install_github("rauschenberger/transreg")
 
 ## Reference
 
-Armin Rauschenberger, Mark A van de Wiel, and Enrico Glaab (2022). "Penalised regression with multiple sets of prior coefficients". *Manuscript in preparation.*
+Armin Rauschenberger, Zied Landoulsi, Mark A van de Wiel, and Enrico Glaab (2022). "Penalised regression with multiple sets of prior effects". *Manuscript in preparation.*
 
 <!--
 [![CRAN

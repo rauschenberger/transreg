@@ -35,10 +35,10 @@ coef.multiridge <- function(object){
 #' @export
 #' 
 #' @title
-#' Penalised regression with multiple sets of prior coefficients
+#' Penalised regression with multiple sets of prior effects
 #' 
 #' @description
-#' Implements penalised regression with multiple sets of prior coefficients 
+#' Implements penalised regression with multiple sets of prior effects
 #' 
 #' @param y
 #' target: vector of length \eqn{n}

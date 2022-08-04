@@ -3,11 +3,11 @@
 #' @docType package
 #' 
 #' @title
-#' Penalised regression with multiple sets of prior coefficients
+#' Penalised regression with multiple sets of prior effects
 #' 
 #' @description
 #' The R package \code{starnet} implements penalised regression
-#' with multiple sets of prior coefficients.
+#' with multiple sets of prior effects.
 #' 
 #' @details
 #' Use function \code{\link{transreg}} for model fitting.
@@ -19,8 +19,9 @@
 #' to open the vignette.
 #' 
 #' @references
-#' A Rauschenberger, MA van de Wiel, and E Glaab (2022).
-#' "Penalised regression with multiple sets of prior coefficients".
+#' Armin Rauschenberger, Zied Landoulsi,
+#' Mark A van de Wiel, and Enrico Glaab (2022).
+#' "Penalised regression with multiple sets of prior effects".
 #' \emph{Manuscript in preparation.}
 #' \email{armin.rauschenberger@uni.lu}
 #'
