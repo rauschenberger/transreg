@@ -4,7 +4,7 @@
 \alias{iso.multiple}
 \title{Isotonic scaling}
 \usage{
-iso.multiple(y, X, prior, family, switch = TRUE, select = TRUE)
+iso.multiple(y, X, prior, family, select = TRUE, switch = TRUE)
 }
 \arguments{
 \item{y}{target: vector of length \eqn{n}}
@@ -15,9 +15,9 @@ iso.multiple(y, X, prior, family, switch = TRUE, select = TRUE)
 
 \item{family}{character "gaussian", "binomial", or "poisson"}
 
-\item{switch}{choose between positive and negative weights for each source: logical}
-
 \item{select}{select from sources: logical}
+
+\item{switch}{choose between positive and negative weights for each source: logical}
 }
 \description{
 Performs isotonic scaling

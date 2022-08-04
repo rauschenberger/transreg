@@ -64,6 +64,8 @@ coef.multiridge <- function(object){
 #' choose between positive and negative weights for each source: logical
 #' @param select
 #' select from sources: logical
+#' @param multiridge
+#' logical
 #' 
 #' @seealso
 #' Methods for objects of class \code{cornet}
@@ -78,8 +80,8 @@ coef.multiridge <- function(object){
 #' prior <- ifelse(beta<(-1),0,ifelse(beta>1,beta,0))
 #' plot(x=beta,y=prior)
 #' object <- transreg(y=y,X=X,prior=prior,scale="com")
-#' predict.transreg(object,newx=X)
-#' predict.trial(object,newx=X)
+#' #predict.transreg(object,newx=X)
+#' #predict.trial(object,newx=X)
 #' 
 transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,scale="iso",sign=FALSE,switch=TRUE,select=TRUE,multiridge=FALSE){
   
@@ -332,13 +334,13 @@ predict.trial <- function(object,newx,...){
 
 predict.test <- function(object,newx,...){
   one <- newx %*% object$base$prior$beta
-  y_hat <- predict(object$test,newx=list(one,newx))
+  y_hat <- stats::predict(object$test,newx=list(one,newx))
   return(y_hat)
 }
 
 coef.transreg <- function(object,...){
-  beta <- coef(object$base,s=c(object$meta$lambda.min,object$meta$lambda.1se))
-  omega <- as.numeric(coef(object$meta,s=object$meta$lambda.min))
+  beta <- stats::coef(object$base,s=c(object$meta$lambda.min,object$meta$lambda.1se))
+  omega <- as.numeric(stats::coef(object$meta,s=object$meta$lambda.min))
   names <- paste0("source",seq_len(ncol(object$base$prior$beta)))
   names(omega) <- c("(Intercept)",names,"lambda.min","lambda.1se")
   p <- nrow(beta)-1
@@ -352,7 +354,7 @@ coef.transreg <- function(object,...){
 
 coef.trial <- function(object,...){
   gamma <- object$base$prior$beta
-  meta <- coef(object$trial,s="lambda.min")
+  meta <- stats::coef(object$trial,s="lambda.min")
   k <- ncol(object$base$prior$beta)
   p <- nrow(object$base$prior$beta)
   alpha_star <- meta[1]
@@ -445,7 +447,6 @@ sign.disc <- function(y,X,prior,family,foldid=NULL,nfolds=10){
 }
 
 #' @title 
-#' 
 #' Exponential scaling
 #' 
 #' @description
@@ -765,8 +766,8 @@ sam.multiple <- function(y,X,prior,family,select=TRUE,switch=TRUE,base){
   # rewrite cv.glmnet to keep not only y_hat but also beta_hat for each cv iteration
   #glmnet <- base
   
-  alpha <- coef(glmnet,s="lambda.min")[1]
-  coef <- coef(glmnet,s="lambda.min")[-1]
+  alpha <- stats::coef(glmnet,s="lambda.min")[1]
+  coef <- stats::coef(glmnet,s="lambda.min")[-1]
   p <- ncol(X)
   k <- ncol(prior)
   beta <- inc <- dec <- matrix(NA,nrow=p,ncol=k)
@@ -776,7 +777,7 @@ sam.multiple <- function(y,X,prior,family,select=TRUE,switch=TRUE,base){
   
   for(i in seq_len(k)){
     scam <- scam::scam(coef~s(prior[,i],bs="mpi"))
-    inc[,i] <- fitted(scam)
+    inc[,i] <- stats::fitted(scam)
     fit <- joinet:::.mean.function(alpha + X %*% inc[,i],family=family)
     res.inc[,i] <- residuals(y=y,y_hat=fit,family=family)
   }
@@ -784,7 +785,7 @@ sam.multiple <- function(y,X,prior,family,select=TRUE,switch=TRUE,base){
   if(switch){
     for(i in seq_len(k)){
       scam <- scam::scam(coef~s(prior[,i],bs="mpd"))
-      dec[,i] <- fitted(scam)
+      dec[,i] <- stats::fitted(scam)
       fit <- joinet:::.mean.function(alpha + X %*% dec[,i],family=family)
       res.dec[,i] <- residuals(y=y,y_hat=fit,family=family)
     }
@@ -889,6 +890,8 @@ com.multiple <- function(y,X,prior,family,select=FALSE,switch=FALSE){
 #' @param type.measure character
 #' @param alpha.prior alpha for source regression
 #' @param monotone logical
+#' @param prs logical
+#' @param multiridge logical
 #' 
 #' @examples
 #' n <- 100; p <- 500
@@ -1123,7 +1126,7 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
       set.seed(seed)
       start <- Sys.time()
       glm <- stats::glm(formula=y0 ~ .,family=family,data=data.frame(x=X0 %*% prior)) # was y~x
-      pred[foldid.ext==i,"prs"] <- predict(glm,newdata=data.frame(x=X1 %*% prior),type="response")
+      pred[foldid.ext==i,"prs"] <- stats::predict(glm,newdata=data.frame(x=X1 %*% prior),type="response")
       end <- Sys.time()
       time["prs"] <- time["prs"] + difftime(time1=end,time2=start,units="secs")
     }

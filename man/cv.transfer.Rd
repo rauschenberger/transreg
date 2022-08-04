@@ -11,10 +11,10 @@ cv.transfer(
   z = NULL,
   family,
   alpha,
-  scale,
-  sign,
-  select,
-  switch,
+  scale = "iso",
+  sign = FALSE,
+  select = TRUE,
+  switch = TRUE,
   foldid.ext = NULL,
   nfolds.ext = 10,
   foldid.int = NULL,
@@ -22,7 +22,9 @@ cv.transfer(
   type.measure = "deviance",
   alpha.prior = NULL,
   partitions = NULL,
-  monotone = NULL
+  monotone = NULL,
+  prs = TRUE,
+  multiridge = FALSE
 )
 }
 \arguments{
@@ -39,7 +41,8 @@ cv.transfer(
 \item{alpha}{elastic net mixing parameter (0=ridge, 1=lasso)}
 
 \item{scale}{"exp" for exponential scaling (3 parameters),
-"iso" for isotonic scaling (1+p parameters)}
+"iso" for isotonic scaling (1+p parameters),
+"sam" for shape-constrained additive scaling}
 
 \item{sign}{sign discovery procedure: logical}
 
@@ -62,12 +65,20 @@ cv.transfer(
 \item{partitions}{monotone: for GRridge}
 
 \item{monotone}{logical}
+
+\item{prs}{logical}
+
+\item{multiridge}{logical}
 }
 \description{
 Performs external \eqn{k}-fold cross-validation
 to estimate the predictive performance of different methods
 }
 \examples{
-NA
+n <- 100; p <- 500
+X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
+beta <- rnorm(p)*rbinom(n=p,size=1,prob=0.2)
+y <- X \%*\% beta
+object <- cv.transfer(target=list(y=y,x=X),prior=beta,scale="com",family="gaussian",alpha=0)
 
 }

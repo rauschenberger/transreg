@@ -2,7 +2,7 @@
 % Please edit documentation in R/functions.R
 \name{transreg}
 \alias{transreg}
-\title{Penalised regression with multiple sets of prior coefficients}
+\title{Penalised regression with multiple sets of prior effects}
 \usage{
 transreg(
   y,
@@ -15,7 +15,8 @@ transreg(
   scale = "iso",
   sign = FALSE,
   switch = TRUE,
-  select = TRUE
+  select = TRUE,
+  multiridge = FALSE
 )
 }
 \arguments{
@@ -34,19 +35,31 @@ transreg(
 \item{nfolds}{number of folds: integer}
 
 \item{scale}{"exp" for exponential scaling (3 parameters),
-"iso" for isotonic scaling (1+p parameters)}
+"iso" for isotonic scaling (1+p parameters),
+"sam" for shape-constrained additive scaling}
 
 \item{sign}{sign discovery procedure: logical}
 
 \item{switch}{choose between positive and negative weights for each source: logical}
 
 \item{select}{select from sources: logical}
+
+\item{multiridge}{logical}
 }
 \description{
-Implements penalised regression with multiple sets of prior coefficients
+Implements penalised regression with multiple sets of prior effects
 }
 \examples{
-NA
+n <- 100; p <- 500
+X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
+beta <- rnorm(p)*rbinom(n=p,size=1,prob=0.2)
+prior <- beta # plus noise
+y <- X \%*\% beta
+prior <- ifelse(beta<(-1),0,ifelse(beta>1,beta,0))
+plot(x=beta,y=prior)
+object <- transreg(y=y,X=X,prior=prior,scale="com")
+#predict.transreg(object,newx=X)
+#predict.trial(object,newx=X)
 
 }
 \seealso{
