@@ -73,8 +73,13 @@ coef.multiridge <- function(object){
 #' n <- 100; p <- 500
 #' X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
 #' beta <- rnorm(p)*rbinom(n=p,size=1,prob=0.2)
+#' prior <- beta # plus noise
 #' y <- X %*% beta
-#' object <- transreg(y=y,X=X,prior=beta,scale="sam")
+#' prior <- ifelse(beta<(-1),0,ifelse(beta>1,beta,0))
+#' plot(x=beta,y=prior)
+#' object <- transreg(y=y,X=X,prior=prior,scale="com")
+#' predict.transreg(object,newx=X)
+#' predict.trial(object,newx=X)
 #' 
 transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,scale="iso",sign=FALSE,switch=TRUE,select=TRUE,multiridge=FALSE){
   
@@ -90,6 +95,7 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
     if(!exists("switch")){switch <- TRUE}
     if(!exists("select")){select <- TRUE}
     if(!exists("multiridge")){multiridge <- FALSE}
+    scale <- "com"; select <- switch <- sign <- FALSE
   }
   
   if(is.vector(prior)){
@@ -130,9 +136,9 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   if(scale=="exp"){
     prior.ext <- exp.multiple(y=y,X=X,prior=prior.ext,family=family,select=select)
   } else if(scale=="iso"){
-    prior.ext <- iso.multiple(y=y,X=X,prior=prior.ext,family=family,switch=switch,select=select)
+    prior.ext <- iso.multiple(y=y,X=X,prior=prior.ext,family=family,select=select,switch=switch)
   } else if(scale=="sam"){
-    prior.ext <- sam.multiple(y=y,X=X,prior=prior.ext,family=family,switch=switch,select=select,base=base)
+    prior.ext <- sam.multiple(y=y,X=X,prior=prior.ext,family=family,select=select,switch=switch,base=base)
   } else if(scale=="com"){
     prior.ext <- com.multiple(y=y,X=X,prior=prior.ext,family=family,select=select,switch=switch)
     k <- ncol(prior.ext$beta)
@@ -148,7 +154,12 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   #pred <- matrix(NA,nrow=n,ncol=length(full$lambda))
   # end trial nested cv
   
-  y_hat <- matrix(NA,nrow=n,ncol=k+2) # was ncol=k+1
+  #if(scale=="com"){
+  #  y_hat <- lapply(seq_len(k),function(x) matrix(NA,nrow=n,ncol=k+2))
+  #} else {
+    y_hat <- matrix(NA,nrow=n,ncol=k+2) # was ncol=k+1
+  #}
+
   for(i in seq_len(nfolds)){
     y0 <- y[foldid!=i]
     X0 <- X[foldid!=i,]
@@ -164,9 +175,9 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
     if(scale=="exp"){
       prior.int <- exp.multiple(y=y0,X=X0,prior=prior.int,family=family,select=select)
     } else if(scale=="iso"){
-      prior.int <- iso.multiple(y=y0,X=X0,prior=prior.int,family=family,switch=switch,select=select)
+      prior.int <- iso.multiple(y=y0,X=X0,prior=prior.int,family=family,select=select,switch=switch)
     } else if(scale=="sam"){
-      prior.int <- sam.multiple(y=y0,X=X0,prior=prior.int,family=family,switch=switch,select=select,base=base)
+      prior.int <- sam.multiple(y=y0,X=X0,prior=prior.int,family=family,select=select,switch=switch,base=base)
     } else if(scale=="com"){
       prior.int <- com.multiple(y=y0,X=X0,prior=prior.int,family=family,select=select,switch=switch)
       k <- ncol(prior.int$beta)
@@ -202,6 +213,25 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   #all(y_hat[,k+1]==temp) # trial
   #y_hat[,k+1] <- Y_hat[,id]-int[,id] # trial (harmonise with predict.transreg)
   
+  if(FALSE & scale=="com"){
+    cat("experimental tuning","\n")
+    if(k!=11){stop("to implement properly")}
+    #--- trial tuning iso-exp weight ---
+    #--- correct this for one source!!! ---
+    #--- adapt this to multiple sources!!! ---
+    cvm <- apply(y_hat,2,function(x) starnet:::.loss(y=y,x=starnet:::.mean.function(x,family=family),family=family,type.measure="deviance"))
+    tryCatch(expr=graphics::plot(x=seq(from=0,to=1,by=0.1),y=cvm[1:k]),error=function(x) NULL)
+    w.id <- which.min(cvm[1:k])
+    cat("min = ",w.id," ")
+    prior.int$alpha <- prior.int$alpha[w.id]
+    prior.int$beta <- prior.int$beta[,w.id,drop=FALSE]
+    # here we should also extract the meta-stuff (continue here!!!)
+    prior.ext$alpha <- prior.ext$alpha[w.id]
+    prior.ext$beta <- prior.ext$beta[,w.id,drop=FALSE]
+    y_hat <- y_hat[,c(w.id,7,8)]
+    k <- 1
+  }  
+    
   base$prior <- prior.ext
   #--- linear predictor stacking ---
   meta <- glmnet::cv.glmnet(y=y,x=y_hat,foldid=foldid,alpha=1,family=family,lower.limits=0)
@@ -635,7 +665,7 @@ iso.fast.single <- function(y,X,prior,family){
 #' @examples 
 #' NA
 #' 
-iso.multiple <- function(y,X,prior,family,switch=TRUE,select=TRUE){
+iso.multiple <- function(y,X,prior,family,select=TRUE,switch=TRUE){
   
   k <- ncol(prior)
   
@@ -724,7 +754,7 @@ iso.multiple <- function(y,X,prior,family,switch=TRUE,select=TRUE){
   return(list(alpha=alpha0,beta=beta0)) # was alpha=NULL # trial 2022-01-04
 }
 
-sam.multiple <- function(y,X,prior,family,switch=TRUE,select=TRUE,base){
+sam.multiple <- function(y,X,prior,family,select=TRUE,switch=TRUE,base){
   
   #if(!is.null(base)){
   #  stop("Implement this.")
@@ -788,15 +818,17 @@ sam.multiple <- function(y,X,prior,family,switch=TRUE,select=TRUE,base){
 # combining based on the lowest residuals makes no sense as isotonic calibration
 # will always get closer to the observed values than exponential calibration
 com.multiple <- function(y,X,prior,family,select=FALSE,switch=FALSE){
-  if(select|switch){warning("Argument select/switch not implemented.")}
+  if(select){warning("Argument select not implemented.")}
   n <- length(y); p <- ncol(X); q <- ncol(prior)
   alpha <- numeric() # rep(NA,times=q)
   beta <- numeric() # matrix(NA,nrow=p,ncol=q)
   for(i in seq_len(q)){
     model <- list()
-    model$a <- iso.fast.single(y=y,X=X,prior=prior[,i,drop=FALSE],family=family)
-    model$b <- iso.fast.single(y=y,X=X,prior=-prior[,i,drop=FALSE],family=family)
-    model$c <- exp.multiple(y=y,X=X,prior=prior[,i,drop=FALSE],family=family,select=FALSE)
+    model$iso <- iso.fast.single(y=y,X=X,prior=prior[,i,drop=FALSE],family=family)
+    if(switch){
+      model$iso_inv <- iso.fast.single(y=y,X=X,prior=-prior[,i,drop=FALSE],family=family)
+    }
+    model$exp <- exp.multiple(y=y,X=X,prior=prior[,i,drop=FALSE],family=family,select=FALSE)
     y_hat <- matrix(data=NA,nrow=n,ncol=length(model))
     for(j in seq_along(model)){
       eta <- model[[j]]$alpha + X %*% model[[j]]$beta
@@ -808,22 +840,26 @@ com.multiple <- function(y,X,prior,family,select=FALSE,switch=FALSE){
     #alpha <- c(alpha,model[[id]]$alpha)
     #beta <- cbind(model[[id]]$beta)
     #--- select sign of iso, combine iso and exp ---
-    id <- which.min(loss[c(1,2)])
-    alpha <- c(alpha,model[[id]]$alpha,model$c$alpha)
-    beta <- cbind(beta,model[[id]]$beta,model$c$beta)
+    #id <- which.min(loss[c(1,2)])
+    #alpha <- c(alpha,model[[id]]$alpha,model$c$alpha)
+    #beta <- cbind(beta,model[[id]]$beta,model$c$beta)
     #--- equal weight for iso and exp ---
     #id <- which.min(loss[c(1,2)])
     #alpha <- c(alpha,0.5*model[[id]]$alpha + 0.5*model$c$alpha)
     #beta <- cbind(beta,0.5*model[[id]]$beta + 0.5*model$c$beta)
     #--- tune weight for iso and exp ---
-    #id <- which.min(loss[c(1,2)])
-    #w <- seq(from=0,to=1,by=0.2)
+    if(switch){
+      if(loss[2]<loss[1]){
+        model$iso <- model$iso_inv
+      }
+    }
+    w <- seq(from=0,to=1,by=1)
     #alpha <- c(alpha,w*model[[id]]$alpha + (1-w)*model$c$alpha)
     #beta <- cbind(beta,w*model[[id]]$beta + (1-w)*model$c$beta)
-    #for(j in seq_along(w)){
-    #  alpha <- c(alpha,w[j]*model[[id]]$alpha + (1-w[i])*model$c$alpha)
-    #  beta <- cbind(beta,w[j]*model[[id]]$beta + (1-w[i])*model$c$beta) 
-    #}
+    for(j in seq_along(w)){
+      alpha <- c(alpha,(1-w[j])*model$exp$alpha + w[j]*model$iso$alpha)
+      beta <- cbind(beta,(1-w[j])*model$exp$beta + w[j]*model$iso$beta)
+    }
     warning("temporary version com.multiple")
   }
   return(list(alpha=alpha,beta=beta))
@@ -855,7 +891,11 @@ com.multiple <- function(y,X,prior,family,select=FALSE,switch=FALSE){
 #' @param monotone logical
 #' 
 #' @examples
-#' NA
+#' n <- 100; p <- 500
+#' X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
+#' beta <- rnorm(p)*rbinom(n=p,size=1,prob=0.2)
+#' y <- X %*% beta
+#' object <- cv.transfer(target=list(y=y,x=X),prior=beta,scale="com",family="gaussian",alpha=0)
 #' 
 cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso",sign=FALSE,select=TRUE,switch=TRUE,foldid.ext=NULL,nfolds.ext=10,foldid.int=NULL,nfolds.int=10,type.measure="deviance",alpha.prior=NULL,partitions=NULL,monotone=NULL,prs=TRUE,multiridge=FALSE){
   
@@ -1008,6 +1048,7 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
   #}
   
   #--- start new ---
+  set.seed(seed) # trial
   folds <- .folds(y=target$y,nfolds.ext=nfolds.ext,nfolds.int=nfolds.int,foldid.ext=foldid.ext,foldid.int=foldid.int)
   foldid.ext <- folds$foldid.ext
   foldid.int <- folds$foldid.int
@@ -1018,7 +1059,7 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
   pred <- matrix(data=NA,nrow=length(target$y),ncol=length(names),dimnames=list(NULL,names))
   time <- rep(0,time=length(names)); names(time) <- names
   
-  set.seed(seed) # trial
+  #set.seed(seed) # trial
   for(i in seq_len(nfolds.ext)){
     y0 <- target$y[foldid.ext!=i]
     X0 <- target$x[foldid.ext!=i,]
@@ -1250,6 +1291,13 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
   
   target <- source <- list()
   
+  #if(!exists(.Random.seed)){
+  #  .Random.seed <- NULL
+  #}
+  #seed <- .Random.seed
+  
+  # effects
+  #set.seed(seed) # trial
   mu <- rep(x=0,times=k+1)
   Sigma <- matrix(data=rho.beta,nrow=k+1,ncol=k+1) # original
   diag(Sigma) <- 1 # original
@@ -1259,7 +1307,7 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
   
   if(FALSE){
     message("Temporary re-scaling of coefficients!")
-    
+
     # source (with perturbation: exponentiated effects)
     #exp <- 0.2
     #beta[,1] <- sign(beta[,1])*abs(beta[,1])^exp
@@ -1287,6 +1335,7 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
   #stats::cor(beta,method="spearman")
   
   # features
+  #set.seed(seed)
   #w <- 0.50 # weight between signal and noise
   mu <- rep(x=0,times=p)
   Sigma <- matrix(data=NA,nrow=p,ncol=p)
@@ -1303,6 +1352,7 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
   }
   
   # target
+  #set.seed(seed) # trial
   target$x <- mvtnorm::rmvnorm(n=n.target,mean=mu,sigma=Sigma)
   eta <- sqrt(w)*as.vector(scale(target$x %*% beta[,k+1])) + sqrt(1-w)*stats::rnorm(n.target)
   target$y <- joinet:::.mean.function(eta,family=family)
