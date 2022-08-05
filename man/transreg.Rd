@@ -16,7 +16,7 @@ transreg(
   sign = FALSE,
   switch = TRUE,
   select = TRUE,
-  multiridge = FALSE
+  diffpen = FALSE
 )
 }
 \arguments{
@@ -44,7 +44,7 @@ transreg(
 
 \item{select}{select from sources: logical}
 
-\item{multiridge}{logical}
+\item{diffpen}{logical}
 }
 \description{
 Implements penalised regression with multiple sets of prior effects
@@ -57,12 +57,10 @@ prior <- beta # plus noise
 y <- X \%*\% beta
 prior <- ifelse(beta<(-1),0,ifelse(beta>1,beta,0))
 plot(x=beta,y=prior)
-object <- transreg(y=y,X=X,prior=prior,scale="com")
-#predict.transreg(object,newx=X)
-#predict.trial(object,newx=X)
+object <- transreg(y=y,X=X,prior=prior)
 
 }
 \seealso{
-Methods for objects of class \code{cornet}
+Methods for objects of class \code{transreg}
 include ...
 }

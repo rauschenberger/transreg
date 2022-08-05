@@ -24,7 +24,7 @@
 #' "Penalised regression with multiple sets of prior effects".
 #' \emph{Manuscript in preparation.}
 #' \email{armin.rauschenberger@uni.lu}
-#'
+#' 
 #' @examples
 #' NA
 #' 

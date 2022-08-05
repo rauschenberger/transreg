@@ -24,7 +24,7 @@ cv.transfer(
   partitions = NULL,
   monotone = NULL,
   prs = TRUE,
-  multiridge = FALSE
+  diffpen = FALSE
 )
 }
 \arguments{
@@ -68,7 +68,7 @@ cv.transfer(
 
 \item{prs}{logical}
 
-\item{multiridge}{logical}
+\item{diffpen}{logical}
 }
 \description{
 Performs external \eqn{k}-fold cross-validation
