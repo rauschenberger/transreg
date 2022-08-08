@@ -169,358 +169,23 @@ or "sam" for shape-constrained additive scaling</p></dd>
 <span class="r-in"><span><span class="va">beta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html" class="external-link">rbinom</a></span><span class="op">(</span>n<span class="op">=</span><span class="va">p</span>,size<span class="op">=</span><span class="fl">1</span>,prob<span class="op">=</span><span class="fl">0.2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="va">X</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">beta</span></span></span>
 <span class="r-in"><span><span class="va">object</span> <span class="op">&lt;-</span> <span class="fu">cv.transfer</span><span class="op">(</span>target<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>y<span class="op">=</span><span class="va">y</span>,x<span class="op">=</span><span class="va">X</span><span class="op">)</span>,prior<span class="op">=</span><span class="va">beta</span>,family<span class="op">=</span><span class="st">"gaussian"</span>,alpha<span class="op">=</span><span class="fl">0</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9.2e-17 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.48 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.13 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.023 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.53 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.16 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.84 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.98 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.75 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8.9e-17 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.43 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.45 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.6 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.86 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.14 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 0.5 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.092 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.46 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.57 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.0053 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8.9e-17 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.72 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.94 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.79 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.83 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.58 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.0078 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.14 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.018 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.96 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9.2e-17 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.6 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.98 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.47 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.81 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.87 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.73 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.7 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.38 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.15 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.56 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.37 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8.9e-17 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.37 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.33 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.47 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.48 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.063 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.063 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.95 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.072 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.072 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.69 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8.9e-17 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.44 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.03 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.89 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.72 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.0074 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.91 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.7 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.9e-15 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 0.78 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.068 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.86 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8.9e-17 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.64 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.12 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.46 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.38 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.72 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.21 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.8 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.9 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.9e-15 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 0.49 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9.2e-17 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.44 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
@@ -530,79 +195,167 @@ or "sam" for shape-constrained additive scaling</p></dd>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.89 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.49 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.38 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.72 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8.9e-17 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.88 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.099 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.5 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.11 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3.2e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.11 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.034 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.99 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.82 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.9 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.12 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9.2e-17 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 0.51 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.34 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3.1e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.55 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.9 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.89 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.3 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.9e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.36 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.31 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.83 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.76 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8.9e-17 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.79 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.26 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.25 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 0.47 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.9e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.88 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.057 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.87 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.0091 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3.1e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3.1e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8.9e-17 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.97 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.37 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.95 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.71 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.39 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.09 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.34 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.77 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.021 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.32 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
@@ -612,34 +365,61 @@ or "sam" for shape-constrained additive scaling</p></dd>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.16 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.87 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.0028 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3.1e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.21 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8.9e-17 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.84 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.041 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.98 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3.1e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.58 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.29 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.0098 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.95 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.89 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.72 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.26 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.19 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
@@ -648,24 +428,262 @@ or "sam" for shape-constrained additive scaling</p></dd>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8.9e-17 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.61 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.67 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.049 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.084 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.53 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.79 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.97 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.83 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3.1e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.78 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.26 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.82 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.91 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9.5e-17 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.33 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.63 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.41 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.89 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.63 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.16 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.37 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.51 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.54 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.6 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8.9e-17 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.6 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.93 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.64 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.9e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.099 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.46 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.41 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3.4e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.88 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3.1e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.46 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.77 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.31 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.53 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8.9e-17 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.32 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.9e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.39 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.9e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.09 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.97 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.5 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 0.73 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.9e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.5 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.64 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.3 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.62 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8.9e-17 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.093 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.4 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.27 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.7 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3.2e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.89 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.24 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.3 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.046 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3.1e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.41 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.21 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.98 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.5 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
