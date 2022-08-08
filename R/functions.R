@@ -111,7 +111,7 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   # external re-scaling
   prior.ext <- prior
   if(sign){
-    prior.ext <- sign.disc(y=y,X=X,prior=prior.ext,family=family)
+    prior.ext <- .signdisc(y=y,X=X,prior=prior.ext,family=family)
   }
   base$z <- prior.ext
   if(scale=="exp"){
@@ -149,7 +149,7 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
     # internal re-scaling
     prior.int <- prior
     if(sign){
-      prior.int <- sign.disc(y=y0,X=X0,prior=prior.int,family=family)
+      prior.int <- .signdisc(y=y0,X=X0,prior=prior.int,family=family)
       # trial:
       #prior.int[prior.ext<0] <- -prior.int[prior.ext<0] # temporary
     }
@@ -407,7 +407,7 @@ coef.trial <- function(object,...){
 #' y_hat <- predict(glm,type="response")
 #' all.equal(res,y-y_hat)
 #' 
-residuals <- function(y,y_hat,family){
+.residuals <- function(y,y_hat,family){
   if(length(y_hat)==1){y_hat <- matrix(y_hat,nrow=length(y),ncol=1)}
   if(family=="gaussian"){
     res <- apply(y_hat,2,function(x) (x-y)^2)
@@ -438,10 +438,10 @@ residuals <- function(y,y_hat,family){
 #' beta <- stats::rnorm(p)*stats::rbinom(n=p,size=1,prob=0.2)
 #' y <- X %*% beta
 #' prior <- matrix(abs(beta),ncol=1)
-#' #temp <- sign.disc(y,X,prior,family="gaussian")
+#' #temp <- .signdisc(y,X,prior,family="gaussian")
 #' #table(sign(beta),sign(temp))
 #' 
-sign.disc <- function(y,X,prior,family,foldid=NULL,nfolds=10){
+.signdisc <- function(y,X,prior,family,foldid=NULL,nfolds=10){
   cond <- apply(prior,2,function(x) any(x>0) & all(x>=0))
   if(any(cond)){
     message(paste("Sign discovery procedure for source(s):",paste(which(cond),collapse=", ")))
@@ -521,8 +521,8 @@ exp.multiple <- function(y,X,prior,family,select,plot=TRUE){
     
     # Include here test of whether residuals are significantly lower than those of the empty model.
     if(select){
-      res0 <- residuals(y=y,y_hat=mean(y),family=family)
-      res1 <- residuals(y=y,y_hat=pred[,which.min(cvm),drop=FALSE],family=family)
+      res0 <- .residuals(y=y,y_hat=mean(y),family=family)
+      res1 <- .residuals(y=y,y_hat=pred[,which.min(cvm),drop=FALSE],family=family)
       pvalue[j] <- stats::wilcox.test(x=res1,y=res0,paired=TRUE,alternative="less")$p.value
     }
     
@@ -694,8 +694,8 @@ iso.multiple <- function(y,X,prior,family,select=TRUE,switch=TRUE){
   # beta0[beta0==min(beta0)] <- sort(beta0,decreasing=FALSE)[2] # hack (trial)
   fit0 <- joinet:::.mean.function(alpha0 + X %*% beta0,family=family)
   
-  res <- residuals(y=y,y_hat=mean(y),family=family)
-  res0 <- residuals(y=y,y_hat=fit0,family=family)
+  res <- .residuals(y=y,y_hat=mean(y),family=family)
+  res0 <- .residuals(y=y,y_hat=fit0,family=family)
   
   #if(family=="gaussian"){
   #  res <- (y-mean(y))^2
@@ -720,7 +720,7 @@ iso.multiple <- function(y,X,prior,family,select=TRUE,switch=TRUE){
     alpha1 <- prior1$alpha; beta1 <- prior1$beta
     fit1 <- joinet:::.mean.function(alpha1 + X %*% beta1,family=family)
     
-    res1 <- residuals(y=y,y_hat=fit1,family=family)
+    res1 <- .residuals(y=y,y_hat=fit1,family=family)
     
     #if(family=="gaussian"){
     #  res1 <- apply(fit1,2,function(x) (x-y)^2)
@@ -789,13 +789,13 @@ sam.multiple <- function(y,X,prior,family,select=TRUE,switch=TRUE,base){
   beta <- inc <- dec <- matrix(NA,nrow=p,ncol=k)
   res.inc <- res.dec <- matrix(NA,nrow=length(y),ncol=k)
   
-  res <- residuals(y=y,y_hat=mean(y),family=family)
+  res <- .residuals(y=y,y_hat=mean(y),family=family)
   
   for(i in seq_len(k)){
     scam <- scam::scam(coef~s(prior[,i],bs="mpi"))
     inc[,i] <- stats::fitted(scam)
     fit <- joinet:::.mean.function(alpha + X %*% inc[,i],family=family)
-    res.inc[,i] <- residuals(y=y,y_hat=fit,family=family)
+    res.inc[,i] <- .residuals(y=y,y_hat=fit,family=family)
   }
   
   if(switch){
@@ -803,7 +803,7 @@ sam.multiple <- function(y,X,prior,family,select=TRUE,switch=TRUE,base){
       scam <- scam::scam(coef~s(prior[,i],bs="mpd"))
       dec[,i] <- stats::fitted(scam)
       fit <- joinet:::.mean.function(alpha + X %*% dec[,i],family=family)
-      res.dec[,i] <- residuals(y=y,y_hat=fit,family=family)
+      res.dec[,i] <- .residuals(y=y,y_hat=fit,family=family)
     }
   }
   
