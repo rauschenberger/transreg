@@ -523,7 +523,7 @@ exp.multiple <- function(y,X,prior,family,select,plot=TRUE){
     if(select){
       res0 <- .residuals(y=y,y_hat=mean(y),family=family)
       res1 <- .residuals(y=y,y_hat=pred[,which.min(cvm),drop=FALSE],family=family)
-      pvalue[j] <- stats::wilcox.test(x=res1,y=res0,paired=TRUE,alternative="less")$p.value
+      pvalue[j] <- suppressWarnings(stats::wilcox.test(x=res1,y=res0,paired=TRUE,alternative="less")$p.value)
     }
     
     if(plot){
@@ -713,7 +713,7 @@ iso.multiple <- function(y,X,prior,family,select=TRUE,switch=TRUE){
   #loss0 <- apply(fit0,2,function(x) palasso:::.loss(y=y,fit=x,family=family,type.measure="deviance")[[1]])
   # when writing a function for residuals: check loss0==colMeans(res0)
   
-  pval0 <- apply(res0,2,function(x) stats::wilcox.test(x=x,y=res,paired=TRUE,alternative="less")$p.value)
+  pval0 <- apply(res0,2,function(x) suppressWarnings(stats::wilcox.test(x=x,y=res,paired=TRUE,alternative="less")$p.value))
   
   if(switch){
     prior1 <- iso.fast.single(y=y,X=X,prior=-prior,family=family) # was iso.slow.single
@@ -733,7 +733,7 @@ iso.multiple <- function(y,X,prior,family,select=TRUE,switch=TRUE){
     #  stop("Family not implemented.")
     #}
     
-    pval1 <- apply(res1,2,function(x) stats::wilcox.test(x=x,y=res,paired=TRUE,alternative="less")$p.value)
+    pval1 <- apply(res1,2,function(x) suppressWarnings(stats::wilcox.test(x=x,y=res,paired=TRUE,alternative="less")$p.value))
     
     message(paste(signif(pval0,digits=2),sep=" "),"\n")
     message(paste(signif(pval1,digits=2),sep=" "),"\n")
@@ -807,10 +807,10 @@ sam.multiple <- function(y,X,prior,family,select=TRUE,switch=TRUE,base){
     }
   }
   
-  pval.inc <- apply(res.inc,2,function(x) stats::wilcox.test(x=x,y=res,paired=TRUE,alternative="less")$p.value)
+  pval.inc <- apply(res.inc,2,function(x) suppressWarnings(stats::wilcox.test(x=x,y=res,paired=TRUE,alternative="less")$p.value))
   
   if(switch){
-    pval.dec <- apply(res.dec,2,function(x) stats::wilcox.test(x=x,y=res,paired=TRUE,alternative="less")$p.value)
+    pval.dec <- apply(res.dec,2,function(x) suppressWarnings(stats::wilcox.test(x=x,y=res,paired=TRUE,alternative="less")$p.value))
   } else {
     pval.dec <- 1
   }
@@ -1033,7 +1033,7 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
       #temp[is.na(temp)] <- 0
       if(is.character(alpha.prior) & alpha.prior=="p-value"){
         if(family=="binomial"){
-          p.value <- apply(source[[i]]$x,2,function(x) stats::wilcox.test(x~source[[i]]$y)$p.value)
+          p.value <- apply(source[[i]]$x,2,function(x) suppressWarnings(stats::wilcox.test(x~source[[i]]$y)$p.value))
           sign <- apply(source[[i]]$x,2,function(x) mean(x[source[[i]]$y==1])-mean(x[source[[i]]$y==0]))
           prior[,i] <- sign*(-log10(p.value))
           #test <- cor(source[[i]]$y,source[[i]]$x)
