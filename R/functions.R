@@ -40,7 +40,7 @@
 #' select from sources: logical
 #' @param diffpen
 #' differential penalisation for features and meta-features: logical
-#' 
+#'
 #' @details
 #' * \eqn{n}: sample size
 #' * \eqn{p}: number of features
