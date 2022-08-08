@@ -195,7 +195,7 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   #y_hat[,k+1] <- Y_hat[,id]-int[,id] # trial (harmonise with predict.transreg)
   
   if(FALSE & scale=="com"){
-    cat("experimental tuning","\n")
+    message("experimental tuning","\n")
     if(k!=11){stop("to implement properly")}
     #--- trial tuning iso-exp weight ---
     #--- correct this for one source!!! ---
@@ -203,7 +203,7 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
     cvm <- apply(y_hat,2,function(x) starnet:::.loss(y=y,x=starnet:::.mean.function(x,family=family),family=family,type.measure="deviance"))
     tryCatch(expr=graphics::plot(x=seq(from=0,to=1,by=0.1),y=cvm[1:k]),error=function(x) NULL)
     w.id <- which.min(cvm[1:k])
-    cat("min = ",w.id," ")
+    message("min = ",w.id," ")
     prior.int$alpha <- prior.int$alpha[w.id]
     prior.int$beta <- prior.int$beta[,w.id,drop=FALSE]
     # here we should also extract the meta-stuff (continue here!!!)
@@ -735,8 +735,8 @@ iso.multiple <- function(y,X,prior,family,select=TRUE,switch=TRUE){
     
     pval1 <- apply(res1,2,function(x) stats::wilcox.test(x=x,y=res,paired=TRUE,alternative="less")$p.value)
     
-    cat(paste(signif(pval0,digits=2),sep=" "),"\n")
-    cat(paste(signif(pval1,digits=2),sep=" "),"\n")
+    message(paste(signif(pval0,digits=2),sep=" "),"\n")
+    message(paste(signif(pval1,digits=2),sep=" "),"\n")
     
     cond <- pval0 <= pval1
     #ALPHA[cond] <- alpha0[cond]
