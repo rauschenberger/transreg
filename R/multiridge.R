@@ -70,10 +70,10 @@
 #'
 multiridge <- function(X,Y,family){
   XXblocks <- multiridge::createXXblocks(datablocks=X)
-  init <- multiridge::fastCV2(XXblocks=XXblocks,Y=Y)
+  invisible(utils::capture.output(init <- multiridge::fastCV2(XXblocks=XXblocks,Y=Y)))
   folds <- multiridge::CVfolds(Y=Y)
-  final <- multiridge::optLambdasWrap(penaltiesinit=init$lambdas,
-                                      XXblocks=XXblocks,Y=Y,folds=folds)
+  invisible(utils::capture.output(final <- multiridge::optLambdasWrap(penaltiesinit=init$lambdas,
+                                      XXblocks=XXblocks,Y=Y,folds=folds)))
   XXT <- multiridge::SigmaFromBlocks(XXblocks=XXblocks,penalties=final$optpen)
   object <- multiridge::IWLSridge(XXT=XXT,Y=Y,model=ifelse(family=="gaussian","linear",ifelse(family=="binomial","logistic",NA)))
   object$family <- family
