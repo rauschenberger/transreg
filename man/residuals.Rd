@@ -9,12 +9,13 @@ residuals(y, y_hat, family)
 \arguments{
 \item{y}{response: vector of length \eqn{n} (see family)}
 
-\item{y_hat}{predicted values: vector of length \eqn{n},
-or matrix with \eqn{n} rows and \eqn{k} columns}
+\item{y_hat}{predicted values or probabilities (see family):
+vector of length \eqn{n},
+or matrix with \eqn{n} rows (samples) and \eqn{k} columns (methods)}
 
 \item{family}{character
 "gaussian" (\eqn{y}: real numbers, \eqn{y_hat}: real numbers)
-or "binomial" (\eqn{y}: 0s and 1s, \eqn{y_hat}: ) $0 \leq x \leq 1$}
+or "binomial" (\eqn{y}: 0s and 1s, \eqn{y_hat}: unit interval)}
 }
 \description{
 Calculates residuals from observed outcome
@@ -22,6 +23,14 @@ and predicted values (Gaussian family)
 or predicted probabilities (binomial family).
 }
 \examples{
-NA
+n <- 100
+p <- 5
+X <- matrix(stats::rnorm(n*p),nrow=n,ncol=p)
+#y <- stats::rbinom(n,size=1,prob=0.5)
+y <- stats::rnorm(n)
+glm <- glm(y~X,family="gaussian")
+res <- residuals.glm(glm)
+y_hat <- predict(glm,type="response")
+all.equal(res,y-y_hat)
 
 }

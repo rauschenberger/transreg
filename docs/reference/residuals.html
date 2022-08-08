@@ -61,21 +61,30 @@ or predicted probabilities (binomial family).</p>
 
 
 <dt>y_hat</dt>
-<dd><p>predicted values: vector of length \(n\),
-or matrix with \(n\) rows and \(k\) columns</p></dd>
+<dd><p>predicted values or probabilities (see family):
+vector of length \(n\),
+or matrix with \(n\) rows (samples) and \(k\) columns (methods)</p></dd>
 
 
 <dt>family</dt>
 <dd><p>character
 "gaussian" (\(y\): real numbers, \(y_hat\): real numbers)
-or "binomial" (\(y\): 0s and 1s, \(y_hat\): ) $0  x  1$</p></dd>
+or "binomial" (\(y\): 0s and 1s, \(y_hat\): unit interval)</p></dd>
 
 </dl></div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="cn">NA</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] NA</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">100</span></span></span>
+<span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fl">5</span></span></span>
+<span class="r-in"><span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">*</span><span class="va">p</span><span class="op">)</span>,nrow<span class="op">=</span><span class="va">n</span>,ncol<span class="op">=</span><span class="va">p</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co">#y &lt;- stats::rbinom(n,size=1,prob=0.5)</span></span></span>
+<span class="r-in"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">glm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">y</span><span class="op">~</span><span class="va">X</span>,family<span class="op">=</span><span class="st">"gaussian"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.summaries.html" class="external-link">residuals.glm</a></span><span class="op">(</span><span class="va">glm</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">y_hat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">glm</span>,type<span class="op">=</span><span class="st">"response"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">res</span>,<span class="va">y</span><span class="op">-</span><span class="va">y_hat</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
