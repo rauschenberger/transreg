@@ -52,27 +52,32 @@
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>y</dt>
-<dd><p>target: vector of length \(n\)</p></dd>
+<dd><p>target: vector of length \(n\) (see <code>family</code>)</p></dd>
 
 
 <dt>X</dt>
-<dd><p>features: matrix with \(n\) rows and \(p\) columns</p></dd>
+<dd><p>features: matrix with \(n\) rows (samples)
+and \(p\) columns (features)</p></dd>
 
 
 <dt>prior</dt>
-<dd><p>prior coefficients: matrix with \(p\) rows and \(k\) columns</p></dd>
+<dd><p>prior coefficients: matrix with \(p\) rows (features)
+and \(k\) columns (sources of co-data)</p></dd>
 
 
 <dt>family</dt>
-<dd><p>character "gaussian", "binomial", or "poisson"</p></dd>
+<dd><p>character "gaussian" (\(y\): real numbers),
+"binomial" (\(y\): 0s and 1s),
+or "poisson" (\(y\): non-negative integers);</p></dd>
 
 
 <dt>foldid</dt>
-<dd><p>fold identifiers: vector of length \(n\) with entries from 1 to <code>nfolds</code></p></dd>
+<dd><p>fold identifiers: vector of length \(n\)
+with entries from 1 to <code>nfolds</code></p></dd>
 
 
 <dt>nfolds</dt>
-<dd><p>number of folds: integer</p></dd>
+<dd><p>number of folds: positive integer</p></dd>
 
 </dl></div>
 

@@ -83,7 +83,8 @@ to estimate the predictive performance of different methods</p>
 
 
 <dt>prior</dt>
-<dd><p>prior coefficients: matrix with \(p\) rows and \(k\) columns</p></dd>
+<dd><p>prior coefficients: matrix with \(p\) rows (features)
+and \(k\) columns (sources of co-data)</p></dd>
 
 
 <dt>z</dt>
@@ -91,17 +92,21 @@ to estimate the predictive performance of different methods</p>
 
 
 <dt>family</dt>
-<dd><p>character "gaussian", "binomial", or "poisson"</p></dd>
+<dd><p>character "gaussian" (\(y\): real numbers),
+"binomial" (\(y\): 0s and 1s),
+or "poisson" (\(y\): non-negative integers);</p></dd>
 
 
 <dt>alpha</dt>
-<dd><p>elastic net mixing parameter (0=ridge, 1=lasso)</p></dd>
+<dd><p>elastic net mixing parameter (0=ridge, 1=lasso):
+number between 0 and 1</p></dd>
 
 
 <dt>scale</dt>
-<dd><p>"exp" for exponential scaling (3 parameters),
-"iso" for isotonic scaling (1+p parameters),
-"sam" for shape-constrained additive scaling</p></dd>
+<dd><p>character
+"exp" for exponential scaling (3 parameters),
+"iso" for isotonic scaling (1+\(p\) parameters),
+or "sam" for shape-constrained additive scaling</p></dd>
 
 
 <dt>sign</dt>
@@ -163,337 +168,394 @@ to estimate the predictive performance of different methods</p>
 <span class="r-in"><span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span>n<span class="op">=</span><span class="va">n</span><span class="op">*</span><span class="va">p</span><span class="op">)</span>,nrow<span class="op">=</span><span class="va">n</span>,ncol<span class="op">=</span><span class="va">p</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">beta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html" class="external-link">rbinom</a></span><span class="op">(</span>n<span class="op">=</span><span class="va">p</span>,size<span class="op">=</span><span class="fl">1</span>,prob<span class="op">=</span><span class="fl">0.2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="va">X</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">beta</span></span></span>
-<span class="r-in"><span><span class="va">object</span> <span class="op">&lt;-</span> <span class="fu">cv.transfer</span><span class="op">(</span>target<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>y<span class="op">=</span><span class="va">y</span>,x<span class="op">=</span><span class="va">X</span><span class="op">)</span>,prior<span class="op">=</span><span class="va">beta</span>,scale<span class="op">=</span><span class="st">"com"</span>,family<span class="op">=</span><span class="st">"gaussian"</span>,alpha<span class="op">=</span><span class="fl">0</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-1.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-2.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-3.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-4.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-5.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-6.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-7.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-8.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-9.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-10.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-11.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-12.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-13.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-14.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-15.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-16.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-17.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-18.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-19.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-20.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-21.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-22.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-23.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-24.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-25.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-26.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-27.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-28.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-29.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-30.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-31.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-32.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-33.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-34.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-35.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-36.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-37.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-38.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-39.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-40.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-41.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-42.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-43.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-44.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-45.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-46.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-47.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-48.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-49.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-50.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-51.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-52.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-53.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-54.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-55.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-56.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-57.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-58.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-59.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-60.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-61.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-62.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-63.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-64.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-65.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-66.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-67.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-68.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-69.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-70.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-71.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-72.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-73.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-74.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-75.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-76.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-77.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-78.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-79.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-80.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-81.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-82.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-83.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-84.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-85.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-86.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-87.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-88.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-89.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-90.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-91.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-92.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-93.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-94.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-95.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-96.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-97.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-98.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-99.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-100.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-101.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-102.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-103.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-104.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-105.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-106.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-107.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-108.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Argument select not implemented.</span>
-<span class="r-plt img"><img src="cv.transfer-109.png" alt="" width="700" height="433"></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>temporary version com.multiple</span>
-<span class="r-plt img"><img src="cv.transfer-110.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="va">object</span> <span class="op">&lt;-</span> <span class="fu">cv.transfer</span><span class="op">(</span>target<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>y<span class="op">=</span><span class="va">y</span>,x<span class="op">=</span><span class="va">X</span><span class="op">)</span>,prior<span class="op">=</span><span class="va">beta</span>,family<span class="op">=</span><span class="st">"gaussian"</span>,alpha<span class="op">=</span><span class="fl">0</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8.9e-17 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.13 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.11 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.25 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.12 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.22 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.13 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.19 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.2 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.068 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.095 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.094 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9.2e-17 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.2 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.17 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.13 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.15 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.33 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.19 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.27 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.33 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.25 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.21 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.18 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8.9e-17 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.27 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.25 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.2 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.86 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.25 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.84 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.19 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.096 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.29 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.31 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.24 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9.2e-17 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.29 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.3 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.48 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.28 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.94 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.33 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.24 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.22 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.25 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.23 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8.9e-17 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.78 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.23 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.65 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.81 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.36 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.12 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.33 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.31 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.92 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.0058 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9.2e-17 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.3 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.11 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.26 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.17 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.81 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.37 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.21 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.34 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.26 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.31 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.2 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9.2e-17 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.22 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.12 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.29 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.16 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.96 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.64 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.2 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.18 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.93 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.17 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8.9e-17 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.2 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.22 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.23 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.32 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.27 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.19 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.9e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.28 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3.1e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.19 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.22 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.12 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.14 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8.9e-17 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.96 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.91 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.34 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.68 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.51 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.48 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.36 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.3 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.89 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.82 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.19 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8.9e-17 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.18 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.37 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3.1e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.2 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.16 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.21 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.16 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with ties</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot compute exact p-value with zeroes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.15 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.18 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.8e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.23 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2.7e-15 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.11 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

@@ -1,4 +1,4 @@
 
-## cornet 0.0.1 (2022-03-08)
+## transreg 0.0.1 (2022-08-04)
 
-* initialise repository
+* first public commit

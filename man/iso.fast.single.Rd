@@ -7,13 +7,17 @@
 iso.fast.single(y, X, prior, family)
 }
 \arguments{
-\item{y}{target: vector of length \eqn{n}}
+\item{y}{target: vector of length \eqn{n} (see \code{family})}
 
-\item{X}{features: matrix with \eqn{n} rows and \eqn{p} columns}
+\item{X}{features: matrix with \eqn{n} rows (samples)
+and \eqn{p} columns (features)}
 
-\item{prior}{prior coefficients: matrix with \eqn{p} rows and \eqn{k} columns}
+\item{prior}{prior coefficients: matrix with \eqn{p} rows (features)
+and \eqn{k} columns (sources of co-data)}
 
-\item{family}{character "gaussian", "binomial", or "poisson"}
+\item{family}{character "gaussian" (\eqn{y}: real numbers),
+"binomial" (\eqn{y}: 0s and 1s),
+or "poisson" (\eqn{y}: non-negative integers);}
 }
 \description{
 Performs isotonic scaling

@@ -7,17 +7,22 @@
 \method{sign}{disc}(y, X, prior, family, foldid = NULL, nfolds = 10)
 }
 \arguments{
-\item{y}{target: vector of length \eqn{n}}
+\item{y}{target: vector of length \eqn{n} (see \code{family})}
 
-\item{X}{features: matrix with \eqn{n} rows and \eqn{p} columns}
+\item{X}{features: matrix with \eqn{n} rows (samples)
+and \eqn{p} columns (features)}
 
-\item{prior}{prior coefficients: matrix with \eqn{p} rows and \eqn{k} columns}
+\item{prior}{prior coefficients: matrix with \eqn{p} rows (features)
+and \eqn{k} columns (sources of co-data)}
 
-\item{family}{character "gaussian", "binomial", or "poisson"}
+\item{family}{character "gaussian" (\eqn{y}: real numbers),
+"binomial" (\eqn{y}: 0s and 1s),
+or "poisson" (\eqn{y}: non-negative integers);}
 
-\item{foldid}{fold identifiers: vector of length \eqn{n} with entries from 1 to \code{nfolds}}
+\item{foldid}{fold identifiers: vector of length \eqn{n}
+with entries from 1 to \code{nfolds}}
 
-\item{nfolds}{number of folds: integer}
+\item{nfolds}{number of folds: positive integer}
 }
 \description{
 Assigns signs to prior weights to obtain prior coefficients

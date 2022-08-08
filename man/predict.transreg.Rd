@@ -11,7 +11,7 @@
 
 \item{newx}{features: matrix with m rows (samples) and p columns (variables)}
 
-\item{...}{not applicable}
+\item{...}{(not applicable)}
 }
 \description{
 Predicts outcome

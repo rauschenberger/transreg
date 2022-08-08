@@ -20,23 +20,30 @@ transreg(
 )
 }
 \arguments{
-\item{y}{target: vector of length \eqn{n}}
+\item{y}{target: vector of length \eqn{n} (see \code{family})}
 
-\item{X}{features: matrix with \eqn{n} rows and \eqn{p} columns}
+\item{X}{features: matrix with \eqn{n} rows (samples)
+and \eqn{p} columns (features)}
 
-\item{prior}{prior coefficients: matrix with \eqn{p} rows and \eqn{k} columns}
+\item{prior}{prior coefficients: matrix with \eqn{p} rows (features)
+and \eqn{k} columns (sources of co-data)}
 
-\item{family}{character "gaussian", "binomial", or "poisson"}
+\item{family}{character "gaussian" (\eqn{y}: real numbers),
+"binomial" (\eqn{y}: 0s and 1s),
+or "poisson" (\eqn{y}: non-negative integers);}
 
-\item{alpha}{elastic net mixing parameter (0=ridge, 1=lasso)}
+\item{alpha}{elastic net mixing parameter (0=ridge, 1=lasso):
+number between 0 and 1}
 
-\item{foldid}{fold identifiers: vector of length \eqn{n} with entries from 1 to \code{nfolds}}
+\item{foldid}{fold identifiers: vector of length \eqn{n}
+with entries from 1 to \code{nfolds}}
 
-\item{nfolds}{number of folds: integer}
+\item{nfolds}{number of folds: positive integer}
 
-\item{scale}{"exp" for exponential scaling (3 parameters),
-"iso" for isotonic scaling (1+p parameters),
-"sam" for shape-constrained additive scaling}
+\item{scale}{character
+"exp" for exponential scaling (3 parameters),
+"iso" for isotonic scaling (1+\eqn{p} parameters),
+or "sam" for shape-constrained additive scaling}
 
 \item{sign}{sign discovery procedure: logical}
 
@@ -44,10 +51,17 @@ transreg(
 
 \item{select}{select from sources: logical}
 
-\item{diffpen}{logical}
+\item{diffpen}{differential penalisation for features and meta-features: logical}
 }
 \description{
 Implements penalised regression with multiple sets of prior effects
+}
+\details{
+\itemize{
+\item \eqn{n}: sample size
+\item \eqn{p}: number of features
+\item \eqn{k}: number of sources
+}
 }
 \examples{
 n <- 100; p <- 500
@@ -62,5 +76,6 @@ object <- transreg(y=y,X=X,prior=prior)
 }
 \seealso{
 Methods for objects of class \code{transreg}
-include ...
+include \code{\link[=coef.transreg]{coef}} and
+\code{\link[=predict.transreg]{predict}}.
 }

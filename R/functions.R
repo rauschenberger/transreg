@@ -1,106 +1,4 @@
 
-#'@export
-#'@title
-#'multiridge wrapper
-#'
-#'@description
-#'see multiridge package.
-#'
-#'@param X list of matrices with n rows
-#'@param Y vector of length n
-#'@param family character "gaussian" or "binomial"
-#'@param object multiridge-object
-#'@param newx list of matrices (new data)
-#'@param ... (not applicable)
-#'
-#'@examples
-#'# simulation
-#'n0 <- 100 # training samples
-#'n1 <- 10000 # testing samples
-#'n <- n0 + n1
-#'p1 <- 5 # first covariate set
-#'p2 <- 500 # second covariate set
-#'X1 <- matrix(rnorm(n*p1),nrow=n,ncol=p1)
-#'X2 <- matrix(rnorm(n*p2),nrow=n,ncol=p2)
-#'beta1 <- rep(c(0,10),times=c(p1-4,4))
-#'beta2 <- c(rnorm(100),rep(0,times=p2-100))
-#'eta <- X2 %*% beta2 + X1 %*% beta1
-#'family <- "binomial"
-#'if(family=="gaussian"){
-#'  y <- eta
-#'} else if(family=="binomial"){
-#'  y <- round(1/(1+exp(-eta)))
-#'}
-#'fold <- rep(c(0,1),times=c(n0,n1))
-#'
-#'# single penalty
-#'glmnet <- glmnet::cv.glmnet(x=cbind(X1[fold==0,],X2[fold==0,]),y=y[fold==0],family=family,alpha=0)
-#'y_hat0 <- predict(glmnet,newx=cbind(X1[fold==1,],X2[fold==1,]),s="lambda.min",type="response")
-#'
-#'# multiple penalties
-#'object <- multiridge(X=list(X1[fold==0,],X2[fold==0,]),Y=y[fold==0],family=family)
-#'y_hat1 <- predict(object,newx=list(X1[fold==1,],X2[fold==1,]))
-#'
-#'# comparison
-#'if(family=="gaussian"){
-#' loss0 <- mean((y[fold==1]-y_hat0)^2)
-#' loss1 <- mean((y[fold==1]-y_hat1)^2)
-#'} else if(family=="binomial"){
-#' loss0 <- mean(y[fold==1]!=round(y_hat0))
-#' loss1 <- mean(y[fold==1]!=round(y_hat1))
-#'}
-#'loss0
-#'loss1
-#'
-#'# equivalence
-#'beta <- coef(object)
-#'eta2 <- beta[[1]] + X1[fold==1,] %*% beta[[2]] + X2[fold==1,] %*% beta[[3]]
-#'if(family=="gaussian"){
-#' y_hat2 <- eta2
-#'} else if(family=="binomial"){
-#' y_hat2 <- 1/(1 + exp(-eta2))
-#'}
-#'all.equal(y_hat1,y_hat2)
-#'
-#'@references
-#'Mark A. van de Wiel, Mirrelijn M. van Nee and Armin Rauschenberger (2021)
-#'"Fast Cross-validation for Multi-penalty High-dimensional Ridge Regression"
-#'\emph{Journal of Computational and Graphical Statistics} 30(4):835-847
-#'\url{https://doi.org/10.1080/10618600.2021.1904962}
-#'
-multiridge <- function(X,Y,family){
-  XXblocks <- multiridge::createXXblocks(datablocks=X)
-  init <- multiridge::fastCV2(XXblocks=XXblocks,Y=Y)
-  folds <- multiridge::CVfolds(Y=Y)
-  final <- multiridge::optLambdasWrap(penaltiesinit=init$lambdas,
-                                      XXblocks=XXblocks,Y=Y,folds=folds)
-  XXT <- multiridge::SigmaFromBlocks(XXblocks=XXblocks,penalties=final$optpen)
-  object <- multiridge::IWLSridge(XXT=XXT,Y=Y,model=ifelse(family=="gaussian","linear",ifelse(family=="binomial","logistic",NA)))
-  object$family <- family
-  object$penalties <- final$optpen
-  object$datablocks <- X
-  class(object) <- "multiridge"
-  return(object)
-}
-
-#'@export
-#'@rdname multiridge
-predict.multiridge <- function(object,newx,...){
-  XXblocks <- multiridge::createXXblocks(datablocks=object$datablocks,datablocksnew=newx)
-  Sigmanew <- multiridge::SigmaFromBlocks(XXblocks=XXblocks,penalties=object$penalties)
-  eta <- multiridge::predictIWLS(IWLSfit=object,Sigmanew=Sigmanew)
-  y_hat <- starnet:::.mean.function(eta,family=object$family)
-  return(y_hat)
-}
-
-#'@export
-#'@rdname multiridge
-coef.multiridge <- function(object,...){
-  Xblocks <- multiridge::createXblocks(datablocks=object$datablocks)
-  beta <- multiridge::betasout(object,Xblocks=Xblocks,penalties=object$penalties)
-  return(beta)
-}
-
 #' @export
 #' 
 #' @title
@@ -110,23 +8,30 @@ coef.multiridge <- function(object,...){
 #' Implements penalised regression with multiple sets of prior effects
 #' 
 #' @param y
-#' target: vector of length \eqn{n}
+#' target: vector of length \eqn{n} (see \code{family})
 #' @param X
-#' features: matrix with \eqn{n} rows and \eqn{p} columns
+#' features: matrix with \eqn{n} rows (samples)
+#' and \eqn{p} columns (features)
 #' @param prior
-#' prior coefficients: matrix with \eqn{p} rows and \eqn{k} columns
+#' prior coefficients: matrix with \eqn{p} rows (features)
+#' and \eqn{k} columns (sources of co-data)
 #' @param family
-#' character "gaussian", "binomial", or "poisson"
+#' character "gaussian" (\eqn{y}: real numbers),
+#' "binomial" (\eqn{y}: 0s and 1s),
+#' or "poisson" (\eqn{y}: non-negative integers);
 #' @param alpha
-#' elastic net mixing parameter (0=ridge, 1=lasso)
+#' elastic net mixing parameter (0=ridge, 1=lasso):
+#' number between 0 and 1
 #' @param foldid
-#' fold identifiers: vector of length \eqn{n} with entries from 1 to \code{nfolds}
+#' fold identifiers: vector of length \eqn{n}
+#' with entries from 1 to \code{nfolds}
 #' @param nfolds
-#' number of folds: integer
+#' number of folds: positive integer
 #' @param scale
+#' character
 #' "exp" for exponential scaling (3 parameters),
-#' "iso" for isotonic scaling (1+p parameters),
-#' "sam" for shape-constrained additive scaling
+#' "iso" for isotonic scaling (1+\eqn{p} parameters),
+#' or "sam" for shape-constrained additive scaling
 #' @param sign
 #' sign discovery procedure: logical
 #' @param switch
@@ -134,11 +39,18 @@ coef.multiridge <- function(object,...){
 #' @param select
 #' select from sources: logical
 #' @param diffpen
-#' logical
+#' differential penalisation for features and meta-features: logical
+#' 
+#' @details
+#' * \eqn{n}: sample size
+#' * \eqn{p}: number of features
+#' * \eqn{k}: number of sources
+#' @md
 #' 
 #' @seealso
 #' Methods for objects of class \code{transreg}
-#' include ...
+#' include \code{\link[=coef.transreg]{coef}} and
+#' \code{\link[=predict.transreg]{predict}}.
 #' 
 #' @examples
 #' n <- 100; p <- 500
@@ -378,8 +290,7 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
 #' object of class 'transreg'
 #' @param newx
 #' features: matrix with m rows (samples) and p columns (variables)
-#' @param ...
-#' not applicable
+#' @param ... (not applicable)
 #' 
 #' @examples
 #' NA
@@ -393,18 +304,21 @@ predict.transreg <- function(object,newx,...){
   return(y_hat)
 }
 
+# only for mf-stacking
 predict.trial <- function(object,newx,...){
   one <- newx %*% object$base$prior$beta
   y_hat <- stats::predict(object$trial,s="lambda.min",newx=cbind(one,newx),type="response")
   return(y_hat)
 }
 
+# only for diffpen=TRUE
 predict.test <- function(object,newx,...){
   one <- newx %*% object$base$prior$beta
   y_hat <- stats::predict(object$test,newx=list(one,newx))
   return(y_hat)
 }
 
+# only for lp-stacking
 coef.transreg <- function(object,...){
   beta <- stats::coef(object$base,s=c(object$meta$lambda.min,object$meta$lambda.1se))
   omega <- as.numeric(stats::coef(object$meta,s=object$meta$lambda.min))
@@ -419,6 +333,7 @@ coef.transreg <- function(object,...){
   return(list(alpha=alpha_star,beta=beta_star))
 }
 
+# only for mf-stacking
 coef.trial <- function(object,...){
   gamma <- object$base$prior$beta
   meta <- stats::coef(object$trial,s="lambda.min")
@@ -454,16 +369,29 @@ coef.trial <- function(object,...){
 #' @description
 #' Calculates residuals from observed outcome
 #' and predicted values (Gaussian family)
-#' or predicted probablities (binomial family).
+#' or predicted probabilities (binomial family).
 #' 
-#' @inheritParams transreg
+#' @param y
+#' response: vector of length \eqn{n} (see family)
 #' @param y_hat
-#' predicted values: vector of length n, or matrix with n rows and k columns
+#' predicted values or probabilities (see family):
+#' vector of length \eqn{n},
+#' or matrix with \eqn{n} rows (samples) and \eqn{k} columns (methods)
 #' @param family
-#' "gaussian" or "binomial"
+#' character
+#' "gaussian" (\eqn{y}: real numbers, \eqn{y_hat}: real numbers)
+#' or "binomial" (\eqn{y}: 0s and 1s, \eqn{y_hat}: unit interval)
 #' 
 #' @examples
-#' NA
+#' n <- 100
+#' p <- 5
+#' X <- matrix(stats::rnorm(n*p),nrow=n,ncol=p)
+#' #y <- stats::rbinom(n,size=1,prob=0.5)
+#' y <- stats::rnorm(n)
+#' glm <- glm(y~X,family="gaussian")
+#' res <- residuals.glm(glm)
+#' y_hat <- predict(glm,type="response")
+#' all.equal(res,y-y_hat)
 #' 
 residuals <- function(y,y_hat,family){
   if(length(y_hat)==1){y_hat <- matrix(y_hat,nrow=length(y),ncol=1)}
@@ -491,7 +419,13 @@ residuals <- function(y,y_hat,family){
 #' @inheritParams transreg
 #' 
 #' @examples
-#' NA
+#' n <- 100; p <- 500
+#' X <- matrix(stats::rnorm(n*p),nrow=n,ncol=p)
+#' beta <- stats::rnorm(p)*stats::rbinom(n=p,size=1,prob=0.2)
+#' y <- X %*% beta
+#' prior <- matrix(abs(beta),ncol=1)
+#' temp <- sign.disc(y,X,prior,family="gaussian")
+#' table(sign(beta),sign(temp))
 #' 
 sign.disc <- function(y,X,prior,family,foldid=NULL,nfolds=10){
   cond <- apply(prior,2,function(x) any(x>0) & all(x>=0))
@@ -966,7 +900,7 @@ com.multiple <- function(y,X,prior,family,select=FALSE,switch=FALSE){
 #' X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
 #' beta <- rnorm(p)*rbinom(n=p,size=1,prob=0.2)
 #' y <- X %*% beta
-#' object <- cv.transfer(target=list(y=y,x=X),prior=beta,scale="com",family="gaussian",alpha=0)
+#' object <- cv.transfer(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0)
 #' 
 cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso",sign=FALSE,select=TRUE,switch=TRUE,foldid.ext=NULL,nfolds.ext=10,foldid.int=NULL,nfolds.int=10,type.measure="deviance",alpha.prior=NULL,partitions=NULL,monotone=NULL,prs=TRUE,diffpen=FALSE){
   
@@ -1327,8 +1261,6 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
   
   return(loss)
 }
-
-# CONTINUE HERE: cv.transfer function (so far only used for single split, error if other fold identifiers than 0 and 1?)
 
 #' @title
 #' Simulation

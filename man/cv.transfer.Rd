@@ -32,17 +32,22 @@ cv.transfer(
 
 \item{source}{list of k lists, each with slot x (feature matrix with m_i rows and p columns) and slot y (target vector of length m_i)}
 
-\item{prior}{prior coefficients: matrix with \eqn{p} rows and \eqn{k} columns}
+\item{prior}{prior coefficients: matrix with \eqn{p} rows (features)
+and \eqn{k} columns (sources of co-data)}
 
 \item{z}{prior weights}
 
-\item{family}{character "gaussian", "binomial", or "poisson"}
+\item{family}{character "gaussian" (\eqn{y}: real numbers),
+"binomial" (\eqn{y}: 0s and 1s),
+or "poisson" (\eqn{y}: non-negative integers);}
 
-\item{alpha}{elastic net mixing parameter (0=ridge, 1=lasso)}
+\item{alpha}{elastic net mixing parameter (0=ridge, 1=lasso):
+number between 0 and 1}
 
-\item{scale}{"exp" for exponential scaling (3 parameters),
-"iso" for isotonic scaling (1+p parameters),
-"sam" for shape-constrained additive scaling}
+\item{scale}{character
+"exp" for exponential scaling (3 parameters),
+"iso" for isotonic scaling (1+\eqn{p} parameters),
+or "sam" for shape-constrained additive scaling}
 
 \item{sign}{sign discovery procedure: logical}
 
@@ -79,6 +84,6 @@ n <- 100; p <- 500
 X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
 beta <- rnorm(p)*rbinom(n=p,size=1,prob=0.2)
 y <- X \%*\% beta
-object <- cv.transfer(target=list(y=y,x=X),prior=beta,scale="com",family="gaussian",alpha=0)
+object <- cv.transfer(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0)
 
 }

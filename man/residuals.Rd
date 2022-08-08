@@ -7,16 +7,19 @@
 residuals(y, y_hat, family)
 }
 \arguments{
-\item{y}{target: vector of length \eqn{n}}
+\item{y}{response: vector of length \eqn{n} (see family)}
 
-\item{y_hat}{predicted values: vector of length n, or matrix with n rows and k columns}
+\item{y_hat}{predicted values: vector of length \eqn{n},
+or matrix with \eqn{n} rows and \eqn{k} columns}
 
-\item{family}{"gaussian" or "binomial"}
+\item{family}{character
+"gaussian" (\eqn{y}: real numbers, \eqn{y_hat}: real numbers)
+or "binomial" (\eqn{y}: 0s and 1s, \eqn{y_hat}: ) $0 \leq x \leq 1$}
 }
 \description{
 Calculates residuals from observed outcome
 and predicted values (Gaussian family)
-or predicted probablities (binomial family).
+or predicted probabilities (binomial family).
 }
 \examples{
 NA

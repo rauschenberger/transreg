@@ -64,37 +64,44 @@
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>y</dt>
-<dd><p>target: vector of length \(n\)</p></dd>
+<dd><p>target: vector of length \(n\) (see <code>family</code>)</p></dd>
 
 
 <dt>X</dt>
-<dd><p>features: matrix with \(n\) rows and \(p\) columns</p></dd>
+<dd><p>features: matrix with \(n\) rows (samples)
+and \(p\) columns (features)</p></dd>
 
 
 <dt>prior</dt>
-<dd><p>prior coefficients: matrix with \(p\) rows and \(k\) columns</p></dd>
+<dd><p>prior coefficients: matrix with \(p\) rows (features)
+and \(k\) columns (sources of co-data)</p></dd>
 
 
 <dt>family</dt>
-<dd><p>character "gaussian", "binomial", or "poisson"</p></dd>
+<dd><p>character "gaussian" (\(y\): real numbers),
+"binomial" (\(y\): 0s and 1s),
+or "poisson" (\(y\): non-negative integers);</p></dd>
 
 
 <dt>alpha</dt>
-<dd><p>elastic net mixing parameter (0=ridge, 1=lasso)</p></dd>
+<dd><p>elastic net mixing parameter (0=ridge, 1=lasso):
+number between 0 and 1</p></dd>
 
 
 <dt>foldid</dt>
-<dd><p>fold identifiers: vector of length \(n\) with entries from 1 to <code>nfolds</code></p></dd>
+<dd><p>fold identifiers: vector of length \(n\)
+with entries from 1 to <code>nfolds</code></p></dd>
 
 
 <dt>nfolds</dt>
-<dd><p>number of folds: integer</p></dd>
+<dd><p>number of folds: positive integer</p></dd>
 
 
 <dt>scale</dt>
-<dd><p>"exp" for exponential scaling (3 parameters),
-"iso" for isotonic scaling (1+p parameters),
-"sam" for shape-constrained additive scaling</p></dd>
+<dd><p>character
+"exp" for exponential scaling (3 parameters),
+"iso" for isotonic scaling (1+\(p\) parameters),
+or "sam" for shape-constrained additive scaling</p></dd>
 
 
 <dt>sign</dt>
@@ -110,13 +117,21 @@
 
 
 <dt>diffpen</dt>
-<dd><p>logical</p></dd>
+<dd><p>differential penalisation for features and meta-features: logical</p></dd>
 
 </dl></div>
     <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    
+<ul><li><p>\(n\): sample size</p></li>
+<li><p>\(p\): number of features</p></li>
+<li><p>\(k\): number of sources</p></li>
+</ul></div>
+    <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Methods for objects of class <code>transreg</code>
-include ...</p></div>
+include <code>coef</code> and
+<code><a href="predict.transreg.html">predict</a></code>.</p></div>
     </div>
 
     <div class="section level2">
