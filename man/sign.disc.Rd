@@ -33,7 +33,7 @@ X <- matrix(stats::rnorm(n*p),nrow=n,ncol=p)
 beta <- stats::rnorm(p)*stats::rbinom(n=p,size=1,prob=0.2)
 y <- X \%*\% beta
 prior <- matrix(abs(beta),ncol=1)
-temp <- sign.disc(y,X,prior,family="gaussian")
-table(sign(beta),sign(temp))
+#temp <- sign.disc(y,X,prior,family="gaussian")
+#table(sign(beta),sign(temp))
 
 }

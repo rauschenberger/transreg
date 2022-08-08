@@ -319,6 +319,20 @@ predict.test <- function(object,newx,...){
 }
 
 # only for lp-stacking
+
+#'@export
+#'
+#'@title
+#'Coefficients
+#'
+#'@description
+#'Extracts coefficients
+#'
+#'@inheritParams predict.transreg
+#'
+#'@examples
+#'NA
+#'
 coef.transreg <- function(object,...){
   beta <- stats::coef(object$base,s=c(object$meta$lambda.min,object$meta$lambda.1se))
   omega <- as.numeric(stats::coef(object$meta,s=object$meta$lambda.min))
@@ -424,8 +438,8 @@ residuals <- function(y,y_hat,family){
 #' beta <- stats::rnorm(p)*stats::rbinom(n=p,size=1,prob=0.2)
 #' y <- X %*% beta
 #' prior <- matrix(abs(beta),ncol=1)
-#' temp <- sign.disc(y,X,prior,family="gaussian")
-#' table(sign(beta),sign(temp))
+#' #temp <- sign.disc(y,X,prior,family="gaussian")
+#' #table(sign(beta),sign(temp))
 #' 
 sign.disc <- function(y,X,prior,family,foldid=NULL,nfolds=10){
   cond <- apply(prior,2,function(x) any(x>0) & all(x>=0))
