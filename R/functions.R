@@ -735,8 +735,8 @@ iso.multiple <- function(y,X,prior,family,select=TRUE,switch=TRUE){
     
     pval1 <- apply(res1,2,function(x) suppressWarnings(stats::wilcox.test(x=x,y=res,paired=TRUE,alternative="less")$p.value))
     
-    message(paste(signif(pval0,digits=2),sep=" "),"\n")
-    message(paste(signif(pval1,digits=2),sep=" "),"\n")
+    message("p-value (increasing): ",paste0(signif(pval0,digits=2),sep=" "))
+    message("p-value (decreasing): ",paste0(signif(pval1,digits=2),sep=" "))
     
     cond <- pval0 <= pval1
     #ALPHA[cond] <- alpha0[cond]
@@ -914,7 +914,12 @@ com.multiple <- function(y,X,prior,family,select=FALSE,switch=FALSE){
 #' X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
 #' beta <- rnorm(p)*rbinom(n=p,size=1,prob=0.2)
 #' y <- X %*% beta
+#' \dontrun{
 #' object <- cv.transfer(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0)
+#' }
+#'\dontshow{
+#' object <- suppressMessages(cv.transfer(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0))
+#' }
 #' 
 cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso",sign=FALSE,select=TRUE,switch=TRUE,foldid.ext=NULL,nfolds.ext=10,foldid.int=NULL,nfolds.int=10,type.measure="deviance",alpha.prior=NULL,partitions=NULL,monotone=NULL,prs=TRUE,diffpen=FALSE){
   
