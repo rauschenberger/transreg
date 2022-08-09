@@ -49,8 +49,8 @@
 #' 
 #' @seealso
 #' Methods for objects of class `transreg`
-#' include \code{\link[=coef.transreg]{coef}} 
-#' and \code{\link[=predict.transreg]{predict}}.
+#' include \code{\link[=coef.lp]{coef}} 
+#' and \code{\link[=predict.lp]{predict}}.
 #' 
 #' @references
 #' Armin Rauschenberger 
@@ -182,7 +182,7 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
     
     # predictions
     for(j in seq_len(k)){
-      y_hat[foldid==i,j] <- X1 %*% prior.int$beta[,j] # original (harmonise with predict.transreg)
+      y_hat[foldid==i,j] <- X1 %*% prior.int$beta[,j] # original (harmonise with predict.lp)
       #y_hat[foldid==i,j] <- prior.int$alpha[j] + X1 %*% prior.int$beta[,j] # trial 2022-01-04 (see below)
     }
     y_hat[foldid==i,k+1] <- base$fit.preval[base$foldid==i,base$lambda==base$lambda.min]
@@ -206,7 +206,7 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   #id <- which.min(cvm) # trial
   #temp <- Y_hat[,id] # trial
   #all(y_hat[,k+1]==temp) # trial
-  #y_hat[,k+1] <- Y_hat[,id]-int[,id] # trial (harmonise with predict.transreg)
+  #y_hat[,k+1] <- Y_hat[,id]-int[,id] # trial (harmonise with predict.lp)
   
   if(FALSE & scale=="com"){
     message("experimental tuning","\n")
@@ -309,7 +309,7 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
 #' @examples
 #' NA
 #' 
-predict.transreg <- function(object,newx,...){
+predict.lp <- function(object,newx,...){
   one <- newx %*% object$base$prior$beta # original (harmonise with transreg)
   #one <- object$base$prior$alpha + newx %*% object$base$prior$beta # trial 2022-01-04 (see above)
   two <- stats::predict(object$base,s=c(object$base$lambda.min,object$base$lambda.1se),newx=newx) # was s="lambda.min"
@@ -318,8 +318,8 @@ predict.transreg <- function(object,newx,...){
   return(y_hat)
 }
 
-# only for mf-stacking
-predict.trial <- function(object,newx,...){
+#'@rdname predict.lp
+predict.mf <- function(object,newx,...){
   one <- newx %*% object$base$prior$beta
   y_hat <- stats::predict(object$trial,s="lambda.min",newx=cbind(one,newx),type="response")
   return(y_hat)
@@ -342,12 +342,12 @@ predict.test <- function(object,newx,...){
 #'@description
 #'Extracts coefficients
 #'
-#'@inheritParams predict.transreg
+#'@inheritParams predict.lp
 #'
 #'@examples
 #'NA
 #'
-coef.transreg <- function(object,...){
+coef.lp <- function(object,...){
   beta <- stats::coef(object$base,s=c(object$meta$lambda.min,object$meta$lambda.1se))
   omega <- as.numeric(stats::coef(object$meta,s=object$meta$lambda.min))
   names <- paste0("source",seq_len(ncol(object$base$prior$beta)))
@@ -361,8 +361,8 @@ coef.transreg <- function(object,...){
   return(list(alpha=alpha_star,beta=beta_star))
 }
 
-# only for mf-stacking
-coef.trial <- function(object,...){
+#'@rdname coef.lp
+coef.mf <- function(object,...){
   gamma <- object$base$prior$beta
   meta <- stats::coef(object$trial,s="lambda.min")
   k <- ncol(object$base$prior$beta)
@@ -1165,14 +1165,14 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
       set.seed(seed) # trial
       start <- Sys.time()
       object <- transreg(y=y0,X=X0,prior=prior,family=family,foldid=foldid,alpha=alpha,scale=scale[j],sign=sign,switch=switch,select=select,diffpen=diffpen)
-      pred[foldid.ext==i,paste0("transreg_",scale[j],"_lp")] <- stats::predict(object,newx=X1)
+      pred[foldid.ext==i,paste0("transreg_",scale[j],"_lp")] <- predict.lp(object,newx=X1)
       end <- Sys.time()
       time["transreg"] <- time["transreg"]+difftime(time1=end,time2=start,units="secs")
       # transreg trial
       if(diffpen){
         pred[foldid.ext==i,paste0("transreg_",scale[j],"_mf")] <- predict.test(object,newx=X1)
       } else {
-        pred[foldid.ext==i,paste0("transreg_",scale[j],"_mf")] <- predict.trial(object,newx=X1)
+        pred[foldid.ext==i,paste0("transreg_",scale[j],"_mf")] <- predict.mf(object,newx=X1)
       }
     }
     

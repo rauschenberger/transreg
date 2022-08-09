@@ -11,8 +11,10 @@ reference:
 - title: "Main functions"
   contents:
   - transreg
-  - coef.transreg
-  - predict.transreg
+  - coef.lp
+  - coef.mf
+  - predict.lp
+  - predict.mf
   - cv.transfer
   - multiridge
 

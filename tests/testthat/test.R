@@ -48,8 +48,8 @@ for(scale in c("exp","iso")){
   
   # old approach
   
-  y_hat1 <- predict(object,newx=X)
-  coef <- coef.transreg(object=object)
+  y_hat1 <- predict.lp(object,newx=X)
+  coef <- coef.lp(object=object)
   y_hat2 <- joinet:::.mean.function(coef$alpha + X %*% coef$beta,family=family)
   
   testthat::test_that("correlation (pred, coef)",{
@@ -60,8 +60,8 @@ for(scale in c("exp","iso")){
   
   # new approach
   
-  y_hat1 <- predict.trial(object,newx=X)
-  coef <- coef.trial(object=object)
+  y_hat1 <- predict.mf(object,newx=X)
+  coef <- coef.mf(object=object)
   y_hat2 <- joinet:::.mean.function(coef$alpha + X %*% coef$beta,family=family)
   
   testthat::test_that("correlation (pred, coef)",{
@@ -86,8 +86,8 @@ for(i in seq_along(prior)){
   object[[i]] <- transreg(y=y,X=X,prior=prior[[i]],family=family,scale=scale)
 }
 pred <- list()
-pred[[1]] <- predict(object[[1]],newx=X)
-pred[[2]] <- predict(object[[2]],newx=X)
+pred[[1]] <- predict.lp(object[[1]],newx=X)
+pred[[2]] <- predict.lp(object[[2]],newx=X)
 
 testthat::test_that("prior re-scaling",{
   cond1 <- mean(pred[[1]])-mean(pred[[2]])<0.01
