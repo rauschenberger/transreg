@@ -4,7 +4,7 @@
 \alias{multiridge}
 \alias{predict.multiridge}
 \alias{coef.multiridge}
-\title{multiridge wrapper}
+\title{Multi-penalty ridge regression}
 \usage{
 multiridge(X, Y, family)
 
@@ -26,7 +26,11 @@ multiridge(X, Y, family)
 \item{...}{(not applicable)}
 }
 \description{
-see multiridge package.
+These functions can be used to
+cross-validate multi-penalty ridge regression (\code{multiridge}),
+extract predicted values (\code{predict.multiridge}),
+and extract estimated coefficients (\code{coef.multiridge}).
+For full functionality, use the R package \code{\link[multiridge:multiridge-package]{multiridge}}.
 }
 \examples{
 # simulation
@@ -79,10 +83,14 @@ all.equal(y_hat1,y_hat2)
 
 }
 \references{
-Mark A. van de Wiel \href{https://orcid.org/0000-0003-4780-8472}{\figure{https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png}},
-Mirrelijn M. van Nee \href{https://orcid.org/0000-0001-7715-1446}{\figure{https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png}},
-and Armin Rauschenberger \href{https://orcid.org/0000-0001-6498-4801}{\figure{https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png}} (2021).
-"Fast Cross-validation for Multi-penalty High-dimensional Ridge Regression"
-\emph{Journal of Computational and Graphical Statistics} 30(4):835-847
-\url{https://doi.org/10.1080/10618600.2021.1904962}
+Mark A. van de Wiel
+\href{https://orcid.org/0000-0003-4780-8472}{\figure{orcid_16x16.png}},
+Mirrelijn M. van Nee
+\href{https://orcid.org/0000-0001-7715-1446}{\figure{orcid_16x16.png}},
+and Armin Rauschenberger
+\href{https://orcid.org/0000-0001-6498-4801}{\figure{orcid_16x16.png}}
+(2021).
+"Fast cross-validation for multi-penalty high-dimensional ridge regression".
+\emph{Journal of Computational and Graphical Statistics} 30(4):835-847.
+\doi{10.1080/10618600.2021.1904962}
 }

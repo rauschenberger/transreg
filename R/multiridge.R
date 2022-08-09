@@ -1,10 +1,14 @@
 
 #'@export
 #'@title
-#'multiridge wrapper
+#'Multi-penalty ridge regression
 #'
 #'@description
-#'see multiridge package.
+#'These functions can be used to
+#'cross-validate multi-penalty ridge regression (`multiridge`),
+#'extract predicted values (`predict.multiridge`),
+#'and extract estimated coefficients (`coef.multiridge`).
+#'For full functionality, use the R package [`multiridge`][multiridge::multiridge-package].
 #'
 #'@param X list of matrices with n rows
 #'@param Y vector of length n
@@ -63,12 +67,17 @@
 #'all.equal(y_hat1,y_hat2)
 #'
 #'@references
-#'Mark A. van de Wiel [![MvdW](https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png)](https://orcid.org/0000-0003-4780-8472),
-#'Mirrelijn M. van Nee [![MvN](https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png)](https://orcid.org/0000-0001-7715-1446),
-#'and Armin Rauschenberger [![AR](https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png)](https://orcid.org/0000-0001-6498-4801) (2021).
-#'"Fast Cross-validation for Multi-penalty High-dimensional Ridge Regression"
-#'\emph{Journal of Computational and Graphical Statistics} 30(4):835-847
-#'\url{https://doi.org/10.1080/10618600.2021.1904962}
+#'Mark A. van de Wiel
+#'[![MvdW](orcid_16x16.png)](https://orcid.org/0000-0003-4780-8472),
+#'Mirrelijn M. van Nee
+#'[![MvN](orcid_16x16.png)](https://orcid.org/0000-0001-7715-1446),
+#'and Armin Rauschenberger
+#'[![AR](orcid_16x16.png)](https://orcid.org/0000-0001-6498-4801)
+#'(2021).
+#'"Fast cross-validation for multi-penalty high-dimensional ridge regression".
+#'*Journal of Computational and Graphical Statistics* 30(4):835-847.
+#'\doi{10.1080/10618600.2021.1904962} 
+#'@md
 #'
 multiridge <- function(X,Y,family){
   XXblocks <- multiridge::createXXblocks(datablocks=X)
