@@ -26,3 +26,6 @@ Performs isotonic scaling
 NA
 
 }
+\seealso{
+\code{\link[=.iso.slow.single]{.iso.slow.single()}}
+}

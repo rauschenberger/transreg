@@ -30,3 +30,6 @@ Performs exponential scaling
 NA
 
 }
+\seealso{
+\code{\link[=.iso.multiple]{.iso.multiple()}}
+}

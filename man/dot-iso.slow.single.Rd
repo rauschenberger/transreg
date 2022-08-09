@@ -27,5 +27,5 @@ NA
 
 }
 \seealso{
-.iso.fast.single
+\code{\link[=.iso.fast.single]{.iso.fast.single()}}
 }

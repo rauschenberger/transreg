@@ -30,3 +30,6 @@ Performs isotonic scaling
 NA
 
 }
+\seealso{
+\code{\link[=.exp.multiple]{.exp.multiple()}}
+}

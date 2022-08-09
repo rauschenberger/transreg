@@ -470,6 +470,9 @@ coef.trial <- function(object,...){
 #' @inheritParams transreg
 #' @param plot logical
 #' 
+#' @seealso
+#' [.iso.multiple()]
+#' 
 #' @examples
 #' NA
 #' 
@@ -551,7 +554,7 @@ coef.trial <- function(object,...){
 #' @inheritParams transreg
 #' 
 #' @seealso
-#' .iso.fast.single
+#' [.iso.fast.single()]
 #' 
 #' @examples 
 #' NA
@@ -628,6 +631,9 @@ coef.trial <- function(object,...){
 #' 
 #' @inheritParams transreg
 #' 
+#' @seealso
+#' [.iso.slow.single()]
+#' 
 #' @examples
 #' NA
 #' 
@@ -678,6 +684,9 @@ coef.trial <- function(object,...){
 #' Performs isotonic scaling
 #' 
 #' @inheritParams transreg
+#' 
+#' @seealso
+#' [.exp.multiple()]
 #' 
 #' @examples 
 #' NA
