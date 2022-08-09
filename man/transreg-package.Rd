@@ -22,8 +22,15 @@ NA
 
 }
 \references{
-Armin Rauschenberger, Zied Landoulsi,
-Mark A van de Wiel, and Enrico Glaab (2022).
+Armin Rauschenberger
+\href{https://orcid.org/0000-0001-6498-4801}{\figure{orcid_16x16.png}},
+Zied Landoulsi
+\href{https://orcid.org/0000-0002-2327-3904}{\figure{orcid_16x16.png}},
+Mark A van de Wiel
+\href{https://orcid.org/0000-0003-4780-8472}{\figure{orcid_16x16.png}},
+and Enrico Glaab
+\href{https://orcid.org/0000-0003-3977-7469}{\figure{orcid_16x16.png}}
+(2022).
 "Penalised regression with multiple sets of prior effects".
 \emph{Manuscript in preparation.}
 \email{armin.rauschenberger@uni.lu}

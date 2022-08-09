@@ -19,10 +19,17 @@
 #' to open the vignette.
 #' 
 #' @references
-#' Armin Rauschenberger, Zied Landoulsi,
-#' Mark A van de Wiel, and Enrico Glaab (2022).
+#' Armin Rauschenberger 
+#' [![AR](orcid_16x16.png)](https://orcid.org/0000-0001-6498-4801),
+#' Zied Landoulsi
+#' [![ZL](orcid_16x16.png)](https://orcid.org/0000-0002-2327-3904),
+#' Mark A van de Wiel 
+#' [![MvdW](orcid_16x16.png)](https://orcid.org/0000-0003-4780-8472),
+#' and Enrico Glaab
+#' [![EG](orcid_16x16.png)](https://orcid.org/0000-0003-3977-7469)
+#' (2022).
 #' "Penalised regression with multiple sets of prior effects".
-#' \emph{Manuscript in preparation.}
+#' *Manuscript in preparation.*
 #' \email{armin.rauschenberger@uni.lu}
 #' 
 #' @examples
