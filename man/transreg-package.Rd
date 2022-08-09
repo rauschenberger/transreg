@@ -5,13 +5,13 @@
 \alias{transreg-package}
 \title{Penalised regression with multiple sets of prior effects}
 \description{
-The R package \code{starnet} implements penalised regression
+The R package \code{transreg} implements penalised regression
 with multiple sets of prior effects.
 }
 \details{
-Use function \code{\link{transreg}} for model fitting.
+Use function \code{\link[=transreg]{transreg()}} for model fitting.
 Type \code{library(transreg)} and then \code{?transreg} or
-\code{help("transreg)"} to open its help file.
+\verb{help("transreg)"} to open its help file.
 
 See the vignette for further examples.
 Type \code{vignette("transreg")} or \code{browseVignettes("transreg")}

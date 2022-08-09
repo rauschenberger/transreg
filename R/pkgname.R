@@ -1,3 +1,4 @@
+
 #' @name transreg-package
 #' @keywords documentation
 #' @docType package
@@ -6,16 +7,16 @@
 #' Penalised regression with multiple sets of prior effects
 #' 
 #' @description
-#' The R package \code{starnet} implements penalised regression
+#' The R package `transreg` implements penalised regression
 #' with multiple sets of prior effects.
 #' 
 #' @details
-#' Use function \code{\link{transreg}} for model fitting.
-#' Type \code{library(transreg)} and then \code{?transreg} or
-#' \code{help("transreg)"} to open its help file.
+#' Use function [transreg()] for model fitting.
+#' Type `library(transreg)` and then `?transreg` or
+#' `help("transreg)"` to open its help file.
 #' 
 #' See the vignette for further examples.
-#' Type \code{vignette("transreg")} or \code{browseVignettes("transreg")}
+#' Type `vignette("transreg")` or `browseVignettes("transreg")`
 #' to open the vignette.
 #' 
 #' @references
