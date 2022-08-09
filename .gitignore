@@ -1,3 +1,4 @@
 .DS_Store
 .Rhistory
 *.png
+!orcid_16x16.png
