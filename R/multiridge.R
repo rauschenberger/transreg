@@ -29,7 +29,7 @@
 #'beta1 <- rep(c(0,10),times=c(p1-4,4))
 #'beta2 <- c(rnorm(100),rep(0,times=p2-100))
 #'eta <- X2 %*% beta2 + X1 %*% beta1
-#'family <- "binomial"
+#'family <- "binomial" # "gaussian" or "binomial"
 #'if(family=="gaussian"){
 #'  y <- eta
 #'} else if(family=="binomial"){

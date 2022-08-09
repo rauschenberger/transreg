@@ -2,3 +2,26 @@ url: ~
 template:
   bootstrap: 5
 
+reference:
+
+- title: "R Package"
+  contents:
+  - transreg-package
+
+- title: "Main functions"
+  contents:
+  - transreg
+  - coef.transreg
+  - predict.transreg
+  - cv.transfer
+  - multiridge
+
+- title: "Internal functions"
+  contents:
+  - .simulate
+  - .exp.multiple
+  - .iso.fast.single
+  - .iso.multiple
+  - .iso.slow.single
+  - .residuals
+  - .signdisc
