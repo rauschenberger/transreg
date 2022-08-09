@@ -12,8 +12,8 @@ y <- X %*% beta
 prior1 <- beta + stats::rnorm(p,sd=0.1)
 prior2 <- beta + stats::rnorm(p,sd=0.1)
 
-slow <- iso.slow.single(y=y,X=X,prior=matrix(prior1,ncol=1),family="gaussian")$beta
-fast <- iso.fast.single(y=y,X=X,prior=matrix(prior1,ncol=1),family="gaussian")$beta
+slow <- .iso.slow.single(y=y,X=X,prior=matrix(prior1,ncol=1),family="gaussian")$beta
+fast <- .iso.fast.single(y=y,X=X,prior=matrix(prior1,ncol=1),family="gaussian")$beta
 
 testthat::test_that("expected signs (slow)",{
   cond1 <- all(slow[prior1==0]==0)

@@ -115,13 +115,13 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   }
   base$z <- prior.ext
   if(scale=="exp"){
-    prior.ext <- exp.multiple(y=y,X=X,prior=prior.ext,family=family,select=select)
+    prior.ext <- .exp.multiple(y=y,X=X,prior=prior.ext,family=family,select=select)
   } else if(scale=="iso"){
-    prior.ext <- iso.multiple(y=y,X=X,prior=prior.ext,family=family,select=select,switch=switch)
+    prior.ext <- .iso.multiple(y=y,X=X,prior=prior.ext,family=family,select=select,switch=switch)
   } else if(scale=="sam"){
-    prior.ext <- sam.multiple(y=y,X=X,prior=prior.ext,family=family,select=select,switch=switch,base=base)
+    prior.ext <- .sam.multiple(y=y,X=X,prior=prior.ext,family=family,select=select,switch=switch,base=base)
   } else if(scale=="com"){
-    prior.ext <- com.multiple(y=y,X=X,prior=prior.ext,family=family,select=select,switch=switch)
+    prior.ext <- .com.multiple(y=y,X=X,prior=prior.ext,family=family,select=select,switch=switch)
     k <- ncol(prior.ext$beta)
   } else {
     stop("Invalid scale.",call.=FALSE)
@@ -154,13 +154,13 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
       #prior.int[prior.ext<0] <- -prior.int[prior.ext<0] # temporary
     }
     if(scale=="exp"){
-      prior.int <- exp.multiple(y=y0,X=X0,prior=prior.int,family=family,select=select)
+      prior.int <- .exp.multiple(y=y0,X=X0,prior=prior.int,family=family,select=select)
     } else if(scale=="iso"){
-      prior.int <- iso.multiple(y=y0,X=X0,prior=prior.int,family=family,select=select,switch=switch)
+      prior.int <- .iso.multiple(y=y0,X=X0,prior=prior.int,family=family,select=select,switch=switch)
     } else if(scale=="sam"){
-      prior.int <- sam.multiple(y=y0,X=X0,prior=prior.int,family=family,select=select,switch=switch,base=base)
+      prior.int <- .sam.multiple(y=y0,X=X0,prior=prior.int,family=family,select=select,switch=switch,base=base)
     } else if(scale=="com"){
-      prior.int <- com.multiple(y=y0,X=X0,prior=prior.int,family=family,select=select,switch=switch)
+      prior.int <- .com.multiple(y=y0,X=X0,prior=prior.int,family=family,select=select,switch=switch)
       k <- ncol(prior.int$beta)
     } else {
       stop("Invalid scale.",call.=FALSE)
@@ -473,7 +473,7 @@ coef.trial <- function(object,...){
 #' @examples
 #' NA
 #' 
-exp.multiple <- function(y,X,prior,family,select,plot=TRUE){
+.exp.multiple <- function(y,X,prior,family,select,plot=TRUE){
   
   #message("Exponential scaling ...")
   
@@ -551,12 +551,12 @@ exp.multiple <- function(y,X,prior,family,select,plot=TRUE){
 #' @inheritParams transreg
 #' 
 #' @seealso
-#' iso.fast.single
+#' .iso.fast.single
 #' 
 #' @examples 
 #' NA
 #' 
-iso.slow.single <- function(y,X,prior,family){
+.iso.slow.single <- function(y,X,prior,family){
   
   message("Isotonic scaling ...")
   
@@ -631,7 +631,7 @@ iso.slow.single <- function(y,X,prior,family){
 #' @examples
 #' NA
 #' 
-iso.fast.single <- function(y,X,prior,family){
+.iso.fast.single <- function(y,X,prior,family){
   n <- length(y)
   p <- nrow(prior)
   k <- ncol(prior)
@@ -682,14 +682,14 @@ iso.fast.single <- function(y,X,prior,family){
 #' @examples 
 #' NA
 #' 
-iso.multiple <- function(y,X,prior,family,select=TRUE,switch=TRUE){
+.iso.multiple <- function(y,X,prior,family,select=TRUE,switch=TRUE){
   
   k <- ncol(prior)
   
   #ALPHA <- rep(NA,times=ncol(prior))
   #BETA <- matrix(NA,nrow=nrow(prior),ncol=ncol(prior))
   
-  prior0 <- iso.fast.single(y=y,X=X,prior=+prior,family=family) # was iso.slow.single
+  prior0 <- .iso.fast.single(y=y,X=X,prior=+prior,family=family) # was .iso.slow.single
   alpha0 <- prior0$alpha; beta0 <- prior0$beta
   # beta0[beta0==min(beta0)] <- sort(beta0,decreasing=FALSE)[2] # hack (trial)
   fit0 <- joinet:::.mean.function(alpha0 + X %*% beta0,family=family)
@@ -716,7 +716,7 @@ iso.multiple <- function(y,X,prior,family,select=TRUE,switch=TRUE){
   pval0 <- apply(res0,2,function(x) suppressWarnings(stats::wilcox.test(x=x,y=res,paired=TRUE,alternative="less")$p.value))
   
   if(switch){
-    prior1 <- iso.fast.single(y=y,X=X,prior=-prior,family=family) # was iso.slow.single
+    prior1 <- .iso.fast.single(y=y,X=X,prior=-prior,family=family) # was .iso.slow.single
     alpha1 <- prior1$alpha; beta1 <- prior1$beta
     fit1 <- joinet:::.mean.function(alpha1 + X %*% beta1,family=family)
     
@@ -771,7 +771,7 @@ iso.multiple <- function(y,X,prior,family,select=TRUE,switch=TRUE){
   return(list(alpha=alpha0,beta=beta0)) # was alpha=NULL # trial 2022-01-04
 }
 
-sam.multiple <- function(y,X,prior,family,select=TRUE,switch=TRUE,base){
+.sam.multiple <- function(y,X,prior,family,select=TRUE,switch=TRUE,base){
   
   #if(!is.null(base)){
   #  stop("Implement this.")
@@ -834,18 +834,18 @@ sam.multiple <- function(y,X,prior,family,select=TRUE,switch=TRUE,base){
 
 # combining based on the lowest residuals makes no sense as isotonic calibration
 # will always get closer to the observed values than exponential calibration
-com.multiple <- function(y,X,prior,family,select=FALSE,switch=FALSE){
+.com.multiple <- function(y,X,prior,family,select=FALSE,switch=FALSE){
   if(select){warning("Argument select not implemented.")}
   n <- length(y); p <- ncol(X); q <- ncol(prior)
   alpha <- numeric() # rep(NA,times=q)
   beta <- numeric() # matrix(NA,nrow=p,ncol=q)
   for(i in seq_len(q)){
     model <- list()
-    model$iso <- iso.fast.single(y=y,X=X,prior=prior[,i,drop=FALSE],family=family)
+    model$iso <- .iso.fast.single(y=y,X=X,prior=prior[,i,drop=FALSE],family=family)
     if(switch){
-      model$iso_inv <- iso.fast.single(y=y,X=X,prior=-prior[,i,drop=FALSE],family=family)
+      model$iso_inv <- .iso.fast.single(y=y,X=X,prior=-prior[,i,drop=FALSE],family=family)
     }
-    model$exp <- exp.multiple(y=y,X=X,prior=prior[,i,drop=FALSE],family=family,select=FALSE)
+    model$exp <- .exp.multiple(y=y,X=X,prior=prior[,i,drop=FALSE],family=family,select=FALSE)
     y_hat <- matrix(data=NA,nrow=n,ncol=length(model))
     for(j in seq_along(model)){
       eta <- model[[j]]$alpha + X %*% model[[j]]$beta
@@ -877,7 +877,7 @@ com.multiple <- function(y,X,prior,family,select=FALSE,switch=FALSE){
       alpha <- c(alpha,(1-w[j])*model$exp$alpha + w[j]*model$iso$alpha)
       beta <- cbind(beta,(1-w[j])*model$exp$beta + w[j]*model$iso$beta)
     }
-    warning("temporary version com.multiple")
+    warning("temporary version .com.multiple")
   }
   return(list(alpha=alpha,beta=beta))
 }
