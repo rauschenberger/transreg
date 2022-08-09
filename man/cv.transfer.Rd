@@ -23,7 +23,7 @@ cv.transfer(
   alpha.prior = NULL,
   partitions = NULL,
   monotone = NULL,
-  prs = TRUE,
+  naive = TRUE,
   diffpen = FALSE
 )
 }
@@ -71,7 +71,7 @@ or "sam" for shape-constrained additive scaling}
 
 \item{monotone}{logical}
 
-\item{prs}{logical}
+\item{naive}{compare with naive transfer learning: logical}
 
 \item{diffpen}{logical}
 }

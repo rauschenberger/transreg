@@ -906,7 +906,7 @@ com.multiple <- function(y,X,prior,family,select=FALSE,switch=FALSE){
 #' @param type.measure character
 #' @param alpha.prior alpha for source regression
 #' @param monotone logical
-#' @param prs logical
+#' @param naive compare with naive transfer learning: logical
 #' @param diffpen logical
 #' 
 #' @examples
@@ -921,7 +921,7 @@ com.multiple <- function(y,X,prior,family,select=FALSE,switch=FALSE){
 #' object <- suppressMessages(cv.transfer(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0))
 #' }
 #' 
-cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso",sign=FALSE,select=TRUE,switch=TRUE,foldid.ext=NULL,nfolds.ext=10,foldid.int=NULL,nfolds.int=10,type.measure="deviance",alpha.prior=NULL,partitions=NULL,monotone=NULL,prs=TRUE,diffpen=FALSE){
+cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso",sign=FALSE,select=TRUE,switch=TRUE,foldid.ext=NULL,nfolds.ext=10,foldid.int=NULL,nfolds.int=10,type.measure="deviance",alpha.prior=NULL,partitions=NULL,monotone=NULL,naive=TRUE,diffpen=FALSE){
   
   if(FALSE){
     if(!exists("source")){source <- NULL}
@@ -935,7 +935,7 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
     if(!exists("alpha.prior")){alpha.prior <- NULL}
     if(!exists("partitions")){partitions <- NULL}
     if(!exists("monotone")){monotone <- NULL}
-    if(!exists("prs")){prs <- FALSE}
+    if(!exists("naive")){naive <- FALSE}
     if(!exists("diffpen")){diffpen <- FALSE}
   }
   
@@ -1079,7 +1079,7 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
   #--- end new ---
   
   temp <- paste0(rep(c("transreg_","transreg_"),each=length(scale)),scale,rep(c("_lp","_mf"),each=length(scale)))
-  names <- c("mean","glmnet","glmtrans"[!is.null(source)],temp,"GRridge"[trial],"NoGroups"[trial],"fwelnet"[trial2],"xtune"[trial2],"CoRF"[trial2],"ecpc"[trial2],"prs"[prs]) # "transreg.test"
+  names <- c("mean","glmnet","glmtrans"[!is.null(source)],temp,"GRridge"[trial],"NoGroups"[trial],"fwelnet"[trial2],"xtune"[trial2],"CoRF"[trial2],"ecpc"[trial2],"naive"[naive]) # "transreg.test"
   pred <- matrix(data=NA,nrow=length(target$y),ncol=length(names),dimnames=list(NULL,names))
   time <- rep(0,time=length(names)); names(time) <- names
   
@@ -1142,14 +1142,14 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
       }
     }
     
-    # PRS
-    if(prs){
+    # naive
+    if(naive){
       set.seed(seed)
       start <- Sys.time()
       glm <- stats::glm(formula=y0 ~ .,family=family,data=data.frame(x=X0 %*% prior)) # was y~x
-      pred[foldid.ext==i,"prs"] <- stats::predict(glm,newdata=data.frame(x=X1 %*% prior),type="response")
+      pred[foldid.ext==i,"naive"] <- stats::predict(glm,newdata=data.frame(x=X1 %*% prior),type="response")
       end <- Sys.time()
-      time["prs"] <- time["prs"] + difftime(time1=end,time2=start,units="secs")
+      time["naive"] <- time["naive"] + difftime(time1=end,time2=start,units="secs")
     }
     
     # GRridge
