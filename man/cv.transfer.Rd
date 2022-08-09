@@ -84,11 +84,9 @@ n <- 100; p <- 500
 X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
 beta <- rnorm(p)*rbinom(n=p,size=1,prob=0.2)
 y <- X \%*\% beta
-\dontrun{
-object <- cv.transfer(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0)
-}
 \dontshow{
-object <- suppressMessages(cv.transfer(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0))
-}
+object <- suppressMessages(cv.transfer(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0))}
+\dontrun{
+object <- cv.transfer(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0)}
 
 }
