@@ -13,7 +13,7 @@
 #' @details
 #' Use function [transreg()] for model fitting.
 #' Type `library(transreg)` and then `?transreg` or
-#' `help("transreg)"` to open its help file.
+#' `help("transreg")` to open its help file.
 #' 
 #' See the vignette for further examples.
 #' Type `vignette("transreg")` or `browseVignettes("transreg")`
