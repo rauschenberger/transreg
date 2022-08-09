@@ -11,7 +11,7 @@ with multiple sets of prior effects.
 \details{
 Use function \code{\link[=transreg]{transreg()}} for model fitting.
 Type \code{library(transreg)} and then \code{?transreg} or
-\verb{help("transreg)"} to open its help file.
+\code{help("transreg")} to open its help file.
 
 See the vignette for further examples.
 Type \code{vignette("transreg")} or \code{browseVignettes("transreg")}

@@ -73,11 +73,11 @@ or "sam" for shape-constrained additive scaling}
 
 \item{naive}{compare with naive transfer learning: logical}
 
-\item{diffpen}{logical}
+\item{diffpen}{differential penalisation for features and meta-features: logical}
 }
 \description{
 Performs external \eqn{k}-fold cross-validation
-to estimate the predictive performance of different methods
+to estimate the predictive performance of different methods.
 }
 \examples{
 n <- 100; p <- 500
@@ -89,4 +89,7 @@ object <- suppressMessages(cv.transfer(target=list(y=y,x=X),prior=beta,family="g
 \dontrun{
 object <- cv.transfer(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0)}
 
+}
+\seealso{
+\code{\link[=transreg]{transreg()}}
 }

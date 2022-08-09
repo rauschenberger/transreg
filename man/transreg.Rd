@@ -90,6 +90,6 @@ and Enrico Glaab
 }
 \seealso{
 Methods for objects of class \code{transreg}
-include \code{\link[=coef.transreg]{coef}} and
-\code{\link[=predict.transreg]{predict}}.
+include \code{\link[=coef.transreg]{coef}}
+and \code{\link[=predict.transreg]{predict}}.
 }

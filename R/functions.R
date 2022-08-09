@@ -24,7 +24,7 @@
 #' number between 0 and 1
 #' @param foldid
 #' fold identifiers: vector of length \eqn{n}
-#' with entries from 1 to \code{nfolds}
+#' with entries from 1 to `nfolds`
 #' @param nfolds
 #' number of folds: positive integer
 #' @param scale
@@ -48,9 +48,9 @@
 #' @md
 #' 
 #' @seealso
-#' Methods for objects of class \code{transreg}
-#' include \code{\link[=coef.transreg]{coef}} and
-#' \code{\link[=predict.transreg]{predict}}.
+#' Methods for objects of class `transreg`
+#' include \code{\link[=coef.transreg]{coef}} 
+#' and \code{\link[=predict.transreg]{predict}}.
 #' 
 #' @references
 #' Armin Rauschenberger 
@@ -912,25 +912,38 @@ coef.trial <- function(object,...){
 #' 
 #' @description
 #' Performs external \eqn{k}-fold cross-validation
-#' to estimate the predictive performance of different methods
+#' to estimate the predictive performance of different methods.
 #' 
 #' @inheritParams transreg
 #' @param target
 #' list with slot x (feature matrix with n rows and p columns) and slot y (target vector of length n)
 #' @param source
 #' list of k lists, each with slot x (feature matrix with m_i rows and p columns) and slot y (target vector of length m_i)
-#' @param partitions monotone: for GRridge
-#' @param alpha.prior number between 0 (lasso) and 1 (ridge), character "p-value", or NULL (alpha.prior=alpha, but if alpha=1 then alpha.prior=0.95)
-#' @param z prior weights
-#' @param foldid.ext external fold identifiers
-#' @param nfolds.ext number of external folds
-#' @param foldid.int internal fold identifiers
-#' @param nfolds.int number of internal folds
-#' @param type.measure character
-#' @param alpha.prior alpha for source regression
-#' @param monotone logical
-#' @param naive compare with naive transfer learning: logical
-#' @param diffpen logical
+#' @param partitions
+#' monotone: for GRridge
+#' @param alpha.prior
+#' number between 0 (lasso) and 1 (ridge), character "p-value", or NULL (alpha.prior=alpha, but if alpha=1 then alpha.prior=0.95)
+#' @param z
+#' prior weights
+#' @param foldid.ext
+#' external fold identifiers
+#' @param nfolds.ext
+#' number of external folds
+#' @param foldid.int
+#' internal fold identifiers
+#' @param nfolds.int
+#' number of internal folds
+#' @param type.measure
+#' character
+#' @param alpha.prior
+#' alpha for source regression
+#' @param monotone
+#' logical
+#' @param naive
+#' compare with naive transfer learning: logical
+#' 
+#' @seealso 
+#' [transreg()]
 #' 
 #' @examples
 #' n <- 100; p <- 500
