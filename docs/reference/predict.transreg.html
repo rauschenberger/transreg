@@ -46,17 +46,28 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for transreg</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">newx</span>, stack <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for lp</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">newx</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for mf</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">newx</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>object</dt>
-<dd><p>object of class 'transreg'</p></dd>
+<dd><p>object of class <code>transreg</code></p></dd>
 
 
 <dt>newx</dt>
-<dd><p>features: matrix with m rows (samples) and p columns (variables)</p></dd>
+<dd><p>features:
+matrix with \(n\) rows (samples) and \(p\) columns (variables)</p></dd>
+
+
+<dt>stack</dt>
+<dd><p>character "lp" (linear predictor stacking) or "mf" (meta-feature stacking)</p></dd>
 
 
 <dt>...</dt>
@@ -68,7 +79,6 @@
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="cn">NA</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] NA</span>
-<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

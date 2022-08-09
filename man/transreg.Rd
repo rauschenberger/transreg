@@ -13,6 +13,7 @@ transreg(
   foldid = NULL,
   nfolds = 10,
   scale = "iso",
+  stack = "mf",
   sign = FALSE,
   switch = TRUE,
   select = TRUE,
@@ -44,6 +45,10 @@ with entries from 1 to \code{nfolds}}
 "exp" for exponential scaling (3 parameters),
 "iso" for isotonic scaling (1+\eqn{p} parameters),
 or "sam" for shape-constrained additive scaling}
+
+\item{stack}{character
+"lp" for linear predictor stacking
+of "mf" for meta-feature stacking}
 
 \item{sign}{sign discovery procedure: logical}
 
@@ -90,6 +95,6 @@ and Enrico Glaab
 }
 \seealso{
 Methods for objects of class \code{transreg}
-include \code{\link[=coef.lp]{coef}}
-and \code{\link[=predict.lp]{predict}}.
+include \code{\link[=coef.transreg]{coef}}
+and \code{\link[=predict.transreg]{predict}}.
 }

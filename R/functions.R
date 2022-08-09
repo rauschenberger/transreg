@@ -32,6 +32,10 @@
 #' "exp" for exponential scaling (3 parameters),
 #' "iso" for isotonic scaling (1+\eqn{p} parameters),
 #' or "sam" for shape-constrained additive scaling
+#' @param stack
+#' character
+#' "lp" for linear predictor stacking
+#' of "mf" for meta-feature stacking
 #' @param sign
 #' sign discovery procedure: logical
 #' @param switch
@@ -49,8 +53,8 @@
 #' 
 #' @seealso
 #' Methods for objects of class `transreg`
-#' include \code{\link[=coef.lp]{coef}} 
-#' and \code{\link[=predict.lp]{predict}}.
+#' include \code{\link[=coef.transreg]{coef}} 
+#' and \code{\link[=predict.transreg]{predict}}.
 #' 
 #' @references
 #' Armin Rauschenberger 
@@ -76,7 +80,7 @@
 #' plot(x=beta,y=prior)
 #' object <- transreg(y=y,X=X,prior=prior)
 #' 
-transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,scale="iso",sign=FALSE,switch=TRUE,select=TRUE,diffpen=FALSE){
+transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,scale="iso",stack="mf",sign=FALSE,switch=TRUE,select=TRUE,diffpen=FALSE){
   
   # family <- "gaussian"; alpha <- 1; foldid <- NULL; nfolds <- 10; scale <- "exp"; sign <- FALSE; switch <- TRUE; select <- TRUE
   
@@ -228,21 +232,30 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   }  
     
   base$prior <- prior.ext
+  
   #--- linear predictor stacking ---
-  meta <- glmnet::cv.glmnet(y=y,x=y_hat,foldid=foldid,alpha=1,family=family,lower.limits=0)
+  if(any(stack=="lp")){
+     meta.lp <- glmnet::cv.glmnet(y=y,x=y_hat,foldid=foldid,alpha=1,family=family,lower.limits=0)
+  } else {
+     meta.lp <- NULL
+  }
   
   #--- meta-feature stacking ---
+  if(any(stack=="mf")){
+     meta.mf <- glmnet::cv.glmnet(y=y,x=cbind(y_hat[,1:k],X),alpha=alpha,family=family,
+                               lower.limits=rep(c(0,-Inf),times=c(k,p)),
+                               penalty.factor=rep(c(0,1),times=c(k,p)),foldid=foldid)
+  } else {
+     meta.mf <- NULL
+  }
+  
   if(diffpen){
+    stop("currently not implemented")
     test <- multiridge(X=list(y_hat[,1:k,drop=FALSE],X),Y=y,family=family)
     # (y=y,x=cbind(y_hat[,1:k],X),alpha=alpha,family=family,
     # lower.limits=rep(c(0,-Inf),times=c(k,p)),
     # penalty.factor=rep(c(0,1),times=c(k,p)),foldid=foldid)
     trial <- NULL
-  } else {
-    trial <- glmnet::cv.glmnet(y=y,x=cbind(y_hat[,1:k],X),alpha=alpha,family=family,
-                               lower.limits=rep(c(0,-Inf),times=c(k,p)),
-                               penalty.factor=rep(c(0,1),times=c(k,p)),foldid=foldid)
-    test <- NULL
   }
   
   #trial <- glmnet::cv.glmnet(y=y,x=cbind(y_hat[,1:k],X),alpha=alpha,family=family,lower.limits=rep(c(0,-Inf),times=c(k,p)),
@@ -287,7 +300,7 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   #                                 penalty.factor=rep(c(0,1),times=c(k+2,p)),foldid=foldid)
   # end alternative triple
   
-  object <- list(base=base,meta=meta,scale=scale,trial=trial,test=test)
+  object <- list(base=base,meta.lp=meta.lp,meta.mf=meta.mf,scale=scale,stack=stack)
   class(object) <- "transreg"
   return(object)
 }
@@ -301,27 +314,42 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
 #' Predicts outcome
 #' 
 #' @param object
-#' object of class 'transreg'
+#' object of class `transreg`
 #' @param newx
-#' features: matrix with m rows (samples) and p columns (variables)
+#' features:
+#' matrix with \eqn{n} rows (samples) and \eqn{p} columns (variables)
+#' @param stack
+#' character "lp" (linear predictor stacking) or "mf" (meta-feature stacking)
 #' @param ... (not applicable)
 #' 
 #' @examples
 #' NA
-#' 
+predict.transreg <- function(object,newx,stack=NULL,...){
+  # select between predict.lp and predict.mf
+  if(is.null(stack)){
+    stack <- object$stack
+  }
+  if(any(object$stack=="lp") & any(object$stack=="mf")){
+    warning("Two options given. Choosing stack='mf'.")
+    stack <- "mf"
+  }
+  eval(parse(text=paste0("predict.",stack,"(object=object,newx=newx,...)")))
+}
+
+#'@rdname predict.transreg
 predict.lp <- function(object,newx,...){
   one <- newx %*% object$base$prior$beta # original (harmonise with transreg)
   #one <- object$base$prior$alpha + newx %*% object$base$prior$beta # trial 2022-01-04 (see above)
   two <- stats::predict(object$base,s=c(object$base$lambda.min,object$base$lambda.1se),newx=newx) # was s="lambda.min"
   #two <- newx %*% coef(object$base,s="lambda.min")[-1] # trial (harmonise with transreg)
-  y_hat <- stats::predict(object$meta,s="lambda.min",newx=cbind(one,two),type="response")
+  y_hat <- stats::predict(object$meta.lp,s="lambda.min",newx=cbind(one,two),type="response")
   return(y_hat)
 }
 
-#'@rdname predict.lp
+#'@rdname predict.transreg
 predict.mf <- function(object,newx,...){
   one <- newx %*% object$base$prior$beta
-  y_hat <- stats::predict(object$trial,s="lambda.min",newx=cbind(one,newx),type="response")
+  y_hat <- stats::predict(object$meta.mf,s="lambda.min",newx=cbind(one,newx),type="response")
   return(y_hat)
 }
 
@@ -332,8 +360,6 @@ predict.test <- function(object,newx,...){
   return(y_hat)
 }
 
-# only for lp-stacking
-
 #'@export
 #'
 #'@title
@@ -342,14 +368,25 @@ predict.test <- function(object,newx,...){
 #'@description
 #'Extracts coefficients
 #'
-#'@inheritParams predict.lp
+#'@inheritParams predict.transreg
 #'
 #'@examples
 #'NA
-#'
+coef.transreg <- function(object,stack=NULL,...){
+  if(is.null(stack)){
+    stack <- object$stack
+  }
+  if(any(object$stack=="lp") & any(object$stack=="mf")){
+    warning("Two options given. Choosing stack='mf'.")
+    stack <- "mf"
+  }
+  eval(parse(text=paste0("coef.",stack,"(object=object,...)")))
+}
+
+#'@rdname coef.transreg
 coef.lp <- function(object,...){
-  beta <- stats::coef(object$base,s=c(object$meta$lambda.min,object$meta$lambda.1se))
-  omega <- as.numeric(stats::coef(object$meta,s=object$meta$lambda.min))
+  beta <- stats::coef(object$base,s=c(object$meta.lp$lambda.min,object$meta.lp$lambda.1se))
+  omega <- as.numeric(stats::coef(object$meta.lp,s=object$meta.lp$lambda.min))
   names <- paste0("source",seq_len(ncol(object$base$prior$beta)))
   names(omega) <- c("(Intercept)",names,"lambda.min","lambda.1se")
   p <- nrow(beta)-1
@@ -361,10 +398,10 @@ coef.lp <- function(object,...){
   return(list(alpha=alpha_star,beta=beta_star))
 }
 
-#'@rdname coef.lp
+#'@rdname coef.transreg
 coef.mf <- function(object,...){
   gamma <- object$base$prior$beta
-  meta <- stats::coef(object$trial,s="lambda.min")
+  meta <- stats::coef(object$meta.mf,s="lambda.min")
   k <- ncol(object$base$prior$beta)
   p <- nrow(object$base$prior$beta)
   alpha_star <- meta[1]
@@ -1164,7 +1201,7 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
     for(j in seq_along(scale)){
       set.seed(seed) # trial
       start <- Sys.time()
-      object <- transreg(y=y0,X=X0,prior=prior,family=family,foldid=foldid,alpha=alpha,scale=scale[j],sign=sign,switch=switch,select=select,diffpen=diffpen)
+      object <- transreg(y=y0,X=X0,prior=prior,family=family,foldid=foldid,alpha=alpha,scale=scale[j],stack=c("lp","mf"),sign=sign,switch=switch,select=select,diffpen=diffpen)
       pred[foldid.ext==i,paste0("transreg_",scale[j],"_lp")] <- predict.lp(object,newx=X1)
       end <- Sys.time()
       time["transreg"] <- time["transreg"]+difftime(time1=end,time2=start,units="secs")

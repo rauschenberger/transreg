@@ -54,6 +54,7 @@
 <span>  foldid <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  nfolds <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>  scale <span class="op">=</span> <span class="st">"iso"</span>,</span>
+<span>  stack <span class="op">=</span> <span class="st">"mf"</span>,</span>
 <span>  sign <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  switch <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  select <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -104,6 +105,12 @@ with entries from 1 to <code>nfolds</code></p></dd>
 or "sam" for shape-constrained additive scaling</p></dd>
 
 
+<dt>stack</dt>
+<dd><p>character
+"lp" for linear predictor stacking
+of "mf" for meta-feature stacking</p></dd>
+
+
 <dt>sign</dt>
 <dd><p>sign discovery procedure: logical</p></dd>
 
@@ -145,8 +152,8 @@ and Enrico Glaab
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Methods for objects of class <code>transreg</code>
-include <code><a href="coef.lp.html">coef</a></code>
-and <code><a href="predict.lp.html">predict</a></code>.</p></div>
+include <code><a href="coef.transreg.html">coef</a></code>
+and <code><a href="predict.transreg.html">predict</a></code>.</p></div>
     </div>
 
     <div class="section level2">

@@ -39,37 +39,25 @@ testthat::test_that("correlation (slow, fast)",{
 #- - - equivalence predicted values- - - - - - - - - - - - - - - - - - - - - - -
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-for(scale in c("exp","iso")){ 
+for(scale in c("exp","iso")){
+  for(stack in c("lp","mf")){
+    
+    family <- "gaussian"
+    
+    prior <- cbind(prior1,prior2)
+    object <- transreg(y=y,X=X,prior=prior,family=family,scale=scale,stack=stack)
+    
+    y_hat1 <- predict(object,newx=X)
+    coef <- coef(object=object)
+    y_hat2 <- joinet:::.mean.function(coef$alpha + X %*% coef$beta,family=family)
+    
+    testthat::test_that("correlation (pred, coef)",{
+      cond1 <- mean(y_hat1)-mean(y_hat2) < 0.01
+      cond2 <- stats::cor(y_hat1,y_hat2) > 0.99
+      testthat::expect_true(cond1&cond2)
+    })
   
-  family <- "gaussian"
-  
-  prior <- cbind(prior1,prior2)
-  object <- transreg(y=y,X=X,prior=prior,family=family,scale=scale)
-  
-  # old approach
-  
-  y_hat1 <- predict.lp(object,newx=X)
-  coef <- coef.lp(object=object)
-  y_hat2 <- joinet:::.mean.function(coef$alpha + X %*% coef$beta,family=family)
-  
-  testthat::test_that("correlation (pred, coef)",{
-    cond1 <- mean(y_hat1)-mean(y_hat2) < 0.01
-    cond2 <- stats::cor(y_hat1,y_hat2) > 0.99
-    testthat::expect_true(cond1&cond2)
-  })
-  
-  # new approach
-  
-  y_hat1 <- predict.mf(object,newx=X)
-  coef <- coef.mf(object=object)
-  y_hat2 <- joinet:::.mean.function(coef$alpha + X %*% coef$beta,family=family)
-  
-  testthat::test_that("correlation (pred, coef)",{
-    cond1 <- mean(y_hat1)-mean(y_hat2) < 0.01
-    cond2 <- stats::cor(y_hat1,y_hat2) > 0.99
-    testthat::expect_true(cond1&cond2)
-  })
-  
+  }
 }
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -77,21 +65,24 @@ for(scale in c("exp","iso")){
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 family <- "gaussian"
-prior <- object <- list()
+prior <- object <- pred <- list()
 prior$original <- prior1
 prior$modified <- -stats::runif(1)*prior1
 
-for(i in seq_along(prior)){
-  set.seed(2)
-  object[[i]] <- transreg(y=y,X=X,prior=prior[[i]],family=family,scale=scale)
+for(scale in c("exp","iso")){
+  for(stack in c("lp","mf")){
+    
+    for(i in seq_along(prior)){
+      set.seed(2)
+      object[[i]] <- transreg(y=y,X=X,prior=prior[[i]],family=family,scale=scale,stack=stack)
+      pred[[i]] <- predict(object[[i]],newx=X)
+    }
+    
+    testthat::test_that("prior re-scaling",{
+      cond1 <- mean(pred[[1]])-mean(pred[[2]])<0.01
+      cond2 <- stats::cor(pred[[1]],pred[[2]])>0.99
+      testthat::expect_true(cond1&cond2)
+    })
+    
+  }
 }
-pred <- list()
-pred[[1]] <- predict.lp(object[[1]],newx=X)
-pred[[2]] <- predict.lp(object[[2]],newx=X)
-
-testthat::test_that("prior re-scaling",{
-  cond1 <- mean(pred[[1]])-mean(pred[[2]])<0.01
-  cond2 <- stats::cor(pred[[1]],pred[[2]])>0.99
-  testthat::expect_true(cond1&cond2)
-})
-
