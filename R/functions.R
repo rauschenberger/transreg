@@ -56,19 +56,7 @@
 #' include \code{\link[=coef.transreg]{coef}} 
 #' and \code{\link[=predict.transreg]{predict}}.
 #' 
-#' @references
-#' Armin Rauschenberger 
-#' [![AR](orcid_16x16.png)](https://orcid.org/0000-0001-6498-4801),
-#' Zied Landoulsi
-#' [![ZL](orcid_16x16.png)](https://orcid.org/0000-0002-2327-3904),
-#' Mark A van de Wiel 
-#' [![MvdW](orcid_16x16.png)](https://orcid.org/0000-0003-4780-8472),
-#' and Enrico Glaab
-#' [![EG](orcid_16x16.png)](https://orcid.org/0000-0003-3977-7469)
-#' (2022).
-#' "Penalised regression with multiple sets of prior effects".
-#' *Manuscript in preparation.*
-#' \email{armin.rauschenberger@uni.lu}
+#' @inherit transreg-package references
 #' 
 #' @examples
 #' n <- 100; p <- 500
@@ -322,6 +310,8 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
 #' character "lp" (linear predictor stacking) or "mf" (meta-feature stacking)
 #' @param ... (not applicable)
 #' 
+#' @inherit transreg-package references
+#' 
 #' @examples
 #' NA
 predict.transreg <- function(object,newx,stack=NULL,...){
@@ -384,6 +374,9 @@ NULL
 #'
 #'@examples
 #'NA
+#'
+#'@inherit transreg-package references
+#'
 coef.transreg <- function(object,stack=NULL,...){
   stack <- .which.stack(object,stack)
   eval(parse(text=paste0(".coef.",stack,"(object=object,...)")))
