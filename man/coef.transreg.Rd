@@ -2,15 +2,9 @@
 % Please edit documentation in R/functions.R
 \name{coef.transreg}
 \alias{coef.transreg}
-\alias{coef.lp}
-\alias{coef.mf}
 \title{Coefficients}
 \usage{
 \method{coef}{transreg}(object, stack = NULL, ...)
-
-\method{coef}{lp}(object, ...)
-
-\method{coef}{mf}(object, ...)
 }
 \arguments{
 \item{object}{object of class \code{transreg}}

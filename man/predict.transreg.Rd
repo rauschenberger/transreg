@@ -2,15 +2,9 @@
 % Please edit documentation in R/functions.R
 \name{predict.transreg}
 \alias{predict.transreg}
-\alias{predict.lp}
-\alias{predict.mf}
 \title{Predict}
 \usage{
 \method{predict}{transreg}(object, newx, stack = NULL, ...)
-
-\method{predict}{lp}(object, newx, ...)
-
-\method{predict}{mf}(object, newx, ...)
 }
 \arguments{
 \item{object}{object of class \code{transreg}}

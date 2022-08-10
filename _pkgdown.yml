@@ -11,12 +11,10 @@ reference:
 - title: "Main functions"
   contents:
   - transreg
-  - coef.lp
-  - coef.mf
-  - predict.lp
-  - predict.mf
   - cv.transfer
   - multiridge
+  - coef.transreg
+  - predict.transreg
 
 - title: "Internal functions"
   contents:
@@ -27,3 +25,5 @@ reference:
   - .iso.slow.single
   - .residuals
   - .signdisc
+  - .predict.lp
+
