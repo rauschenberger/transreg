@@ -131,25 +131,25 @@ of "mf" for meta-feature stacking</p></dd>
     
 
 <p>This function returns an object of class <code>transreg</code>.
-Rather than accessing its slots (see below),
+Rather than accessing its slots,
 it is recommended to use methods like
 <code>predict.transreg</code> and <code>coef.transreg</code>.</p><ul><li><p>slot <code>base</code>:
 Object of class <code>glmnet</code>.
 Regression of outcome on features (without prior effects),
-with 1 + p estimated coefficients
+with \(1 + p\) estimated coefficients
 (intercept + features).</p></li>
 <li><p>slot <code>meta.lp</code>:
 <code>NULL</code> or object of class <code>glmnet</code>.
 Regression of outcome on cross-validated linear predictors
 from prior effects and estimated effects,
-with 1 + k + 2 estimated coefficients
-(intercept + sources of co-data + lambda_min and lambda_1se).
-*slot <code>meta.mf</code>:
+with \(1 + k + 2\) estimated coefficients
+(intercept + sources of co-data + lambda_min and lambda_1se).</p></li>
+<li><p>slot <code>meta.mf</code>:
 <code>NULL</code> or object of class <code>glmnet</code>.
 Regression of outcome on meta-features
 (cross-validated linear predictors from prior effects)
 and original features,
-with 1 + k + p estimated coefficients
+with \(1 + k + p\) estimated coefficients
 (intercept + sources of co-data + features).</p></li>
 <li><p>slot <code>scale</code>:
 indicates the chosen calibration approach

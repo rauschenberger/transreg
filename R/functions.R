@@ -51,31 +51,35 @@
 #' 
 #' @return
 #' This function returns an object of class `transreg`.
-#' Rather than accessing its slots (see below),
+#' Rather than accessing its slots (see list below),
 #' it is recommended to use methods like
 #' `predict.transreg` and `coef.transreg`.
 #' 
 #' * slot `base`:
 #' Object of class `glmnet`.
 #' Regression of outcome on features (without prior effects),
-#' with 1 + p estimated coefficients
+#' with \eqn{1 + p} estimated coefficients
 #' (intercept + features).
+#' 
 #' * slot `meta.lp`:
 #' `NULL` or object of class `glmnet`.
 #' Regression of outcome on cross-validated linear predictors
 #' from prior effects and estimated effects,
-#' with 1 + k + 2 estimated coefficients
+#' with \eqn{1 + k + 2} estimated coefficients
 #' (intercept + sources of co-data + lambda_min and lambda_1se).
-#' *slot `meta.mf`:
+#' 
+#' * slot `meta.mf`:
 #' `NULL` or object of class `glmnet`.
 #' Regression of outcome on meta-features
 #' (cross-validated linear predictors from prior effects)
 #' and original features,
-#' with 1 + k + p estimated coefficients
+#' with \eqn{1 + k + p} estimated coefficients
 #' (intercept + sources of co-data + features).
+#' 
 #' * slot `scale`:
 #' indicates the chosen calibration approach
 #' ("exp": exponential calibration, "iso": isotonic calibration)
+#' 
 #' * slot `stack`:
 #' indicates the chosen stacking approach
 #' ("lp": linear predictor stacking, "mf": meta-feature stacking)

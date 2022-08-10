@@ -59,27 +59,27 @@ of "mf" for meta-feature stacking}
 }
 \value{
 This function returns an object of class \code{transreg}.
-Rather than accessing its slots (see below),
+Rather than accessing its slots (see list below),
 it is recommended to use methods like
 \code{predict.transreg} and \code{coef.transreg}.
 \itemize{
 \item slot \code{base}:
 Object of class \code{glmnet}.
 Regression of outcome on features (without prior effects),
-with 1 + p estimated coefficients
+with \eqn{1 + p} estimated coefficients
 (intercept + features).
 \item slot \code{meta.lp}:
 \code{NULL} or object of class \code{glmnet}.
 Regression of outcome on cross-validated linear predictors
 from prior effects and estimated effects,
-with 1 + k + 2 estimated coefficients
+with \eqn{1 + k + 2} estimated coefficients
 (intercept + sources of co-data + lambda_min and lambda_1se).
-*slot \code{meta.mf}:
+\item slot \code{meta.mf}:
 \code{NULL} or object of class \code{glmnet}.
 Regression of outcome on meta-features
 (cross-validated linear predictors from prior effects)
 and original features,
-with 1 + k + p estimated coefficients
+with \eqn{1 + k + p} estimated coefficients
 (intercept + sources of co-data + features).
 \item slot \code{scale}:
 indicates the chosen calibration approach
