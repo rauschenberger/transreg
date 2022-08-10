@@ -324,7 +324,7 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   #                                 penalty.factor=rep(c(0,1),times=c(k+2,p)),foldid=foldid)
   # end alternative triple
   
-  object <- list(base=base,meta.lp=meta.lp,meta.mf=meta.mf,scale=scale,stack=stack)
+  object <- list(base=base,meta.lp=meta.lp,meta.mf=meta.mf,scale=scale,stack=stack,info=data.frame(n=n,p=p,k=k,family=family))
   class(object) <- "transreg"
   return(object)
 }
@@ -1568,4 +1568,30 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
     foldid <- lapply(foldid,function(x) x[order])
   }
   return(list(foldid=foldid[["all"]],foldid.ext=foldid[["ext"]],foldid.int=foldid[["int"]]))
+}
+
+
+#' @export
+#' 
+#' @title 
+#' Print transreg-object
+#' 
+#' @description
+#' Show summary of transreg-object
+#' 
+#' @param x object of class transreg
+#' @inheritParams predict.transreg
+#' 
+#' @examples
+#' NA
+#' 
+print.transreg <- function(x,...){
+  cat("----- transreg-object -----\n")
+  cat(paste0("family: '",x$info$family,"'\n"))
+  cat("n =",x$info$n,"(samples)\n")
+  cat("p =",x$info$p,"(features)\n")
+  cat("k =",x$info$k,"(sources of co-data)\n")
+  cat(paste0("calibration: '",x$scale,"'\n"))
+  cat("stacking:",paste(paste0("'",x$stack,"'"),collapse=" and "),"\n")
+  cat("---------------------------")
 }
