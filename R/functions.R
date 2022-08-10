@@ -350,7 +350,7 @@ predict.transreg <- function(object,newx,stack=NULL,...){
 #'
 #' @description
 #' Internal functions called by
-#' [coef.transreg()] and [predict.transreg()]. 
+#' [coef.transreg()] and [predict.transreg()], 
 #' depending on choice between
 #' linear predictor stacking
 #' and meta-feature stacking.
@@ -577,20 +577,24 @@ coef.transreg <- function(object,stack=NULL,...){
 }
 
 #' @title 
-#' Exponential scaling
-#' 
+#' Internal functions
+#'
 #' @description
-#' Performs exponential scaling
-#' 
+#' Internal functions called by
+#' [transreg()],
+#' depending on choice between
+#' exponential and isotonic calibration.
+#'
 #' @inheritParams transreg
 #' @param plot logical
-#' 
+#'
 #' @seealso
-#' [.iso.multiple()]
-#' 
-#' @examples
-#' NA
-#' 
+#' Use \code{\link[=transreg]{transreg}} for model fitting.
+#'
+#' @name calibrate
+NULL
+
+#' @describeIn calibrate called by `transreg` if `scale="iso"`
 .exp.multiple <- function(y,X,prior,family,select,plot=TRUE){
   
   #message("Exponential scaling ...")
@@ -660,20 +664,7 @@ coef.transreg <- function(object,stack=NULL,...){
   return(list(alpha=alpha,beta=beta,theta=theta,tau=tau))
 }
 
-#' @title 
-#' Isotonic scaling
-#' 
-#' @description 
-#' Performs isotonic scaling. This function is for comparison only.
-#'
-#' @inheritParams transreg
-#' 
-#' @seealso
-#' [.iso.fast.single()]
-#' 
-#' @examples 
-#' NA
-#' 
+#' @describeIn calibrate replaced by `.iso.fast.single`
 .iso.slow.single <- function(y,X,prior,family){
   
   message("Isotonic scaling ...")
@@ -737,21 +728,7 @@ coef.transreg <- function(object,stack=NULL,...){
   return(list(alpha=ALPHA,beta=BETA))
 }
 
-# with sign constraints (glmnet)
-#' @title 
-#' Isotonic scaling
-#' 
-#' @description 
-#' Performs isotonic scaling
-#' 
-#' @inheritParams transreg
-#' 
-#' @seealso
-#' [.iso.slow.single()]
-#' 
-#' @examples
-#' NA
-#' 
+#' @describeIn calibrate called by `transreg` if `scale="iso"` (via `.iso.multiple`)
 .iso.fast.single <- function(y,X,prior,family){
   n <- length(y)
   p <- nrow(prior)
@@ -792,20 +769,7 @@ coef.transreg <- function(object,stack=NULL,...){
 
 # Speed up this function by only examining the "negative prior" if the "positive prior" is insignificant? Or do some pre-screening based on correlation, and then decide which one to run first and which one to run second (i.e. only if the first one fits poorly).
 
-#' @title 
-#' Isotonic scaling
-#' 
-#' @description
-#' Performs isotonic scaling
-#' 
-#' @inheritParams transreg
-#' 
-#' @seealso
-#' [.exp.multiple()]
-#' 
-#' @examples 
-#' NA
-#' 
+#' @describeIn calibrate called by `transreg` if `scale="iso"`
 .iso.multiple <- function(y,X,prior,family,select=TRUE,switch=TRUE){
   
   k <- ncol(prior)
