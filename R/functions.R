@@ -361,10 +361,10 @@ predict.transreg <- function(object,newx,stack=NULL,...){
 #' Use \code{\link[=coef.transreg]{coef}} 
 #' and \code{\link[=predict.transreg]{predict}}.
 #'
-#' @name methods
+#' @name extract
 NULL
 
-#' @describeIn methods called by `predict.transreg` if `stack="lp"`
+#' @describeIn extract called by `predict.transreg` if `stack="lp"`
 .predict.lp <- function(object,newx,...){
   one <- newx %*% object$base$prior$beta # original (harmonise with transreg)
   #one <- object$base$prior$alpha + newx %*% object$base$prior$beta # trial 2022-01-04 (see above)
@@ -374,7 +374,7 @@ NULL
   return(y_hat)
 }
 
-#' @describeIn methods called by `predict.transreg` if `stack="mf"`
+#' @describeIn extract called by `predict.transreg` if `stack="mf"`
 .predict.mf <- function(object,newx,...){
   one <- newx %*% object$base$prior$beta
   y_hat <- stats::predict(object$meta.mf,s="lambda.min",newx=cbind(one,newx),type="response")
@@ -408,7 +408,7 @@ coef.transreg <- function(object,stack=NULL,...){
   eval(parse(text=paste0(".coef.",stack,"(object=object,...)")))
 }
 
-#' @describeIn methods called by `coef.transreg` if `stack="lp"`
+#' @describeIn extract called by `coef.transreg` if `stack="lp"`
 .coef.lp <- function(object,...){
   beta <- stats::coef(object$base,s=c(object$meta.lp$lambda.min,object$meta.lp$lambda.1se))
   omega <- as.numeric(stats::coef(object$meta.lp,s=object$meta.lp$lambda.min))
@@ -423,7 +423,7 @@ coef.transreg <- function(object,stack=NULL,...){
   return(list(alpha=alpha_star,beta=beta_star))
 }
 
-#' @describeIn methods called by `coef.transreg` if `stack="mf"`
+#' @describeIn extract called by `coef.transreg` if `stack="mf"`
 .coef.mf <- function(object,...){
   gamma <- object$base$prior$beta
   meta <- stats::coef(object$meta.mf,s="lambda.min")
@@ -439,7 +439,7 @@ coef.transreg <- function(object,stack=NULL,...){
   return(list(alpha=alpha_star,beta=beta_star))
 }
 
-#' @describeIn methods called by `coef.transreg` and `predict.transreg`
+#' @describeIn extract called by `coef.transreg` and `predict.transreg`
 .which.stack <- function(object,stack){
   if(is.null(stack) & length(object$stack)==1){
     return(object$stack)
@@ -499,6 +499,7 @@ coef.transreg <- function(object,stack=NULL,...){
 #' Calculates residuals from observed outcome
 #' and predicted values (Gaussian family)
 #' or predicted probabilities (binomial family).
+#' Called by `.exp.multiple` and `.iso.multiple`.
 #' 
 #' @param y
 #' response: vector of length \eqn{n} (see family)

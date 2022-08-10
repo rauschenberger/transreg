@@ -21,6 +21,7 @@ or "binomial" (\eqn{y}: 0s and 1s, \eqn{y_hat}: unit interval)}
 Calculates residuals from observed outcome
 and predicted values (Gaussian family)
 or predicted probabilities (binomial family).
+Called by \code{.exp.multiple} and \code{.iso.multiple}.
 }
 \examples{
 n <- 100

@@ -11,18 +11,15 @@ reference:
 - title: "Main functions"
   contents:
   - transreg
-  - cv.transfer
-  - multiridge
   - coef.transreg
   - predict.transreg
+  - multiridge
+  - cv.transfer
 
 - title: "Internal functions"
   contents:
   - .simulate
-  - .exp.multiple
-  - .iso.fast.single
-  - .iso.multiple
-  - .iso.slow.single
   - .residuals
   - .signdisc
-  - methods
+  - extract
+  - calibrate
