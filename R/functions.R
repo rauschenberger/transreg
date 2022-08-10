@@ -91,10 +91,6 @@
 #' include \code{\link[=coef.transreg]{coef}} 
 #' and \code{\link[=predict.transreg]{predict}}.
 #' 
-#' Methods for objects of class `transreg`
-#' include [`coef`](transreg::coef.transreg()) 
-#' and [`predict`]([transreg::predict.transreg()]).
-#' 
 #' @examples
 #' n <- 100; p <- 500
 #' X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
@@ -849,8 +845,8 @@ NULL
     
     pval1 <- apply(res1,2,function(x) suppressWarnings(stats::wilcox.test(x=x,y=res,paired=TRUE,alternative="less")$p.value))
     
-    message("p-value (increasing): ",paste0(signif(pval0,digits=2),sep=" "))
-    message("p-value (decreasing): ",paste0(signif(pval1,digits=2),sep=" "))
+    message("p-value (+): ",paste0(signif(pval0,digits=2),sep=" "))
+    message("p-value (-): ",paste0(signif(pval1,digits=2),sep=" "))
     
     cond <- pval0 <= pval1
     #ALPHA[cond] <- alpha0[cond]

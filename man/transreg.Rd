@@ -131,8 +131,4 @@ and Enrico Glaab
 Methods for objects of class \code{transreg}
 include \code{\link[=coef.transreg]{coef}}
 and \code{\link[=predict.transreg]{predict}}.
-
-Methods for objects of class \code{transreg}
-include \href{transreg::coef.transreg()}{\code{coef}}
-and \href{[transreg::predict.transreg()]}{\code{predict}}.
 }
