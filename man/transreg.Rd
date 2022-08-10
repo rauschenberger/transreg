@@ -58,6 +58,31 @@ of "mf" for meta-feature stacking}
 
 \item{diffpen}{differential penalisation for features and meta-features: logical}
 }
+\value{
+This function returns an object of class \code{transreg},
+including two or three objects of class \code{glmnet}.
+\itemize{
+\item slot \code{base}:
+Regression of outcome on features (without prior effects),
+with 1 + p estimated coefficients
+(intercept + features).
+\item slot \code{meta.x} (where \code{x} is "lp" or "mf"):
+Regression of outcome on cross-validated linear predictors
+from estimated effects and prior effects ("lp"),
+with 1 + k + 2 estimated coefficients
+(intercept + sources of co-data + lambda_min and lambda_1se).
+Regression of outcome on meta-features (cross-validated linear predictors
+from prior effects) and original features ("mf"),
+with 1 + k + p estimated coefficients
+(intercept + sources of co-data + features).
+\item slot \code{scale}:
+indicates the chosen calibration approach
+("exp": exponential calibration, "iso": isotonic calibration)
+\item slot \code{stack}:
+indicates the chosen stacking approach
+("lp": linear predictor stacking, "mf": meta-feature stacking)
+}
+}
 \description{
 Implements penalised regression with multiple sets of prior effects
 }
@@ -76,7 +101,10 @@ prior <- beta # plus noise
 y <- X \%*\% beta
 prior <- ifelse(beta<(-1),0,ifelse(beta>1,beta,0))
 plot(x=beta,y=prior)
-object <- transreg(y=y,X=X,prior=prior)
+object <- transreg(y=y,X=X,prior=prior,stack=c("lp","mf"))
+dim(coef(object$base))
+dim(coef(object$meta.lp))
+dim(coef(object$meta.mf))
 
 }
 \references{

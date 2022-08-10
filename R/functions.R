@@ -50,6 +50,30 @@
 #' * \eqn{p}: number of features
 #' * \eqn{k}: number of sources
 #' 
+#' @return
+#' This function returns an object of class `transreg`,
+#' including two or three objects of class `glmnet`.
+#' 
+#' * slot `base`:
+#' Regression of outcome on features (without prior effects),
+#' with 1 + p estimated coefficients
+#' (intercept + features).
+#' * slot `meta.x` (where `x` is "lp" or "mf"):
+#' Regression of outcome on cross-validated linear predictors
+#' from estimated effects and prior effects ("lp"),
+#' with 1 + k + 2 estimated coefficients
+#' (intercept + sources of co-data + lambda_min and lambda_1se).
+#' Regression of outcome on meta-features (cross-validated linear predictors
+#' from prior effects) and original features ("mf"),
+#' with 1 + k + p estimated coefficients
+#' (intercept + sources of co-data + features).
+#' * slot `scale`:
+#' indicates the chosen calibration approach
+#' ("exp": exponential calibration, "iso": isotonic calibration)
+#' * slot `stack`:
+#' indicates the chosen stacking approach
+#' ("lp": linear predictor stacking, "mf": meta-feature stacking)
+#' 
 #' @inherit transreg-package references
 #' 
 #' @seealso
@@ -65,7 +89,10 @@
 #' y <- X %*% beta
 #' prior <- ifelse(beta<(-1),0,ifelse(beta>1,beta,0))
 #' plot(x=beta,y=prior)
-#' object <- transreg(y=y,X=X,prior=prior)
+#' object <- transreg(y=y,X=X,prior=prior,stack=c("lp","mf"))
+#' dim(coef(object$base))
+#' dim(coef(object$meta.lp))
+#' dim(coef(object$meta.mf))
 #' 
 transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,scale="iso",stack="mf",sign=FALSE,switch=TRUE,select=TRUE,diffpen=FALSE){
   
