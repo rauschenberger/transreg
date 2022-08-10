@@ -52,3 +52,12 @@ and Enrico Glaab
 \emph{Manuscript in preparation.}
 \email{armin.rauschenberger@uni.lu}
 }
+\seealso{
+Methods for objects of class \code{transreg}
+include \code{\link[=coef.transreg]{coef}}
+and \code{\link[=predict.transreg]{predict}}.
+
+Methods for objects of class \code{transreg}
+include \href{transreg::coef.transreg()}{\code{coef}}
+and \href{[transreg::predict.transreg()]}{\code{predict}}.
+}

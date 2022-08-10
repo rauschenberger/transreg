@@ -91,6 +91,10 @@
 #' include \code{\link[=coef.transreg]{coef}} 
 #' and \code{\link[=predict.transreg]{predict}}.
 #' 
+#' Methods for objects of class `transreg`
+#' include [`coef`](transreg::coef.transreg()) 
+#' and [`predict`]([transreg::predict.transreg()]).
+#' 
 #' @examples
 #' n <- 100; p <- 500
 #' X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
@@ -330,6 +334,7 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
 }
 
 #' @export
+#' @aliases predict
 #' 
 #' @title
 #' Predict
@@ -352,8 +357,9 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
 #' 
 #' @inherit transreg-package references
 #' 
+#' @inherit transreg seealso
+#' 
 #' @inherit transreg examples
-#' @aliases predict
 #' 
 predict.transreg <- function(object,newx,stack=NULL,...){
   stack <- .which.stack(object,stack)
@@ -403,26 +409,28 @@ NULL
   return(y_hat)
 }
 
-#'@export
+#' @export
+#' @aliases coef
 #'
-#'@title
-#'Coefficients
+#' @title
+#' Coefficients
 #'
-#'@description
-#'Extracts coefficients
+#' @description
+#' Extracts coefficients
 #'
-#'@inheritParams predict.transreg
+#' @inheritParams predict.transreg
 #'
-#'@return
-#'This function returns estimated coefficients.
-#'The output is a list with two slots,
-#'namely the slot `alpha` with the estimated intercept (scalar),
-#'and the slot `beta` with the estimated slopes (vector).
+#' @return
+#' This function returns estimated coefficients.
+#' The output is a list with two slots,
+#' namely the slot `alpha` with the estimated intercept (scalar),
+#' and the slot `beta` with the estimated slopes (vector).
 #'
-#'@inherit transreg-package references
+#' @inherit transreg-package references
+#' 
+#' @inherit transreg seealso
 #'
-#'@inherit transreg examples
-#'@aliases coef
+#' @inherit transreg examples
 #'
 coef.transreg <- function(object,stack=NULL,...){
   stack <- .which.stack(object,stack)

@@ -87,6 +87,15 @@ and Enrico Glaab
 <em>Manuscript in preparation.</em>
 <a href="mailto:armin.rauschenberger@uni.lu">armin.rauschenberger@uni.lu</a></p>
     </div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index"><p>Methods for objects of class <code>transreg</code>
+include <code>coef</code>
+and <code><a href="predict.transreg.html">predict</a></code>.</p>
+<p>Methods for objects of class <code>transreg</code>
+include <a href="transreg::coef.transreg()"><code>coef</code></a>
+and <a href="%5Btransreg::predict.transreg()%5D"><code>predict</code></a>.</p></div>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
@@ -99,38 +108,38 @@ and Enrico Glaab
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">beta</span>,y<span class="op">=</span><span class="va">prior</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">object</span> <span class="op">&lt;-</span> <span class="fu"><a href="transreg.html">transreg</a></span><span class="op">(</span>y<span class="op">=</span><span class="va">y</span>,X<span class="op">=</span><span class="va">X</span>,prior<span class="op">=</span><span class="va">prior</span>,stack<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"lp"</span>,<span class="st">"mf"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Consider sign discovery procedure.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (increasing): 4.5e-06 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (decreasing): 0.63 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (increasing): 0.00045 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (decreasing): 0.72 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (increasing): 5.9e-06 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (decreasing): 0.62 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (increasing): 0.0026 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (decreasing): 0.65 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (increasing): 1.3e-05 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (decreasing): 0.96 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (increasing): 0.0011 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (decreasing): 0.75 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (increasing): 4.6e-05 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (increasing): 0.00057 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (decreasing): 0.58 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (increasing): 0.0013 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (decreasing): 0.71 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (increasing): 0.0017 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (decreasing): 0.2 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (increasing): 0.00018 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (decreasing): 0.38 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (increasing): 0.00069 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (decreasing): 0.49 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (increasing): 0.001 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (decreasing): 0.28 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (increasing): 5.9e-06 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (decreasing): 1 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (increasing): 0.00075 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (decreasing): 0.78 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (increasing): 8.3e-06 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (decreasing): 0.37 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (increasing): 1.4e-05 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (decreasing): 1 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (increasing): 1.5e-05 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (decreasing): 0.46 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (increasing): 2.3e-05 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (decreasing): 0.91 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (increasing): 2.3e-05 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (decreasing): 0.29 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (increasing): 4.7e-06 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (decreasing): 1 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (increasing): 0.0015 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (decreasing): 0.56 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
 <span class="r-plt img"><img src="coef.transreg-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="fu">coef</span><span class="op">(</span><span class="va">object</span><span class="op">$</span><span class="va">base</span><span class="op">)</span><span class="op">)</span></span></span>
