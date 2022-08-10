@@ -42,9 +42,8 @@ with entries from 1 to \code{nfolds}}
 \item{nfolds}{number of folds: positive integer}
 
 \item{scale}{character
-"exp" for exponential scaling (3 parameters),
-"iso" for isotonic scaling (1+\eqn{p} parameters),
-or "sam" for shape-constrained additive scaling}
+"exp" for exponential calibration or
+"iso" for isotonic calibration}
 
 \item{stack}{character
 "lp" for linear predictor stacking

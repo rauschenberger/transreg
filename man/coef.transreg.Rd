@@ -13,11 +13,27 @@
 
 \item{...}{(not applicable)}
 }
+\value{
+This function returns estimated coefficients.
+The output is a list with two slots,
+namely the slot \code{alpha} with the estimated intercept (scalar),
+and the slot \code{beta} with the estimated slopes (vector).
+}
 \description{
 Extracts coefficients
 }
 \examples{
-NA
+n <- 100; p <- 500
+X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
+beta <- rnorm(p)*rbinom(n=p,size=1,prob=0.2)
+prior <- beta # plus noise
+y <- X \%*\% beta
+prior <- ifelse(beta<(-1),0,ifelse(beta>1,beta,0))
+plot(x=beta,y=prior)
+object <- transreg(y=y,X=X,prior=prior,stack=c("lp","mf"))
+dim(coef(object$base))
+dim(coef(object$meta.lp))
+dim(coef(object$meta.mf))
 
 }
 \references{

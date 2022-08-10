@@ -29,9 +29,8 @@
 #' number of folds: positive integer
 #' @param scale
 #' character
-#' "exp" for exponential scaling (3 parameters),
-#' "iso" for isotonic scaling (1+\eqn{p} parameters),
-#' or "sam" for shape-constrained additive scaling
+#' "exp" for exponential calibration or
+#' "iso" for isotonic calibration
 #' @param stack
 #' character
 #' "lp" for linear predictor stacking
@@ -336,6 +335,10 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
 #' character "lp" (linear predictor stacking) or "mf" (meta-feature stacking)
 #' @param ... (not applicable)
 #' 
+#' @return
+#' This function returns predicted values or predicted probabilities.
+#' The output is a column vector with one entry for each sample. 
+#' 
 #' @inherit transreg-package references
 #' 
 #' @inherit transreg examples
@@ -398,8 +401,11 @@ NULL
 #'
 #'@inheritParams predict.transreg
 #'
-#'@examples
-#'NA
+#'@return
+#'This function returns estimated coefficients.
+#'The output is a list with two slots,
+#'namely the slot `alpha` with the estimated intercept (scalar),
+#'and the slot `beta` with the estimated slopes (vector).
 #'
 #'@inherit transreg-package references
 #'
@@ -600,8 +606,6 @@ NULL
 #' @describeIn calibrate called by `transreg` if `scale="iso"`
 .exp.multiple <- function(y,X,prior,family,select,plot=TRUE){
   
-  #message("Exponential scaling ...")
-  
   n <- nrow(X); p <- ncol(X); k <- ncol(prior)
   
   alpha <- theta <- pvalue <- sign <- tau <- rep(NA,times=k)
@@ -659,7 +663,7 @@ NULL
   
   if(select){
     remove <- pvalue > 0.05/k
-    # Use same cut-off for exponential and isotonic scaling!
+    # Use same cut-off for exponential and isotonic calibration!
     beta[,remove] <- 0
     message(ifelse(remove,".",ifelse(sign==1,"+","-")))
   }
@@ -669,8 +673,6 @@ NULL
 
 #' @describeIn calibrate replaced by `.iso.fast.single`
 .iso.slow.single <- function(y,X,prior,family){
-  
-  message("Isotonic scaling ...")
   
   n <- length(y)
   p <- nrow(prior)

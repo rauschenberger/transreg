@@ -45,9 +45,8 @@ or "poisson" (\eqn{y}: non-negative integers);}
 number between 0 and 1}
 
 \item{scale}{character
-"exp" for exponential scaling (3 parameters),
-"iso" for isotonic scaling (1+\eqn{p} parameters),
-or "sam" for shape-constrained additive scaling}
+"exp" for exponential calibration or
+"iso" for isotonic calibration}
 
 \item{sign}{sign discovery procedure: logical}
 
