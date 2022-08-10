@@ -58,20 +58,27 @@ of "mf" for meta-feature stacking}
 \item{diffpen}{differential penalisation for features and meta-features: logical}
 }
 \value{
-This function returns an object of class \code{transreg},
-including two or three objects of class \code{glmnet}.
+This function returns an object of class \code{transreg}.
+Rather than accessing its slots (see below),
+it is recommended to use methods like
+\code{predict.transreg} and \code{coef.transreg}.
 \itemize{
 \item slot \code{base}:
+Object of class \code{glmnet}.
 Regression of outcome on features (without prior effects),
 with 1 + p estimated coefficients
 (intercept + features).
-\item slot \code{meta.x} (where \code{x} is "lp" or "mf"):
+\item slot \code{meta.lp}:
+\code{NULL} or object of class \code{glmnet}.
 Regression of outcome on cross-validated linear predictors
-from estimated effects and prior effects ("lp"),
+from prior effects and estimated effects,
 with 1 + k + 2 estimated coefficients
 (intercept + sources of co-data + lambda_min and lambda_1se).
-Regression of outcome on meta-features (cross-validated linear predictors
-from prior effects) and original features ("mf"),
+*slot \code{meta.mf}:
+\code{NULL} or object of class \code{glmnet}.
+Regression of outcome on meta-features
+(cross-validated linear predictors from prior effects)
+and original features,
 with 1 + k + p estimated coefficients
 (intercept + sources of co-data + features).
 \item slot \code{scale}:

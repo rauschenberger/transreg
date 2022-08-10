@@ -50,20 +50,27 @@
 #' * \eqn{k}: number of sources
 #' 
 #' @return
-#' This function returns an object of class `transreg`,
-#' including two or three objects of class `glmnet`.
+#' This function returns an object of class `transreg`.
+#' Rather than accessing its slots (see below),
+#' it is recommended to use methods like
+#' `predict.transreg` and `coef.transreg`.
 #' 
 #' * slot `base`:
+#' Object of class `glmnet`.
 #' Regression of outcome on features (without prior effects),
 #' with 1 + p estimated coefficients
 #' (intercept + features).
-#' * slot `meta.x` (where `x` is "lp" or "mf"):
+#' * slot `meta.lp`:
+#' `NULL` or object of class `glmnet`.
 #' Regression of outcome on cross-validated linear predictors
-#' from estimated effects and prior effects ("lp"),
+#' from prior effects and estimated effects,
 #' with 1 + k + 2 estimated coefficients
 #' (intercept + sources of co-data + lambda_min and lambda_1se).
-#' Regression of outcome on meta-features (cross-validated linear predictors
-#' from prior effects) and original features ("mf"),
+#' *slot `meta.mf`:
+#' `NULL` or object of class `glmnet`.
+#' Regression of outcome on meta-features
+#' (cross-validated linear predictors from prior effects)
+#' and original features,
 #' with 1 + k + p estimated coefficients
 #' (intercept + sources of co-data + features).
 #' * slot `scale`:
