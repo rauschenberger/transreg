@@ -8,7 +8,7 @@ status](https://ci.appveyor.com/api/projects/status/github/rauschenberger/transr
 Status](https://codecov.io/github/rauschenberger/transreg/coverage.svg?branch=master)](https://codecov.io/github/rauschenberger/transreg)
 -->
 
-## Penalised regression with multiple sets of prior coefficients
+## Penalised regression with multiple sets of prior effects
 
 Improves the predictive performance of ridge and lasso regression exploiting one or more sources of prior information on the importance and direction of effects.
 
