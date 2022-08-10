@@ -25,5 +25,4 @@ reference:
   - .iso.slow.single
   - .residuals
   - .signdisc
-  - .predict.lp
-
+  - methods

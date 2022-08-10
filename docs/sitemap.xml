@@ -22,6 +22,12 @@
     <loc>/reference/cv.transfer.html</loc>
   </url>
   <url>
+    <loc>/reference/dot-coef.lp.html</loc>
+  </url>
+  <url>
+    <loc>/reference/dot-coef.mf.html</loc>
+  </url>
+  <url>
     <loc>/reference/dot-exp.multiple.html</loc>
   </url>
   <url>
@@ -34,7 +40,13 @@
     <loc>/reference/dot-iso.slow.single.html</loc>
   </url>
   <url>
+    <loc>/reference/dot-methods.html</loc>
+  </url>
+  <url>
     <loc>/reference/dot-predict.lp.html</loc>
+  </url>
+  <url>
+    <loc>/reference/dot-predict.mf.html</loc>
   </url>
   <url>
     <loc>/reference/dot-residuals.html</loc>
@@ -62,6 +74,9 @@
   </url>
   <url>
     <loc>/reference/iso.slow.single.html</loc>
+  </url>
+  <url>
+    <loc>/reference/methods.html</loc>
   </url>
   <url>
     <loc>/reference/multiridge.html</loc>

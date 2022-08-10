@@ -325,13 +325,7 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
 #' @examples
 #' NA
 predict.transreg <- function(object,newx,stack=NULL,...){
-  if(is.null(stack)){
-    stack <- object$stack
-  }
-  if(any(object$stack=="lp") & any(object$stack=="mf")){
-    warning("Two options given. Choosing stack='mf'.")
-    stack <- "mf"
-  }
+  stack <- .which.stack(object,stack)
   eval(parse(text=paste0(".predict.",stack,"(object=object,newx=newx,...)")))
 }
 
@@ -340,7 +334,7 @@ predict.transreg <- function(object,newx,stack=NULL,...){
 #'
 #' @description
 #' Internal functions called by
-#' [coef.transreg()] and [predict.transreg()],
+#' [coef.transreg()] and [predict.transreg()]. 
 #' depending on choice between
 #' linear predictor stacking
 #' and meta-feature stacking.
@@ -351,8 +345,10 @@ predict.transreg <- function(object,newx,stack=NULL,...){
 #' Use \code{\link[=coef.transreg]{coef}} 
 #' and \code{\link[=predict.transreg]{predict}}.
 #'
-#' @examples
-#' NA
+#' @name methods
+NULL
+
+#' @describeIn methods called by `predict.transreg` if `stack="lp"`
 .predict.lp <- function(object,newx,...){
   one <- newx %*% object$base$prior$beta # original (harmonise with transreg)
   #one <- object$base$prior$alpha + newx %*% object$base$prior$beta # trial 2022-01-04 (see above)
@@ -362,7 +358,7 @@ predict.transreg <- function(object,newx,stack=NULL,...){
   return(y_hat)
 }
 
-#'@rdname .predict.lp
+#' @describeIn methods called by `predict.transreg` if `stack="mf"`
 .predict.mf <- function(object,newx,...){
   one <- newx %*% object$base$prior$beta
   y_hat <- stats::predict(object$meta.mf,s="lambda.min",newx=cbind(one,newx),type="response")
@@ -389,17 +385,11 @@ predict.transreg <- function(object,newx,stack=NULL,...){
 #'@examples
 #'NA
 coef.transreg <- function(object,stack=NULL,...){
-  if(is.null(stack)){
-    stack <- object$stack
-  }
-  if(any(object$stack=="lp") & any(object$stack=="mf")){
-    warning("Two options given. Choosing stack='mf'.")
-    stack <- "mf"
-  }
+  stack <- .which.stack(object,stack)
   eval(parse(text=paste0(".coef.",stack,"(object=object,...)")))
 }
 
-#'@rdname .predict.lp
+#' @describeIn methods called by `coef.transreg` if `stack="lp"`
 .coef.lp <- function(object,...){
   beta <- stats::coef(object$base,s=c(object$meta.lp$lambda.min,object$meta.lp$lambda.1se))
   omega <- as.numeric(stats::coef(object$meta.lp,s=object$meta.lp$lambda.min))
@@ -414,7 +404,7 @@ coef.transreg <- function(object,stack=NULL,...){
   return(list(alpha=alpha_star,beta=beta_star))
 }
 
-#'@rdname .predict.lp
+#' @describeIn methods called by `coef.transreg` if `stack="mf"`
 .coef.mf <- function(object,...){
   gamma <- object$base$prior$beta
   meta <- stats::coef(object$meta.mf,s="lambda.min")
@@ -429,6 +419,44 @@ coef.transreg <- function(object,stack=NULL,...){
   }
   return(list(alpha=alpha_star,beta=beta_star))
 }
+
+.which.stack <- function(object,stack){
+  if(is.null(stack) & length(object$stack)==1){
+    return(object$stack)
+  }
+  if(!is.null(stack) & length(stack)==1 & any(object$stack==stack)){
+    return(stack)
+  }
+  names <- paste(paste0("stack='",object$stack,"'"),collapse=" and ")
+  stop(paste0("Choose between ",names,"."))
+  
+  # if(is.null(stack)){
+  #   if(length(object$stack)==1){
+  #     stack <- object$stack
+  #   } else {
+  #     stop(paste0("Choose between ",names,"."))
+  #   }
+  # } else {
+  #   if(length(stack)!=1){
+  #     stop("Invalid argument 'stack'. Provide single name.")
+  #   }
+  #   if(!any(object$stack==stack)){
+  #     stop(paste0("Cannot extract results for stack='",stack,"' from transreg-object fitted with ",names,"."))
+  #   }
+  # }
+  
+  #if(is.null(stack)){
+  #  stack <- object$stack
+  #} else if(length(intersect(stack,object$stack))==0){
+  #  stop("stack='",stack,"' not available in object")
+  #}
+  #if(any(object$stack=="lp") & any(object$stack=="mf")){
+  #  warning("Two options given. Choosing stack='mf'.")
+  #  stack <- "mf"
+  #}
+  #return(stack)
+}
+
 
 #.predict.test <- function(object,newx,...){
 #  one <- newx %*% object$base$prior$beta
