@@ -338,8 +338,8 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
 #' 
 #' @inherit transreg-package references
 #' 
-#' @examples
-#' NA
+#' @inherit transreg examples
+#' 
 predict.transreg <- function(object,newx,stack=NULL,...){
   stack <- .which.stack(object,stack)
   eval(parse(text=paste0(".predict.",stack,"(object=object,newx=newx,...)")))
@@ -402,6 +402,8 @@ NULL
 #'NA
 #'
 #'@inherit transreg-package references
+#'
+#'@inherit transreg examples
 #'
 coef.transreg <- function(object,stack=NULL,...){
   stack <- .which.stack(object,stack)
