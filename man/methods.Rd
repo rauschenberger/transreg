@@ -6,6 +6,7 @@
 \alias{.predict.mf}
 \alias{.coef.lp}
 \alias{.coef.mf}
+\alias{.which.stack}
 \title{Internal functions}
 \usage{
 .predict.lp(object, newx, ...)
@@ -15,6 +16,8 @@
 .coef.lp(object, ...)
 
 .coef.mf(object, ...)
+
+.which.stack(object, stack)
 }
 \arguments{
 \item{object}{object of class \code{transreg}}
@@ -23,6 +26,8 @@
 matrix with \eqn{n} rows (samples) and \eqn{p} columns (variables)}
 
 \item{...}{(not applicable)}
+
+\item{stack}{character "lp" (linear predictor stacking) or "mf" (meta-feature stacking)}
 }
 \description{
 Internal functions called by
@@ -40,6 +45,8 @@ and meta-feature stacking.
 \item \code{.coef.lp}: called by \code{coef.transreg} if \code{stack="lp"}
 
 \item \code{.coef.mf}: called by \code{coef.transreg} if \code{stack="mf"}
+
+\item \code{.which.stack}: called by \code{coef.transreg} and \code{predict.transreg}
 }}
 
 \seealso{

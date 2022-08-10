@@ -413,6 +413,7 @@ coef.transreg <- function(object,stack=NULL,...){
   return(list(alpha=alpha_star,beta=beta_star))
 }
 
+#' @describeIn methods called by `coef.transreg` and `predict.transreg`
 .which.stack <- function(object,stack){
   if(is.null(stack) & length(object$stack)==1){
     return(object$stack)

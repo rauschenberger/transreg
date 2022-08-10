@@ -63,7 +63,9 @@ and meta-feature stacking.</p>
 <span></span>
 <span><span class="fu">.coef.lp</span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">.coef.mf</span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">.coef.mf</span><span class="op">(</span><span class="va">object</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">.which.stack</span><span class="op">(</span><span class="va">object</span>, <span class="va">stack</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -80,6 +82,10 @@ matrix with \(n\) rows (samples) and \(p\) columns (variables)</p></dd>
 <dt>...</dt>
 <dd><p>(not applicable)</p></dd>
 
+
+<dt>stack</dt>
+<dd><p>character "lp" (linear predictor stacking) or "mf" (meta-feature stacking)</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="functions">Functions<a class="anchor" aria-label="anchor" href="#functions"></a></h2>
@@ -88,6 +94,7 @@ matrix with \(n\) rows (samples) and \(p\) columns (variables)</p></dd>
 <li><p><code>.predict.mf</code>: called by <code>predict.transreg</code> if <code>stack="mf"</code></p></li>
 <li><p><code>.coef.lp</code>: called by <code>coef.transreg</code> if <code>stack="lp"</code></p></li>
 <li><p><code>.coef.mf</code>: called by <code>coef.transreg</code> if <code>stack="mf"</code></p></li>
+<li><p><code>.which.stack</code>: called by <code>coef.transreg</code> and <code>predict.transreg</code></p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
