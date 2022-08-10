@@ -49,14 +49,13 @@
 #' * \eqn{n}: sample size
 #' * \eqn{p}: number of features
 #' * \eqn{k}: number of sources
-#' @md
+#' 
+#' @inherit transreg-package references
 #' 
 #' @seealso
 #' Methods for objects of class `transreg`
 #' include \code{\link[=coef.transreg]{coef}} 
 #' and \code{\link[=predict.transreg]{predict}}.
-#' 
-#' @inherit transreg-package references
 #' 
 #' @examples
 #' n <- 100; p <- 500

@@ -77,7 +77,6 @@
 #'"Fast cross-validation for multi-penalty high-dimensional ridge regression".
 #'*Journal of Computational and Graphical Statistics* 30(4):835-847.
 #'\doi{10.1080/10618600.2021.1904962} 
-#'@md
 #'
 multiridge <- function(X,Y,family){
   XXblocks <- multiridge::createXXblocks(datablocks=X)
