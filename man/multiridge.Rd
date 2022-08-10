@@ -84,11 +84,11 @@ all.equal(y_hat1,y_hat2)
 }
 \references{
 Mark A. van de Wiel
-\href{https://orcid.org/0000-0003-4780-8472}{\figure{orcid_16x16.png}},
+\href{https://orcid.org/0000-0003-4780-8472}{\figure{orcid_16x16.png}{(iD)}},
 Mirrelijn M. van Nee
-\href{https://orcid.org/0000-0001-7715-1446}{\figure{orcid_16x16.png}},
+\href{https://orcid.org/0000-0001-7715-1446}{\figure{orcid_16x16.png}{(iD)}},
 and Armin Rauschenberger
-\href{https://orcid.org/0000-0001-6498-4801}{\figure{orcid_16x16.png}}
+\href{https://orcid.org/0000-0001-6498-4801}{\figure{orcid_16x16.png}{(iD)}}
 (2021).
 "Fast cross-validation for multi-penalty high-dimensional ridge regression".
 \emph{Journal of Computational and Graphical Statistics} 30(4):835-847.

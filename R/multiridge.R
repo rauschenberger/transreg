@@ -68,11 +68,11 @@
 #'
 #'@references
 #'Mark A. van de Wiel
-#'[![MvdW](orcid_16x16.png)](https://orcid.org/0000-0003-4780-8472),
+#'[![MvdW](orcid_16x16.png "(iD)")](https://orcid.org/0000-0003-4780-8472),
 #'Mirrelijn M. van Nee
-#'[![MvN](orcid_16x16.png)](https://orcid.org/0000-0001-7715-1446),
+#'[![MvN](orcid_16x16.png "(iD)")](https://orcid.org/0000-0001-7715-1446),
 #'and Armin Rauschenberger
-#'[![AR](orcid_16x16.png)](https://orcid.org/0000-0001-6498-4801)
+#'[![AR](orcid_16x16.png "(iD)")](https://orcid.org/0000-0001-6498-4801)
 #'(2021).
 #'"Fast cross-validation for multi-penalty high-dimensional ridge regression".
 #'*Journal of Computational and Graphical Statistics* 30(4):835-847.
