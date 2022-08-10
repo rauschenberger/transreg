@@ -53,5 +53,5 @@ exponential and isotonic calibration.
 }}
 
 \seealso{
-Use \code{\link[=transreg]{transreg}} for model fitting.
+Use \code{\link[=transreg]{transreg()}} for model fitting.
 }

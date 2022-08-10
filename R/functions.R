@@ -353,6 +353,7 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
 #' @inherit transreg-package references
 #' 
 #' @inherit transreg examples
+#' @aliases predict
 #' 
 predict.transreg <- function(object,newx,stack=NULL,...){
   stack <- .which.stack(object,stack)
@@ -421,6 +422,7 @@ NULL
 #'@inherit transreg-package references
 #'
 #'@inherit transreg examples
+#'@aliases coef
 #'
 coef.transreg <- function(object,stack=NULL,...){
   stack <- .which.stack(object,stack)
@@ -609,7 +611,7 @@ coef.transreg <- function(object,stack=NULL,...){
 #' @param plot logical
 #'
 #' @seealso
-#' Use \code{\link[=transreg]{transreg}} for model fitting.
+#' Use [transreg()] for model fitting.
 #'
 #' @name calibrate
 NULL

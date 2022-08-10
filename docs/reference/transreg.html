@@ -131,7 +131,7 @@ of "mf" for meta-feature stacking</p></dd>
     
 
 <p>This function returns an object of class <code>transreg</code>.
-Rather than accessing its slots,
+Rather than accessing its slots (see list below),
 it is recommended to use methods like
 <code>predict.transreg</code> and <code>coef.transreg</code>.</p><ul><li><p>slot <code>base</code>:
 Object of class <code>glmnet</code>.
@@ -232,11 +232,11 @@ and <code><a href="predict.transreg.html">predict</a></code>.</p></div>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (increasing): 0.00022 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (decreasing): 0.9 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">object</span><span class="op">$</span><span class="va">base</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="fu"><a href="coef.transreg.html">coef</a></span><span class="op">(</span><span class="va">object</span><span class="op">$</span><span class="va">base</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 501   1</span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">object</span><span class="op">$</span><span class="va">meta.lp</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="fu"><a href="coef.transreg.html">coef</a></span><span class="op">(</span><span class="va">object</span><span class="op">$</span><span class="va">meta.lp</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 4 1</span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">object</span><span class="op">$</span><span class="va">meta.mf</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="fu"><a href="coef.transreg.html">coef</a></span><span class="op">(</span><span class="va">object</span><span class="op">$</span><span class="va">meta.mf</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 502   1</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
