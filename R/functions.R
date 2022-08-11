@@ -403,7 +403,30 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
 #' 
 #' @inherit transreg seealso
 #' 
-#' @inherit transreg examples
+#' @examples
+#' #--- simulation ---
+#' n0 <- 100; n1 <- 10000; n <- n0 + n1; p <- 500
+#' X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
+#' beta <- rnorm(p)
+#' prior <- beta + rnorm(p)
+#' y <- X %*% beta
+#' 
+#' #--- train-test split ---
+#' foldid <- rep(c(0,1),times=c(n0,n1))
+#' y0 <- y[foldid==0]
+#' X0 <- X[foldid==0,]
+#' y1 <- y[foldid==1]
+#' X1 <- X[foldid==1,]
+#' 
+#' #--- glmnet (without prior effects) ---
+#' object <- glmnet::cv.glmnet(y=y0,x=X0)
+#' y_hat <- predict(object,newx=X1,s="lambda.min")
+#' mean((y1-y_hat)^2)
+#' 
+#' #--- transreg (with prior effects) ---
+#' object <- transreg(y=y0,X=X0,prior=prior)
+#' y_hat <- predict(object,newx=X1)
+#' mean((y1-y_hat)^2) # decrease in MSE?
 #' 
 predict.transreg <- function(object,newx,stack=NULL,...){
   stack <- .which.stack(object,stack)
@@ -476,7 +499,6 @@ NULL
 #'
 #' @examples
 #' #--- simulation ---
-#' set.seed(1)
 #' n <- 100; p <- 500
 #' X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
 #' beta <- rnorm(p)
@@ -491,7 +513,7 @@ NULL
 #' #--- transreg (with prior effects) ---
 #' object <- transreg(y=y,X=X,prior=prior,alpha=0)
 #' beta_hat <- coef(object)$beta
-#' mean((beta-beta_hat)^2)
+#' mean((beta-beta_hat)^2) # decrease in MSE?
 #'
 coef.transreg <- function(object,stack=NULL,...){
   stack <- .which.stack(object,stack)

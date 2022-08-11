@@ -24,7 +24,6 @@ Extracts coefficients
 }
 \examples{
 #--- simulation ---
-set.seed(1)
 n <- 100; p <- 500
 X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
 beta <- rnorm(p)
@@ -39,7 +38,7 @@ mean((beta-beta_hat)^2)
 #--- transreg (with prior effects) ---
 object <- transreg(y=y,X=X,prior=prior,alpha=0)
 beta_hat <- coef(object)$beta
-mean((beta-beta_hat)^2)
+mean((beta-beta_hat)^2) # decrease in MSE?
 
 }
 \references{
