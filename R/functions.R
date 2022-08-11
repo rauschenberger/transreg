@@ -484,15 +484,14 @@ NULL
 #' y <- X %*% beta
 #' 
 #' #--- glmnet (without prior effects) ---
-#' glmnet <- glmnet::cv.glmnet(y=y,x=X,alpha=0)
-#' beta.glmnet <- coef(glmnet,s="lambda.min")[-1]
-#' mean((beta-beta.glmnet)^2)
-#' cond <- beta==0
+#' object <- glmnet::cv.glmnet(y=y,x=X,alpha=0)
+#' beta_hat <- coef(object,s="lambda.min")[-1]
+#' mean((beta-beta_hat)^2)
 #' 
 #' #--- transreg (with prior effects) ---
-#' transreg <- transreg(y=y,X=X,prior=prior,alpha=0)
-#' beta.transreg <- coef(transreg)$beta
-#' mean((beta-beta.transreg)^2)
+#' object <- transreg(y=y,X=X,prior=prior,alpha=0)
+#' beta_hat <- coef(object)$beta
+#' mean((beta-beta_hat)^2)
 #'
 coef.transreg <- function(object,stack=NULL,...){
   stack <- .which.stack(object,stack)
