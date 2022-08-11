@@ -2,7 +2,6 @@
 % Please edit documentation in R/functions.R
 \name{weights.transreg}
 \alias{weights.transreg}
-\alias{weights}
 \title{Extract weights}
 \usage{
 \method{weights}{transreg}(object, stack = NULL, ...)

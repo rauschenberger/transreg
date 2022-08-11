@@ -2,7 +2,6 @@
 % Please edit documentation in R/functions.R
 \name{coef.transreg}
 \alias{coef.transreg}
-\alias{coef}
 \title{Coefficients}
 \usage{
 \method{coef}{transreg}(object, stack = NULL, ...)

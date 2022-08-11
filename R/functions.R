@@ -330,7 +330,6 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
 }
 
 #' @export
-#' @aliases predict
 #' 
 #' @title
 #' Predict
@@ -367,7 +366,7 @@ predict.transreg <- function(object,newx,stack=NULL,...){
 #'
 #' @description
 #' Internal functions called by
-#' [coef.transreg()] and [predict.transreg()], 
+#' [coef.transreg()], [predict.transreg()] and [weights.transreg()], 
 #' depending on choice between
 #' linear predictor stacking
 #' and meta-feature stacking.
@@ -375,8 +374,9 @@ predict.transreg <- function(object,newx,stack=NULL,...){
 #' @inheritParams predict.transreg
 #'
 #' @seealso
-#' Use \code{\link[=coef.transreg]{coef}} 
-#' and \code{\link[=predict.transreg]{predict}}.
+#' Use \code{\link[=coef.transreg]{coef}}, 
+#' \code{\link[=predict.transreg]{predict}}
+#' and \code{\link[=weights.transreg]{weights}}.
 #'
 #' @name extract
 NULL
@@ -406,7 +406,6 @@ NULL
 }
 
 #' @export
-#' @aliases coef
 #'
 #' @title
 #' Coefficients
@@ -1599,7 +1598,6 @@ print.transreg <- function(x,...){
 
 #' @export
 #' @importFrom stats weights
-#' @aliases weights
 #' 
 #' @title
 #' Extract weights

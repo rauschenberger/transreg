@@ -37,7 +37,7 @@ matrix with \eqn{n} rows (samples) and \eqn{p} columns (variables)}
 }
 \description{
 Internal functions called by
-\code{\link[=coef.transreg]{coef.transreg()}} and \code{\link[=predict.transreg]{predict.transreg()}},
+\code{\link[=coef.transreg]{coef.transreg()}}, \code{\link[=predict.transreg]{predict.transreg()}} and \code{\link[=weights.transreg]{weights.transreg()}},
 depending on choice between
 linear predictor stacking
 and meta-feature stacking.
@@ -60,6 +60,7 @@ and meta-feature stacking.
 }}
 
 \seealso{
-Use \code{\link[=coef.transreg]{coef}}
-and \code{\link[=predict.transreg]{predict}}.
+Use \code{\link[=coef.transreg]{coef}},
+\code{\link[=predict.transreg]{predict}}
+and \code{\link[=weights.transreg]{weights}}.
 }
