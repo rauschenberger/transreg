@@ -1671,11 +1671,23 @@ simulate <- function(p=1000,n.target=100,n.source=150,k=3,family="gaussian",prop
 #' @inheritParams predict.transreg
 #' 
 #' @examples
-#' NA
+#' #--- simulation ---
+#' set.seed(1)
+#' n <- 100; p <- 500
+#' X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
+#' beta <- rnorm(p)
+#' prior <- beta + rnorm(p)
+#' y <- X %*% beta
+#' 
+#' #--- print.transreg  ---
+#' object <- transreg(y=y,X=X,prior=prior,alpha=0.5)
+#' object
 #' 
 print.transreg <- function(x,...){
   cat("----- transreg-object -----\n")
   cat(paste0("family: '",x$info$family,"'\n"))
+  name <- ifelse(x$info$alpha==0,"ridge",ifelse(x$info$alpha==1,"lasso","elastic net"))
+  cat(paste0("alpha = ",x$info$alpha," (",name,")\n"))
   cat("n =",x$info$n,"(samples)\n")
   cat("p =",x$info$p,"(features)\n")
   cat("k =",x$info$k,"(sources of co-data)\n")
@@ -1683,7 +1695,6 @@ print.transreg <- function(x,...){
   cat("stacking:",paste(paste0("'",x$stack,"'"),collapse=" and "),"\n")
   cat("---------------------------")
 }
-
 
 #' @export
 #' @importFrom stats weights
@@ -1760,5 +1771,5 @@ fitted.transreg <- function(object,stack=NULL,...){
 
 
 plot.transreg <- function(x,y,...){
-  
+  NULL
 }

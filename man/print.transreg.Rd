@@ -15,6 +15,16 @@
 Show summary of transreg-object
 }
 \examples{
-NA
+#--- simulation ---
+set.seed(1)
+n <- 100; p <- 500
+X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
+beta <- rnorm(p)
+prior <- beta + rnorm(p)
+y <- X \%*\% beta
+
+#--- print.transreg  ---
+object <- transreg(y=y,X=X,prior=prior,alpha=0.5)
+object
 
 }
