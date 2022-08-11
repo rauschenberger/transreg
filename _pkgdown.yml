@@ -22,6 +22,6 @@ reference:
   - compare
   - .residuals
   - .signdisc
-  - .extract
-  - .calibrate
+  - extract
+  - calibrate
   - print.transreg

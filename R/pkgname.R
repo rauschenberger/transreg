@@ -34,6 +34,8 @@
 #' \email{armin.rauschenberger@uni.lu}
 #' 
 #' @examples
-#' NA
+#' ?transreg
+#' ?predict.transreg
+#' ?coef.transreg
 #' 
 NULL

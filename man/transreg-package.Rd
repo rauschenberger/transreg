@@ -18,7 +18,9 @@ Type \code{vignette("transreg")} or \code{browseVignettes("transreg")}
 to open the vignette.
 }
 \examples{
-NA
+?transreg
+?predict.transreg
+?coef.transreg
 
 }
 \references{

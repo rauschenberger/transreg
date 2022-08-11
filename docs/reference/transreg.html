@@ -189,55 +189,380 @@ and <code><a href="predict.transreg.html">predict</a></code>.</p></div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">100</span>; <span class="va">p</span> <span class="op">&lt;-</span> <span class="fl">500</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#--- simulation ---</span></span></span>
+<span class="r-in"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">100</span>; <span class="va">p</span> <span class="op">&lt;-</span> <span class="fl">500</span></span></span>
 <span class="r-in"><span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span>n<span class="op">=</span><span class="va">n</span><span class="op">*</span><span class="va">p</span><span class="op">)</span>,nrow<span class="op">=</span><span class="va">n</span>,ncol<span class="op">=</span><span class="va">p</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">beta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html" class="external-link">rbinom</a></span><span class="op">(</span>n<span class="op">=</span><span class="va">p</span>,size<span class="op">=</span><span class="fl">1</span>,prob<span class="op">=</span><span class="fl">0.2</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">prior</span> <span class="op">&lt;-</span> <span class="va">beta</span> <span class="co"># plus noise</span></span></span>
-<span class="r-in"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="va">X</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">beta</span></span></span>
-<span class="r-in"><span><span class="va">prior</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">beta</span><span class="op">&lt;</span><span class="op">(</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span>,<span class="fl">0</span>,<span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">beta</span><span class="op">&gt;</span><span class="fl">1</span>,<span class="va">beta</span>,<span class="fl">0</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">beta</span>,y<span class="op">=</span><span class="va">prior</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="transreg-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="va">object</span> <span class="op">&lt;-</span> <span class="fu">transreg</span><span class="op">(</span>y<span class="op">=</span><span class="va">y</span>,X<span class="op">=</span><span class="va">X</span>,prior<span class="op">=</span><span class="va">prior</span>,stack<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"lp"</span>,<span class="st">"mf"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Consider sign discovery procedure.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 6.8e-05 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.02 </span>
+<span class="r-in"><span><span class="va">prior1</span> <span class="op">&lt;-</span> <span class="va">beta</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">prior2</span> <span class="op">&lt;-</span> <span class="va">beta</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">y_lin</span> <span class="op">&lt;-</span> <span class="va">X</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html" class="external-link">%*%</a></span> <span class="va">beta</span></span></span>
+<span class="r-in"><span><span class="va">y_log</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">*</span><span class="op">(</span><span class="va">y_lin</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#--- single vs multiple priors ---</span></span></span>
+<span class="r-in"><span><span class="va">one</span> <span class="op">&lt;-</span> <span class="fu">transreg</span><span class="op">(</span>y<span class="op">=</span><span class="va">y_lin</span>,X<span class="op">=</span><span class="va">X</span>,prior<span class="op">=</span><span class="va">prior1</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0028 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.23 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.007 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.2 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0011 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.3 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0028 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.22 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0024 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.2 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0029 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.2 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.014 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.26 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0087 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.15 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0053 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.12 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0034 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.13 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0017 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.2 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-in"><span><span class="va">two</span> <span class="op">&lt;-</span> <span class="fu">transreg</span><span class="op">(</span>y<span class="op">=</span><span class="va">y_lin</span>,X<span class="op">=</span><span class="va">X</span>,prior<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">prior1</span>,<span class="va">prior2</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.004 0.00077 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.23 0.49 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ++</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0012 0.00073 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.19 0.64 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ++</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.012 0.00064 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.12 0.42 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ++</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0029 0.0043 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.22 0.37 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ++</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0022 0.00013 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.25 0.39 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ++</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0094 0.0042 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.26 0.6 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ++</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0035 0.0017 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.2 0.59 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ++</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.025 0.0031 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.1 0.58 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ++</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0033 0.00053 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.27 0.54 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ++</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.031 0.0071 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.095 0.29 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ++</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0016 0.0013 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.27 0.33 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ++</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/weights.html" class="external-link">weights</a></span><span class="op">(</span><span class="va">one</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.7087297</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/weights.html" class="external-link">weights</a></span><span class="op">(</span><span class="va">two</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.4231842 0.5133205</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#--- linear vs logistic regression ---</span></span></span>
+<span class="r-in"><span><span class="va">lin</span> <span class="op">&lt;-</span> <span class="fu">transreg</span><span class="op">(</span>y<span class="op">=</span><span class="va">y_lin</span>,X<span class="op">=</span><span class="va">X</span>,prior<span class="op">=</span><span class="va">prior1</span>,family<span class="op">=</span><span class="st">"gaussian"</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0028 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.23 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0017 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.25 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.011 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.16 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0031 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.19 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.005 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.27 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0064 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.18 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0021 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.2 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.023 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.25 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.00097 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.2 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0035 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.098 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0043 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.31 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-in"><span><span class="va">log</span> <span class="op">&lt;-</span> <span class="fu">transreg</span><span class="op">(</span>y<span class="op">=</span><span class="va">y_log</span>,X<span class="op">=</span><span class="va">X</span>,prior<span class="op">=</span><span class="va">prior1</span>,family<span class="op">=</span><span class="st">"binomial"</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 4.1e-05 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.089 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 8e-05 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.066 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 3.6e-05 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.049 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.00012 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.16 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 3e-05 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.048 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 9.3e-05 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.087 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 4.3e-05 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.034 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 6.2e-05 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.069 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 6e-06 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.24 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 1.4e-05 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.11 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 8.8e-05 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.11 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">lin</span>,newx<span class="op">=</span><span class="va">X</span><span class="op">)</span><span class="op">)</span> <span class="co"># predicted values</span></span></span>
+<span class="r-plt img"><img src="transreg-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html" class="external-link">hist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">log</span>,newx<span class="op">=</span><span class="va">X</span><span class="op">)</span><span class="op">)</span> <span class="co"># predicted probabilities</span></span></span>
+<span class="r-plt img"><img src="transreg-2.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#--- ridge vs lasso penalisation ---</span></span></span>
+<span class="r-in"><span><span class="va">ridge</span> <span class="op">&lt;-</span> <span class="fu">transreg</span><span class="op">(</span>y<span class="op">=</span><span class="va">y_lin</span>,X<span class="op">=</span><span class="va">X</span>,prior<span class="op">=</span><span class="va">prior1</span>,alpha<span class="op">=</span><span class="fl">0</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0028 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.23 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0035 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.21 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0048 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.14 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.011 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.32 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0023 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.31 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0033 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.12 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0014 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.16 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0041 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.11 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0027 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.18 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0081 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.33 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0037 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.16 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-in"><span><span class="va">lasso</span> <span class="op">&lt;-</span> <span class="fu">transreg</span><span class="op">(</span>y<span class="op">=</span><span class="va">y_lin</span>,X<span class="op">=</span><span class="va">X</span>,prior<span class="op">=</span><span class="va">prior1</span>,alpha<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0028 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.23 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.00047 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.25 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0032 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.11 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.00039 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.16 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0051 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.23 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.015 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.38 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0021 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.27 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0031 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.27 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.018 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.1 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 8.7e-05 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.48 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0062 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.17 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 1e-04 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0055 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.13 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-in"><span><span class="co"># initial coefficients (without prior)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">ridge</span><span class="op">$</span><span class="va">base</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="co"># dense</span></span></span>
+<span class="r-plt img"><img src="transreg-3.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">lasso</span><span class="op">$</span><span class="va">base</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="co"># sparse</span></span></span>
+<span class="r-plt img"><img src="transreg-4.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="co"># final coefficients (with prior)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">ridge</span><span class="op">)</span><span class="op">$</span><span class="va">beta</span><span class="op">)</span> <span class="co"># dense</span></span></span>
+<span class="r-plt img"><img src="transreg-5.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">lasso</span><span class="op">)</span><span class="op">$</span><span class="va">beta</span><span class="op">)</span> <span class="co"># not sparse</span></span></span>
+<span class="r-plt img"><img src="transreg-6.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#--- exponential vs isotonic calibration ---</span></span></span>
+<span class="r-in"><span><span class="va">exp</span> <span class="op">&lt;-</span> <span class="fu">transreg</span><span class="op">(</span>y<span class="op">=</span><span class="va">y_lin</span>,X<span class="op">=</span><span class="va">X</span>,prior<span class="op">=</span><span class="va">prior1</span>,scale<span class="op">=</span><span class="st">"exp"</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-plt img"><img src="transreg-7.png" alt="" width="700" height="433"></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> .</span>
+<span class="r-plt img"><img src="transreg-8.png" alt="" width="700" height="433"></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-plt img"><img src="transreg-9.png" alt="" width="700" height="433"></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-plt img"><img src="transreg-10.png" alt="" width="700" height="433"></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-plt img"><img src="transreg-11.png" alt="" width="700" height="433"></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-plt img"><img src="transreg-12.png" alt="" width="700" height="433"></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-plt img"><img src="transreg-13.png" alt="" width="700" height="433"></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-plt img"><img src="transreg-14.png" alt="" width="700" height="433"></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-plt img"><img src="transreg-15.png" alt="" width="700" height="433"></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-plt img"><img src="transreg-16.png" alt="" width="700" height="433"></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-plt img"><img src="transreg-17.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="va">iso</span> <span class="op">&lt;-</span> <span class="fu">transreg</span><span class="op">(</span>y<span class="op">=</span><span class="va">y_lin</span>,X<span class="op">=</span><span class="va">X</span>,prior<span class="op">=</span><span class="va">prior1</span>,scale<span class="op">=</span><span class="st">"iso"</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0028 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.23 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0025 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.16 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0036 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.38 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0066 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.13 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.004 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.19 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0064 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.33 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0053 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.19 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0064 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.2 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.001 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.29 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0045 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.088 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.00096 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.26 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">prior1</span>,y<span class="op">=</span><span class="va">exp</span><span class="op">$</span><span class="va">prior</span><span class="op">$</span><span class="va">calib</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="transreg-18.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">prior1</span>,y<span class="op">=</span><span class="va">iso</span><span class="op">$</span><span class="va">prior</span><span class="op">$</span><span class="va">calib</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="transreg-19.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#--- linear predictor vs meta-feature stacking ---</span></span></span>
+<span class="r-in"><span><span class="va">prior</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">prior1</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">250</span><span class="op">]</span>,<span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">250</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">lp</span> <span class="op">&lt;-</span> <span class="fu">transreg</span><span class="op">(</span>y<span class="op">=</span><span class="va">y_lin</span>,X<span class="op">=</span><span class="va">X</span>,prior<span class="op">=</span><span class="va">prior</span>,stack<span class="op">=</span><span class="st">"lp"</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.00058 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.88 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.00027 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 1 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.00027 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.84 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0014 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 1 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0026 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.6 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.00059 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 1 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0051 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.7 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0011 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.22 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.00062 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.2 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.001 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.34 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.00048 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.9 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.82 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.00014 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.01 </span>
+<span class="r-in"><span><span class="va">mf</span> <span class="op">&lt;-</span> <span class="fu">transreg</span><span class="op">(</span>y<span class="op">=</span><span class="va">y_lin</span>,X<span class="op">=</span><span class="va">X</span>,prior<span class="op">=</span><span class="va">prior</span>,stack<span class="op">=</span><span class="st">"mf"</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.00058 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.88 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.00013 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.95 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.00016 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.13 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 6.4e-05 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.93 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0013 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.97 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 3e-04 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0018 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.12 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0042 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.76 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0017 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.094 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.00099 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.63 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.00074 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.55 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.0012 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.17 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.00055 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.74 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.00014 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.025 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.00021 </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.15 </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (+): 0.00022 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> p-value (-): 0.9 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> +</span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">object</span><span class="op">$</span><span class="va">base</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 501   1</span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">object</span><span class="op">$</span><span class="va">meta.lp</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 4 1</span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">object</span><span class="op">$</span><span class="va">meta.mf</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 502   1</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">lp</span><span class="op">$</span><span class="va">base</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span>,y<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">lp</span><span class="op">)</span><span class="op">$</span><span class="va">beta</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="transreg-20.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mf</span><span class="op">$</span><span class="va">base</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span>,y<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">mf</span><span class="op">)</span><span class="op">$</span><span class="va">beta</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="transreg-21.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
