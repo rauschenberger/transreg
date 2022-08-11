@@ -43,6 +43,8 @@
 #' select from sources: logical
 #' @param diffpen
 #' differential penalisation for features and meta-features: logical
+#' @param track
+#' logical
 #'
 #' @details
 #' * \eqn{n}: sample size
@@ -136,7 +138,13 @@
 #' plot(x=coef(lp$base)[-1],y=coef(lp)$beta)
 #' plot(x=coef(mf$base)[-1],y=coef(mf)$beta)
 #' 
-transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,scale="iso",stack="mf",sign=FALSE,switch=TRUE,select=TRUE,diffpen=FALSE){
+transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,scale="iso",stack="mf",sign=FALSE,switch=TRUE,select=TRUE,diffpen=FALSE,track=FALSE){
+  
+  #if(sink){
+  #  temp <- file("temp.txt",open="wt")
+  #  #sink(temp,type="output")
+  #  sink(temp,type="message")
+  #}
   
   # family <- "gaussian"; alpha <- 1; foldid <- NULL; nfolds <- 10; scale <- "exp"; sign <- FALSE; switch <- TRUE; select <- TRUE
   
@@ -189,9 +197,9 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   }
   base$z <- prior.ext
   if(scale=="exp"){
-    prior.ext <- .exp.multiple(y=y,X=X,prior=prior.ext,family=family,select=select)
+    prior.ext <- .exp.multiple(y=y,X=X,prior=prior.ext,family=family,select=select,track=track)
   } else if(scale=="iso"){
-    prior.ext <- .iso.multiple(y=y,X=X,prior=prior.ext,family=family,select=select,switch=switch)
+    prior.ext <- .iso.multiple(y=y,X=X,prior=prior.ext,family=family,select=select,switch=switch,track=track)
   } else if(scale=="sam"){
     prior.ext <- .sam.multiple(y=y,X=X,prior=prior.ext,family=family,select=select,switch=switch,base=base)
   } else if(scale=="com"){
@@ -228,9 +236,9 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
       #prior.int[prior.ext<0] <- -prior.int[prior.ext<0] # temporary
     }
     if(scale=="exp"){
-      prior.int <- .exp.multiple(y=y0,X=X0,prior=prior.int,family=family,select=select)
+      prior.int <- .exp.multiple(y=y0,X=X0,prior=prior.int,family=family,select=select,track=track)
     } else if(scale=="iso"){
-      prior.int <- .iso.multiple(y=y0,X=X0,prior=prior.int,family=family,select=select,switch=switch)
+      prior.int <- .iso.multiple(y=y0,X=X0,prior=prior.int,family=family,select=select,switch=switch,track=track)
     } else if(scale=="sam"){
       prior.int <- .sam.multiple(y=y0,X=X0,prior=prior.int,family=family,select=select,switch=switch,base=base)
     } else if(scale=="com"){
@@ -269,15 +277,15 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   #y_hat[,k+1] <- Y_hat[,id]-int[,id] # trial (harmonise with .predict.lp)
   
   if(FALSE & scale=="com"){
-    message("experimental tuning","\n")
+    if(track){message("experimental tuning","\n")}
     if(k!=11){stop("to implement properly")}
     #--- trial tuning iso-exp weight ---
     #--- correct this for one source!!! ---
     #--- adapt this to multiple sources!!! ---
     cvm <- apply(y_hat,2,function(x) starnet:::.loss(y=y,x=starnet:::.mean.function(x,family=family),family=family,type.measure="deviance"))
-    tryCatch(expr=graphics::plot(x=seq(from=0,to=1,by=0.1),y=cvm[1:k]),error=function(x) NULL)
+    if(track){tryCatch(expr=graphics::plot(x=seq(from=0,to=1,by=0.1),y=cvm[1:k]),error=function(x) NULL)}
     w.id <- which.min(cvm[1:k])
-    message("min = ",w.id," ")
+    if(track){message("min = ",w.id," ")}
     prior.int$alpha <- prior.int$alpha[w.id]
     prior.int$beta <- prior.int$beta[,w.id,drop=FALSE]
     # here we should also extract the meta-stuff (continue here!!!)
@@ -359,6 +367,14 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   call <- deparse(sys.call())
   object <- list(base=base,meta.lp=meta.lp,meta.mf=meta.mf,scale=scale,stack=stack,call=call,data=list(y=y,X=X,prior=prior),prior.calib=prior.ext$beta,info=data.frame(n=n,p=p,k=k,family=family,alpha=alpha))
   class(object) <- "transreg"
+  
+  #if(sink){
+    #close(temp)
+    #sink()
+    #sink()
+    #closeAllConnections()
+  #}
+  
   return(object)
 }
 
@@ -614,10 +630,10 @@ coef.transreg <- function(object,stack=NULL,...){
 #' #temp <- .signdisc(y,X,prior,family="gaussian")
 #' #table(sign(beta),sign(temp))
 #' 
-.signdisc <- function(y,X,prior,family,foldid=NULL,nfolds=10){
+.signdisc <- function(y,X,prior,family,foldid=NULL,nfolds=10,track=FALSE){
   cond <- apply(prior,2,function(x) any(x>0) & all(x>=0))
   if(any(cond)){
-    message(paste("Sign discovery procedure for source(s):",paste(which(cond),collapse=", ")))
+    if(track){message(paste("Sign discovery procedure for source(s):",paste(which(cond),collapse=", ")))}
     #--- regression of target on features (trial) ---
     #init <- glmnet::cv.glmnet(x=X,y=y,family=family,alpha=0,foldid=foldid,nfolds=nfolds,penalty.factors=1/abs(prior))
     #sign <- sign(coef(init,s="lambda.min")[-1])
@@ -644,7 +660,6 @@ coef.transreg <- function(object,stack=NULL,...){
 #' exponential and isotonic calibration.
 #'
 #' @inheritParams transreg
-#' @param plot logical
 #'
 #' @seealso
 #' Use [transreg()] for model fitting.
@@ -653,7 +668,7 @@ coef.transreg <- function(object,stack=NULL,...){
 NULL
 
 #' @describeIn calibrate called by `transreg` if `scale="iso"`
-.exp.multiple <- function(y,X,prior,family,select,plot=TRUE){
+.exp.multiple <- function(y,X,prior,family,select,track=FALSE){
   
   n <- nrow(X); p <- ncol(X); k <- ncol(prior)
   
@@ -704,7 +719,7 @@ NULL
       pvalue[j] <- suppressWarnings(stats::wilcox.test(x=res1,y=res0,paired=TRUE,alternative="less")$p.value)
     }
     
-    if(plot){
+    if(track){
       tryCatch(graphics::plot(x=exp,y=cvm,main=j),error=function(x) NULL)
       tryCatch(graphics::abline(v=exp[id.min]),error=function(x) NULL)
     }
@@ -714,7 +729,7 @@ NULL
     remove <- pvalue > 0.05/k
     # Use same cut-off for exponential and isotonic calibration!
     beta[,remove] <- 0
-    message(ifelse(remove,".",ifelse(sign==1,"+","-")))
+    if(track){message(ifelse(remove,".",ifelse(sign==1,"+","-")))}
   }
   
   return(list(alpha=alpha,beta=beta,theta=theta,tau=tau))
@@ -824,7 +839,7 @@ NULL
 # Speed up this function by only examining the "negative prior" if the "positive prior" is insignificant? Or do some pre-screening based on correlation, and then decide which one to run first and which one to run second (i.e. only if the first one fits poorly).
 
 #' @describeIn calibrate called by `transreg` if `scale="iso"`
-.iso.multiple <- function(y,X,prior,family,select=TRUE,switch=TRUE){
+.iso.multiple <- function(y,X,prior,family,select=TRUE,switch=TRUE,track=FALSE){
   
   k <- ncol(prior)
   
@@ -877,8 +892,8 @@ NULL
     
     pval1 <- apply(res1,2,function(x) suppressWarnings(stats::wilcox.test(x=x,y=res,paired=TRUE,alternative="less")$p.value))
     
-    message("p-value (+): ",paste0(signif(pval0,digits=2),sep=" "))
-    message("p-value (-): ",paste0(signif(pval1,digits=2),sep=" "))
+    if(track){message("p-value (+): ",paste0(signif(pval0,digits=2),sep=" "))}
+    if(track){message("p-value (-): ",paste0(signif(pval1,digits=2),sep=" "))}
     
     cond <- pval0 <= pval1
     #ALPHA[cond] <- alpha0[cond]
@@ -907,7 +922,7 @@ NULL
     #prior[,remove] <- 0 # changed from 1 (mistake!?) to 0 # original
     alpha0[remove] <- 0 # correction # 2022-01-27: Why remove intercept???
     beta0[,remove] <- 0 # correction
-    message(ifelse(remove,".",ifelse(cond,"+","-")))
+    if(track){message(ifelse(remove,".",ifelse(cond,"+","-")))}
   }
   
   return(list(alpha=alpha0,beta=beta0)) # was alpha=NULL # trial 2022-01-04
@@ -976,7 +991,7 @@ NULL
 
 # combining based on the lowest residuals makes no sense as isotonic calibration
 # will always get closer to the observed values than exponential calibration
-.com.multiple <- function(y,X,prior,family,select=FALSE,switch=FALSE){
+.com.multiple <- function(y,X,prior,family,select=FALSE,switch=FALSE,track=FALSE){
   if(select){warning("Argument select not implemented.")}
   n <- length(y); p <- ncol(X); q <- ncol(prior)
   alpha <- numeric() # rep(NA,times=q)
@@ -987,7 +1002,7 @@ NULL
     if(switch){
       model$iso_inv <- .iso.fast.single(y=y,X=X,prior=-prior[,i,drop=FALSE],family=family)
     }
-    model$exp <- .exp.multiple(y=y,X=X,prior=prior[,i,drop=FALSE],family=family,select=FALSE)
+    model$exp <- .exp.multiple(y=y,X=X,prior=prior[,i,drop=FALSE],family=family,select=FALSE,track=track)
     y_hat <- matrix(data=NA,nrow=n,ncol=length(model))
     for(j in seq_along(model)){
       eta <- model[[j]]$alpha + X %*% model[[j]]$beta
@@ -1481,7 +1496,7 @@ simulate <- function(p=1000,n.target=100,n.source=150,k=3,family="gaussian",prop
   beta <- mvtnorm::rmvnorm(n=p,mean=mu,sigma=Sigma)
   
   if(FALSE){
-    message("Temporary re-scaling of coefficients!")
+    if(track){message("Temporary re-scaling of coefficients!")}
 
     # source (with perturbation: exponentiated effects)
     #exp <- 0.2

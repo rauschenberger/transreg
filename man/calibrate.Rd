@@ -8,13 +8,13 @@
 \alias{.iso.multiple}
 \title{Internal functions}
 \usage{
-.exp.multiple(y, X, prior, family, select, plot = TRUE)
+.exp.multiple(y, X, prior, family, select, track = FALSE)
 
 .iso.slow.single(y, X, prior, family)
 
 .iso.fast.single(y, X, prior, family)
 
-.iso.multiple(y, X, prior, family, select = TRUE, switch = TRUE)
+.iso.multiple(y, X, prior, family, select = TRUE, switch = TRUE, track = FALSE)
 }
 \arguments{
 \item{y}{target: vector of length \eqn{n} (see \code{family})}
@@ -31,7 +31,7 @@ or "poisson" (\eqn{y}: non-negative integers);}
 
 \item{select}{select from sources: logical}
 
-\item{plot}{logical}
+\item{track}{logical}
 
 \item{switch}{choose between positive and negative weights for each source: logical}
 }

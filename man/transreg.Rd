@@ -17,7 +17,8 @@ transreg(
   sign = FALSE,
   switch = TRUE,
   select = TRUE,
-  diffpen = FALSE
+  diffpen = FALSE,
+  track = FALSE
 )
 }
 \arguments{
@@ -56,6 +57,8 @@ of "mf" for meta-feature stacking}
 \item{select}{select from sources: logical}
 
 \item{diffpen}{differential penalisation for features and meta-features: logical}
+
+\item{track}{logical}
 }
 \value{
 This function returns an object of class \code{transreg}.

@@ -4,7 +4,7 @@
 \alias{.signdisc}
 \title{Sign discovery}
 \usage{
-.signdisc(y, X, prior, family, foldid = NULL, nfolds = 10)
+.signdisc(y, X, prior, family, foldid = NULL, nfolds = 10, track = FALSE)
 }
 \arguments{
 \item{y}{target: vector of length \eqn{n} (see \code{family})}
@@ -23,6 +23,8 @@ or "poisson" (\eqn{y}: non-negative integers);}
 with entries from 1 to \code{nfolds}}
 
 \item{nfolds}{number of folds: positive integer}
+
+\item{track}{logical}
 }
 \description{
 Assigns signs to prior weights to obtain prior coefficients
