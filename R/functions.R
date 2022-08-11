@@ -405,6 +405,7 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
 #' 
 #' @examples
 #' #--- simulation ---
+#' set.seed(1)
 #' n0 <- 100; n1 <- 10000; n <- n0 + n1; p <- 500
 #' X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
 #' beta <- rnorm(p)
@@ -499,6 +500,7 @@ NULL
 #'
 #' @examples
 #' #--- simulation ---
+#' set.seed(1)
 #' n <- 100; p <- 500
 #' X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
 #' beta <- rnorm(p)
@@ -1705,6 +1707,7 @@ print.transreg <- function(x,...){
 #'
 #' @examples
 #' #--- simulation ---
+#' set.seed(1)
 #' n <- 100; p <- 500
 #' X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
 #' beta <- rnorm(p)

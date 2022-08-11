@@ -24,6 +24,7 @@ Extracts coefficients
 }
 \examples{
 #--- simulation ---
+set.seed(1)
 n <- 100; p <- 500
 X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
 beta <- rnorm(p)
