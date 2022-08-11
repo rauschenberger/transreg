@@ -23,48 +23,29 @@ Extracts fitted values
 }
 \examples{
 #--- simulation ---
-n <- 100; p <- 500
+set.seed(1)
+n0 <- 100; n1 <- 10000; n <- n0 + n1; p <- 500
 X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
-beta <- rnorm(p)*rbinom(n=p,size=1,prob=0.2)
-prior1 <- beta + rnorm(p)
-prior2 <- beta + rnorm(p)
-y_lin <- X \%*\% beta
-y_log <- 1*(y_lin > 0)
+beta <- rnorm(p)
+prior <- beta + rnorm(p)
+y <- X \%*\% beta
 
-#--- single vs multiple priors ---
-one <- transreg(y=y_lin,X=X,prior=prior1)
-two <- transreg(y=y_lin,X=X,prior=cbind(prior1,prior2))
-weights(one)
-weights(two)
+#--- train-test split ---
+foldid <- rep(c(0,1),times=c(n0,n1))
+y0 <- y[foldid==0]
+X0 <- X[foldid==0,]
+y1 <- y[foldid==1]
+X1 <- X[foldid==1,]
 
-#--- linear vs logistic regression ---
-lin <- transreg(y=y_lin,X=X,prior=prior1,family="gaussian")
-log <- transreg(y=y_log,X=X,prior=prior1,family="binomial")
-hist(predict(lin,newx=X)) # predicted values
-hist(predict(log,newx=X)) # predicted probabilities
+object <- transreg(y=y0,X=X0,prior=prior)
 
-#--- ridge vs lasso penalisation ---
-ridge <- transreg(y=y_lin,X=X,prior=prior1,alpha=0)
-lasso <- transreg(y=y_lin,X=X,prior=prior1,alpha=1)
-# initial coefficients (without prior)
-plot(x=coef(ridge$base)[-1]) # dense
-plot(x=coef(lasso$base)[-1]) # sparse
-# final coefficients (with prior)
-plot(x=coef(ridge)$beta) # dense
-plot(x=coef(lasso)$beta) # not sparse
+#--- fitted values ---
+y0_hat <- fitted(object)
+mean((y0-y0_hat)^2)
 
-#--- exponential vs isotonic calibration ---
-exp <- transreg(y=y_lin,X=X,prior=prior1,scale="exp")
-iso <- transreg(y=y_lin,X=X,prior=prior1,scale="iso")
-plot(x=prior1,y=exp$prior.calib)
-plot(x=prior1,y=iso$prior.calib)
-
-#--- linear predictor vs meta-feature stacking ---
-prior <- c(prior1[1:250],rep(0,250))
-lp <- transreg(y=y_lin,X=X,prior=prior,stack="lp")
-mf <- transreg(y=y_lin,X=X,prior=prior,stack="mf")
-plot(x=coef(lp$base)[-1],y=coef(lp)$beta)
-plot(x=coef(mf$base)[-1],y=coef(mf)$beta)
+#--- predicted values ---
+y1_hat <- predict(object,newx=X1)
+mean((y1-y1_hat)^2) # increase in MSE?
 
 }
 \references{

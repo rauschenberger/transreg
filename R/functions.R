@@ -1763,13 +1763,37 @@ weights.transreg <- function(object,stack=NULL,...){
 #' 
 #' @inherit transreg seealso
 #'
-#' @inherit transreg examples
-#'
+#' @examples
+#' #--- simulation ---
+#' set.seed(1)
+#' n0 <- 100; n1 <- 10000; n <- n0 + n1; p <- 500
+#' X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
+#' beta <- rnorm(p)
+#' prior <- beta + rnorm(p)
+#' y <- X %*% beta
+#' 
+#' #--- train-test split ---
+#' foldid <- rep(c(0,1),times=c(n0,n1))
+#' y0 <- y[foldid==0]
+#' X0 <- X[foldid==0,]
+#' y1 <- y[foldid==1]
+#' X1 <- X[foldid==1,]
+#' 
+#' object <- transreg(y=y0,X=X0,prior=prior)
+#' 
+#' #--- fitted values ---
+#' y0_hat <- fitted(object)
+#' mean((y0-y0_hat)^2)
+#' 
+#' #--- predicted values ---
+#' y1_hat <- predict(object,newx=X1)
+#' mean((y1-y1_hat)^2) # increase in MSE?
+#' 
 fitted.transreg <- function(object,stack=NULL,...){
   stats::predict(object,newx=object$data$X,stack=stack,...)
 }
 
 
 plot.transreg <- function(x,y,...){
-  NULL
+  graphics::par(mfrow=c(2,2))
 }
