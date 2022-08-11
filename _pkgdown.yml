@@ -13,6 +13,7 @@ reference:
   - transreg
   - coef.transreg
   - predict.transreg
+  - weights.transreg
   - multiridge
   - cv.transfer
 

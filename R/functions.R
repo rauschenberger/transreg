@@ -1595,3 +1595,43 @@ print.transreg <- function(x,...){
   cat("stacking:",paste(paste0("'",x$stack,"'"),collapse=" and "),"\n")
   cat("---------------------------")
 }
+
+
+#' @export
+#' @importFrom stats weights
+#' @aliases weights
+#' 
+#' @title
+#' Extract weights
+#'
+#' @description
+#' Extracts weights for sources of co-data
+#' 
+#' @inheritParams predict.transreg
+#'
+#' @return
+#' This function returns weights.
+#' The output is a numerical vector
+#' with one entry for each source of co-data.
+#'
+#' @inherit transreg-package references
+#' 
+#' @inherit transreg seealso
+#'
+#' @inherit transreg examples
+#'
+weights.transreg <- function(object,stack=NULL,...){
+  stack <- .which.stack(object,stack)
+  eval(parse(text=paste0(".weights.",stack,"(object=object,...)")))
+}
+
+#' @describeIn extract called by `weights.transreg` if `stack="lp"`
+.weights.lp <- function(object,...){
+  stats::coef(object$meta.lp,s="lambda.min")[2:(object$info$k+1)]
+}
+
+#' @describeIn extract called by `weights.transreg` if `stack="mf"`
+.weights.mf <- function(object,...){
+  stats::coef(object$meta.mf,s="lambda.min")[2:(object$info$k+1)]
+}
+

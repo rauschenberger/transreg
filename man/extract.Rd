@@ -7,6 +7,8 @@
 \alias{.coef.lp}
 \alias{.coef.mf}
 \alias{.which.stack}
+\alias{.weights.lp}
+\alias{.weights.mf}
 \title{Internal functions}
 \usage{
 .predict.lp(object, newx, ...)
@@ -18,6 +20,10 @@
 .coef.mf(object, ...)
 
 .which.stack(object, stack)
+
+.weights.lp(object, ...)
+
+.weights.mf(object, ...)
 }
 \arguments{
 \item{object}{object of class \code{transreg}}
@@ -47,6 +53,10 @@ and meta-feature stacking.
 \item \code{.coef.mf}: called by \code{coef.transreg} if \code{stack="mf"}
 
 \item \code{.which.stack}: called by \code{coef.transreg} and \code{predict.transreg}
+
+\item \code{.weights.lp}: called by \code{weights.transreg} if \code{stack="lp"}
+
+\item \code{.weights.mf}: called by \code{weights.transreg} if \code{stack="mf"}
 }}
 
 \seealso{
