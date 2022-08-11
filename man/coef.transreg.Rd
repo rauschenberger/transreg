@@ -24,48 +24,23 @@ Extracts coefficients
 }
 \examples{
 #--- simulation ---
+set.seed(1)
 n <- 100; p <- 500
 X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
-beta <- rnorm(p)*rbinom(n=p,size=1,prob=0.2)
-prior1 <- beta + rnorm(p)
-prior2 <- beta + rnorm(p)
-y_lin <- X \%*\% beta
-y_log <- 1*(y_lin > 0)
+beta <- rnorm(p)
+prior <- beta + rnorm(p)
+y <- X \%*\% beta
 
-#--- single vs multiple priors ---
-one <- transreg(y=y_lin,X=X,prior=prior1)
-two <- transreg(y=y_lin,X=X,prior=cbind(prior1,prior2))
-weights(one)
-weights(two)
+#--- glmnet (without prior effects) ---
+glmnet <- glmnet::cv.glmnet(y=y,x=X,alpha=0)
+beta.glmnet <- coef(glmnet,s="lambda.min")[-1]
+mean((beta-beta.glmnet)^2)
+cond <- beta==0
 
-#--- linear vs logistic regression ---
-lin <- transreg(y=y_lin,X=X,prior=prior1,family="gaussian")
-log <- transreg(y=y_log,X=X,prior=prior1,family="binomial")
-hist(predict(lin,newx=X)) # predicted values
-hist(predict(log,newx=X)) # predicted probabilities
-
-#--- ridge vs lasso penalisation ---
-ridge <- transreg(y=y_lin,X=X,prior=prior1,alpha=0)
-lasso <- transreg(y=y_lin,X=X,prior=prior1,alpha=1)
-# initial coefficients (without prior)
-plot(x=coef(ridge$base)[-1]) # dense
-plot(x=coef(lasso$base)[-1]) # sparse
-# final coefficients (with prior)
-plot(x=coef(ridge)$beta) # dense
-plot(x=coef(lasso)$beta) # not sparse
-
-#--- exponential vs isotonic calibration ---
-exp <- transreg(y=y_lin,X=X,prior=prior1,scale="exp")
-iso <- transreg(y=y_lin,X=X,prior=prior1,scale="iso")
-plot(x=prior1,y=exp$prior.calib)
-plot(x=prior1,y=iso$prior.calib)
-
-#--- linear predictor vs meta-feature stacking ---
-prior <- c(prior1[1:250],rep(0,250))
-lp <- transreg(y=y_lin,X=X,prior=prior,stack="lp")
-mf <- transreg(y=y_lin,X=X,prior=prior,stack="mf")
-plot(x=coef(lp$base)[-1],y=coef(lp)$beta)
-plot(x=coef(mf$base)[-1],y=coef(mf)$beta)
+#--- transreg (with prior effects) ---
+transreg <- transreg(y=y,X=X,prior=prior,alpha=0)
+beta.transreg <- coef(transreg)$beta
+mean((beta-beta.transreg)^2)
 
 }
 \references{

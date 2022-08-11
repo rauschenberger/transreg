@@ -474,7 +474,25 @@ NULL
 #' 
 #' @inherit transreg seealso
 #'
-#' @inherit transreg examples
+#' @examples
+#' #--- simulation ---
+#' set.seed(1)
+#' n <- 100; p <- 500
+#' X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
+#' beta <- rnorm(p)
+#' prior <- beta + rnorm(p)
+#' y <- X %*% beta
+#' 
+#' #--- glmnet (without prior effects) ---
+#' glmnet <- glmnet::cv.glmnet(y=y,x=X,alpha=0)
+#' beta.glmnet <- coef(glmnet,s="lambda.min")[-1]
+#' mean((beta-beta.glmnet)^2)
+#' cond <- beta==0
+#' 
+#' #--- transreg (with prior effects) ---
+#' transreg <- transreg(y=y,X=X,prior=prior,alpha=0)
+#' beta.transreg <- coef(transreg)$beta
+#' mean((beta-beta.transreg)^2)
 #'
 coef.transreg <- function(object,stack=NULL,...){
   stack <- .which.stack(object,stack)
