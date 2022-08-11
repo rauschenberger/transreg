@@ -1705,3 +1705,8 @@ weights.transreg <- function(object,stack=NULL,...){
 fitted.transreg <- function(object,stack=NULL,...){
   stats::predict(object,newx=object$data$X,stack=stack,...)
 }
+
+
+plot.transreg <- function(x,y,...){
+  
+}
