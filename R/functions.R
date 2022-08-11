@@ -1703,7 +1703,17 @@ print.transreg <- function(x,...){
 #' 
 #' @inherit transreg seealso
 #'
-#' @inherit transreg examples
+#' @examples
+#' #--- simulation ---
+#' n <- 100; p <- 500
+#' X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
+#' beta <- rnorm(p)
+#' prior <- cbind(beta+rnorm(p),beta+rnorm(p),rnorm(p),rnorm(p))
+#' y <- X %*% beta
+#' 
+#' #--- transreg ---
+#' object <- transreg(y=y,X=X,prior=prior)
+#' weights(object)
 #'
 weights.transreg <- function(object,stack=NULL,...){
   stack <- .which.stack(object,stack)
