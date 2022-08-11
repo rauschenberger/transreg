@@ -14,14 +14,14 @@ reference:
   - coef.transreg
   - predict.transreg
   - weights.transreg
-  - multiridge
-  - cv.transfer
 
-- title: "Internal functions"
+- title: "Other functions"
   contents:
-  - .simulate
+  - multiridge
+  - simulate
+  - compare
   - .residuals
   - .signdisc
-  - extract
-  - calibrate
+  - .extract
+  - .calibrate
   - print.transreg

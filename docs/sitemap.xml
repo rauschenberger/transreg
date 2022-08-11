@@ -22,7 +22,13 @@
     <loc>/reference/coef.transreg.html</loc>
   </url>
   <url>
+    <loc>/reference/compare.html</loc>
+  </url>
+  <url>
     <loc>/reference/cv.transfer.html</loc>
+  </url>
+  <url>
+    <loc>/reference/dot-calibrate.html</loc>
   </url>
   <url>
     <loc>/reference/dot-coef.lp.html</loc>
@@ -32,6 +38,9 @@
   </url>
   <url>
     <loc>/reference/dot-exp.multiple.html</loc>
+  </url>
+  <url>
+    <loc>/reference/dot-extract.html</loc>
   </url>
   <url>
     <loc>/reference/dot-iso.fast.single.html</loc>
@@ -101,6 +110,9 @@
   </url>
   <url>
     <loc>/reference/sign.disc.html</loc>
+  </url>
+  <url>
+    <loc>/reference/simulate.html</loc>
   </url>
   <url>
     <loc>/reference/transreg-package.html</loc>

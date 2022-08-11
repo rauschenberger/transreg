@@ -378,10 +378,10 @@ predict.transreg <- function(object,newx,stack=NULL,...){
 #' \code{\link[=predict.transreg]{predict}}
 #' and \code{\link[=weights.transreg]{weights}}.
 #'
-#' @name extract
+#' @name .extract
 NULL
 
-#' @describeIn extract called by `predict.transreg` if `stack="lp"`
+#' @describeIn .extract called by `predict.transreg` if `stack="lp"`
 .predict.lp <- function(object,newx,...){
   one <- newx %*% object$base$prior$beta # original (harmonise with transreg)
   #one <- object$base$prior$alpha + newx %*% object$base$prior$beta # trial 2022-01-04 (see above)
@@ -391,7 +391,7 @@ NULL
   return(y_hat)
 }
 
-#' @describeIn extract called by `predict.transreg` if `stack="mf"`
+#' @describeIn .extract called by `predict.transreg` if `stack="mf"`
 .predict.mf <- function(object,newx,...){
   one <- newx %*% object$base$prior$beta
   y_hat <- stats::predict(object$meta.mf,s="lambda.min",newx=cbind(one,newx),type="response")
@@ -432,7 +432,7 @@ coef.transreg <- function(object,stack=NULL,...){
   eval(parse(text=paste0(".coef.",stack,"(object=object,...)")))
 }
 
-#' @describeIn extract called by `coef.transreg` if `stack="lp"`
+#' @describeIn .extract called by `coef.transreg` if `stack="lp"`
 .coef.lp <- function(object,...){
   beta <- stats::coef(object$base,s=c(object$meta.lp$lambda.min,object$meta.lp$lambda.1se))
   omega <- as.numeric(stats::coef(object$meta.lp,s=object$meta.lp$lambda.min))
@@ -447,7 +447,7 @@ coef.transreg <- function(object,stack=NULL,...){
   return(list(alpha=alpha_star,beta=beta_star))
 }
 
-#' @describeIn extract called by `coef.transreg` if `stack="mf"`
+#' @describeIn .extract called by `coef.transreg` if `stack="mf"`
 .coef.mf <- function(object,...){
   gamma <- object$base$prior$beta
   meta <- stats::coef(object$meta.mf,s="lambda.min")
@@ -463,7 +463,7 @@ coef.transreg <- function(object,stack=NULL,...){
   return(list(alpha=alpha_star,beta=beta_star))
 }
 
-#' @describeIn extract called by `coef.transreg` and `predict.transreg`
+#' @describeIn .extract called by `coef.transreg`, `predict.transreg` and `weights.transreg`
 .which.stack <- function(object,stack){
   if(is.null(stack) & length(object$stack)==1){
     return(object$stack)
@@ -616,10 +616,10 @@ coef.transreg <- function(object,stack=NULL,...){
 #' @seealso
 #' Use [transreg()] for model fitting.
 #'
-#' @name calibrate
+#' @name .calibrate
 NULL
 
-#' @describeIn calibrate called by `transreg` if `scale="iso"`
+#' @describeIn .calibrate called by `transreg` if `scale="iso"`
 .exp.multiple <- function(y,X,prior,family,select,plot=TRUE){
   
   n <- nrow(X); p <- ncol(X); k <- ncol(prior)
@@ -687,7 +687,7 @@ NULL
   return(list(alpha=alpha,beta=beta,theta=theta,tau=tau))
 }
 
-#' @describeIn calibrate replaced by `.iso.fast.single`
+#' @describeIn .calibrate replaced by `.iso.fast.single`
 .iso.slow.single <- function(y,X,prior,family){
   
   n <- length(y)
@@ -749,7 +749,7 @@ NULL
   return(list(alpha=ALPHA,beta=BETA))
 }
 
-#' @describeIn calibrate called by `transreg` if `scale="iso"` (via `.iso.multiple`)
+#' @describeIn .calibrate called by `transreg` if `scale="iso"` (via `.iso.multiple`)
 .iso.fast.single <- function(y,X,prior,family){
   n <- length(y)
   p <- nrow(prior)
@@ -790,7 +790,7 @@ NULL
 
 # Speed up this function by only examining the "negative prior" if the "positive prior" is insignificant? Or do some pre-screening based on correlation, and then decide which one to run first and which one to run second (i.e. only if the first one fits poorly).
 
-#' @describeIn calibrate called by `transreg` if `scale="iso"`
+#' @describeIn .calibrate called by `transreg` if `scale="iso"`
 .iso.multiple <- function(y,X,prior,family,select=TRUE,switch=TRUE){
   
   k <- ncol(prior)
@@ -1037,11 +1037,11 @@ NULL
 #' beta <- rnorm(p)*rbinom(n=p,size=1,prob=0.2)
 #' y <- X %*% beta
 #' \dontshow{
-#' object <- suppressMessages(cv.transfer(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0))}
+#' object <- suppressMessages(compare(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0))}
 #' \dontrun{
-#' object <- cv.transfer(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0)}
+#' object <- compare(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0)}
 #' 
-cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso",sign=FALSE,select=TRUE,switch=TRUE,foldid.ext=NULL,nfolds.ext=10,foldid.int=NULL,nfolds.int=10,type.measure="deviance",alpha.prior=NULL,partitions=NULL,monotone=NULL,naive=TRUE,diffpen=FALSE){
+compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso",sign=FALSE,select=TRUE,switch=TRUE,foldid.ext=NULL,nfolds.ext=10,foldid.int=NULL,nfolds.int=10,type.measure="deviance",alpha.prior=NULL,partitions=NULL,monotone=NULL,naive=TRUE,diffpen=FALSE){
   
   if(FALSE){
     if(!exists("source")){source <- NULL}
@@ -1429,7 +1429,7 @@ cv.transfer <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale=
 #' @examples
 #' NA
 #' 
-.simulate <- function(p=1000,n.target=100,n.source=150,k=3,family="gaussian",prop=0.01,rho.beta=0.95,rho.x=0.95,w=0.5){
+simulate <- function(p=1000,n.target=100,n.source=150,k=3,family="gaussian",prop=0.01,rho.beta=0.95,rho.x=0.95,w=0.5){
   
   target <- source <- list()
   
@@ -1623,12 +1623,12 @@ weights.transreg <- function(object,stack=NULL,...){
   eval(parse(text=paste0(".weights.",stack,"(object=object,...)")))
 }
 
-#' @describeIn extract called by `weights.transreg` if `stack="lp"`
+#' @describeIn .extract called by `weights.transreg` if `stack="lp"`
 .weights.lp <- function(object,...){
   stats::coef(object$meta.lp,s="lambda.min")[2:(object$info$k+1)]
 }
 
-#' @describeIn extract called by `weights.transreg` if `stack="mf"`
+#' @describeIn .extract called by `weights.transreg` if `stack="mf"`
 .weights.mf <- function(object,...){
   stats::coef(object$meta.mf,s="lambda.min")[2:(object$info$k+1)]
 }
