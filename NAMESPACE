@@ -2,6 +2,7 @@
 
 S3method(coef,multiridge)
 S3method(coef,transreg)
+S3method(fitted,transreg)
 S3method(predict,multiridge)
 S3method(predict,transreg)
 S3method(print,transreg)

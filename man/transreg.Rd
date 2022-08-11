@@ -134,8 +134,8 @@ plot(x=coef(lasso)$beta) # not sparse
 #--- exponential vs isotonic calibration ---
 exp <- transreg(y=y_lin,X=X,prior=prior1,scale="exp")
 iso <- transreg(y=y_lin,X=X,prior=prior1,scale="iso")
-plot(x=prior1,y=exp$prior$calib)
-plot(x=prior1,y=iso$prior$calib)
+plot(x=prior1,y=exp$prior.calib)
+plot(x=prior1,y=iso$prior.calib)
 
 #--- linear predictor vs meta-feature stacking ---
 prior <- c(prior1[1:250],rep(0,250))

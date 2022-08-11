@@ -126,8 +126,8 @@
 #' #--- exponential vs isotonic calibration ---
 #' exp <- transreg(y=y_lin,X=X,prior=prior1,scale="exp")
 #' iso <- transreg(y=y_lin,X=X,prior=prior1,scale="iso")
-#' plot(x=prior1,y=exp$prior$calib)
-#' plot(x=prior1,y=iso$prior$calib)
+#' plot(x=prior1,y=exp$prior.calib)
+#' plot(x=prior1,y=iso$prior.calib)
 #' 
 #' #--- linear predictor vs meta-feature stacking ---
 #' prior <- c(prior1[1:250],rep(0,250))
@@ -356,7 +356,8 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   #                                 penalty.factor=rep(c(0,1),times=c(k+2,p)),foldid=foldid)
   # end alternative triple
   
-  object <- list(base=base,meta.lp=meta.lp,meta.mf=meta.mf,scale=scale,stack=stack,prior=list(init=prior,calib=prior.ext$beta),info=data.frame(n=n,p=p,k=k,family=family))
+  call <- deparse(sys.call())
+  object <- list(base=base,meta.lp=meta.lp,meta.mf=meta.mf,scale=scale,stack=stack,call=call,data=list(y=y,X=X,prior=prior),prior.calib=prior.ext$beta,info=data.frame(n=n,p=p,k=k,family=family,alpha=alpha))
   class(object) <- "transreg"
   return(object)
 }
@@ -1665,3 +1666,27 @@ weights.transreg <- function(object,stack=NULL,...){
   stats::coef(object$meta.mf,s="lambda.min")[2:(object$info$k+1)]
 }
 
+#' @export
+#' 
+#' @title
+#' Fitted values
+#'
+#' @description
+#' Extracts fitted values
+#' 
+#' @inheritParams predict.transreg
+#'
+#' @return
+#' This function returns fitted values.
+#' The output is a numerical vector
+#' with one entry for sample.
+#'
+#' @inherit transreg-package references
+#' 
+#' @inherit transreg seealso
+#'
+#' @inherit transreg examples
+#'
+fitted.transreg <- function(object,stack=NULL,...){
+  stats::predict(object,newx=object$data$X,stack=stack,...)
+}
