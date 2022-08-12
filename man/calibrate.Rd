@@ -3,18 +3,18 @@
 \name{calibrate}
 \alias{calibrate}
 \alias{.exp.multiple}
-\alias{.iso.slow.single}
-\alias{.iso.fast.single}
 \alias{.iso.multiple}
+\alias{.iso.fast.single}
+\alias{.iso.slow.single}
 \title{Internal functions}
 \usage{
 .exp.multiple(y, X, prior, family, select, track = FALSE)
 
-.iso.slow.single(y, X, prior, family)
+.iso.multiple(y, X, prior, family, select = TRUE, switch = TRUE, track = FALSE)
 
 .iso.fast.single(y, X, prior, family)
 
-.iso.multiple(y, X, prior, family, select = TRUE, switch = TRUE, track = FALSE)
+.iso.slow.single(y, X, prior, family)
 }
 \arguments{
 \item{y}{target: vector of length \eqn{n} (see \code{family})}
@@ -45,11 +45,11 @@ exponential and isotonic calibration.
 \itemize{
 \item \code{.exp.multiple}: called by \code{transreg} if \code{scale="iso"}
 
-\item \code{.iso.slow.single}: replaced by \code{.iso.fast.single}
+\item \code{.iso.multiple}: called by \code{transreg} if \code{scale="iso"}
 
 \item \code{.iso.fast.single}: called by \code{transreg} if \code{scale="iso"} (via \code{.iso.multiple})
 
-\item \code{.iso.multiple}: called by \code{transreg} if \code{scale="iso"}
+\item \code{.iso.slow.single}: replaced by \code{.iso.fast.single}
 }}
 
 \seealso{

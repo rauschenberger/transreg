@@ -1,4 +1,6 @@
 
+##### transreg #####
+
 #' @export
 #' 
 #' @title
@@ -209,10 +211,12 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   } else if(scale=="iso"){
     prior.ext <- .iso.multiple(y=y,X=X,prior=prior.ext,family=family,select=select,switch=switch,track=track)
   } else if(scale=="sam"){
-    prior.ext <- .sam.multiple(y=y,X=X,prior=prior.ext,family=family,select=select,switch=switch,base=base)
+    stop("not available")
+    #prior.ext <- .sam.multiple(y=y,X=X,prior=prior.ext,family=family,select=select,switch=switch,base=base)
   } else if(scale=="com"){
-    prior.ext <- .com.multiple(y=y,X=X,prior=prior.ext,family=family,select=select,switch=switch)
-    k <- ncol(prior.ext$beta)
+    stop("not available")
+    #prior.ext <- .com.multiple(y=y,X=X,prior=prior.ext,family=family,select=select,switch=switch)
+    #k <- ncol(prior.ext$beta)
   } else {
     stop("Invalid scale.",call.=FALSE)
   }
@@ -248,10 +252,12 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
     } else if(scale=="iso"){
       prior.int <- .iso.multiple(y=y0,X=X0,prior=prior.int,family=family,select=select,switch=switch,track=track)
     } else if(scale=="sam"){
-      prior.int <- .sam.multiple(y=y0,X=X0,prior=prior.int,family=family,select=select,switch=switch,base=base)
+      stop("not available")
+      #prior.int <- .sam.multiple(y=y0,X=X0,prior=prior.int,family=family,select=select,switch=switch,base=base)
     } else if(scale=="com"){
-      prior.int <- .com.multiple(y=y0,X=X0,prior=prior.int,family=family,select=select,switch=switch)
-      k <- ncol(prior.int$beta)
+      stop("not available")
+      #prior.int <- .com.multiple(y=y0,X=X0,prior=prior.int,family=family,select=select,switch=switch)
+      #k <- ncol(prior.int$beta)
     } else {
       stop("Invalid scale.",call.=FALSE)
     }
@@ -385,36 +391,12 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   return(object)
 }
 
-#' @describeIn extract called by `coef.transreg`, `predict.transreg` and `weights.transreg`
-.which.stack <- function(object,stack){
-  names <- c("lp"[!is.null(object$meta.lp)],"mf"[!is.null(object$meta.mf)])
-  if(is.null(stack) & length(names)==1){
-    return(names)
-  }
-  if(!is.null(stack) & length(stack)==1 & any(names==stack)){
-    return(stack)
-  }
-  names <- paste(paste0("stack='",names,"'"),collapse=" and ")
-  stop(paste0("Choose between ",names,"."))
-}
-
-#.predict.test <- function(object,newx,...){
-#  one <- newx %*% object$base$prior$beta
-#  y_hat <- stats::predict(object$test,s="lambda.min",newx=cbind(one,newx),type="response")
-#  return(y_hat)
-#}
-
-#.predict.test <- function(object,newx,...){
-#  one <- newx %*% object$base$prior$beta
-#  two <- stats::predict(object$base,s=c(object$base$lambda.min,object$base$lambda.1se),newx=newx) # was s="lambda.min"
-#  y_hat <- stats::predict(object$test,s="lambda.min",newx=cbind(one,two,newx),type="response")
-#  return(y_hat)
-#}
+##### predict #####
 
 #' @export
 #' 
 #' @title
-#' Predict
+#' Make Predictions
 #' 
 #' @description
 #' Predicts outcome
@@ -504,12 +486,27 @@ NULL
   return(y_hat)
 }
 
-# only for diffpen=TRUE
-.predict.test <- function(object,newx,...){
-  one <- newx %*% object$base$prior$beta
-  y_hat <- stats::predict(object$test,newx=list(one,newx))
-  return(y_hat)
-}
+## only for diffpen=TRUE
+#.predict.test <- function(object,newx,...){
+#  one <- newx %*% object$base$prior$beta
+#  y_hat <- stats::predict(object$test,newx=list(one,newx))
+#  return(y_hat)
+#}
+
+#.predict.test <- function(object,newx,...){
+#  one <- newx %*% object$base$prior$beta
+#  y_hat <- stats::predict(object$test,s="lambda.min",newx=cbind(one,newx),type="response")
+#  return(y_hat)
+#}
+
+#.predict.test <- function(object,newx,...){
+#  one <- newx %*% object$base$prior$beta
+#  two <- stats::predict(object$base,s=c(object$base$lambda.min,object$base$lambda.1se),newx=newx) # was s="lambda.min"
+#  y_hat <- stats::predict(object$test,s="lambda.min",newx=cbind(one,two,newx),type="response")
+#  return(y_hat)
+#}
+
+##### coef #####
 
 #' @export
 #'
@@ -587,91 +584,7 @@ coef.transreg <- function(object,stack=NULL,...){
   return(list(alpha=alpha_star,beta=beta_star))
 }
 
-#' @export
-#'
-#' @title Calculate residuals
-#' 
-#' @description
-#' Calculates residuals from observed outcome
-#' and predicted values (Gaussian family)
-#' or predicted probabilities (binomial family).
-#' Called by `.exp.multiple` and `.iso.multiple`.
-#' 
-#' @param y
-#' response: vector of length \eqn{n} (see family)
-#' @param y_hat
-#' predicted values or probabilities (see family):
-#' vector of length \eqn{n},
-#' or matrix with \eqn{n} rows (samples) and \eqn{k} columns (methods)
-#' @param family
-#' character
-#' "gaussian" (\eqn{y}: real numbers, \eqn{y_hat}: real numbers)
-#' or "binomial" (\eqn{y}: 0s and 1s, \eqn{y_hat}: unit interval)
-#' 
-#' @examples
-#' n <- 100
-#' p <- 5
-#' X <- matrix(stats::rnorm(n*p),nrow=n,ncol=p)
-#' #y <- stats::rbinom(n,size=1,prob=0.5)
-#' y <- stats::rnorm(n)
-#' glm <- glm(y~X,family="gaussian")
-#' res <- residuals.glm(glm)
-#' y_hat <- predict(glm,type="response")
-#' all.equal(res,y-y_hat)
-#' 
-.residuals <- function(y,y_hat,family){
-  if(length(y_hat)==1){y_hat <- matrix(y_hat,nrow=length(y),ncol=1)}
-  if(family=="gaussian"){
-    res <- apply(y_hat,2,function(x) (x-y)^2)
-  } else if(family=="binomial"){
-    if(any(y_hat<0)){stop("Below range.")}
-    if(any(y_hat>1)){stop("Above range.")}
-    limit <- 1e-5
-    y_hat[y_hat < limit] <- limit
-    y_hat[y_hat > 1 - limit] <- 1 - limit
-    res <- apply(y_hat,2,function(x) -2*(y*log(x)+(1-y)*log(1-x)))
-  } else {
-    stop("Family not implemented.")
-  }
-  return(res)
-}
-
-#' @title 
-#' Sign discovery
-#' 
-#' @description
-#' Assigns signs to prior weights to obtain prior coefficients
-#' 
-#' @inheritParams transreg
-#' 
-#' @examples
-#' n <- 100; p <- 500
-#' X <- matrix(stats::rnorm(n*p),nrow=n,ncol=p)
-#' beta <- stats::rnorm(p)*stats::rbinom(n=p,size=1,prob=0.2)
-#' y <- X %*% beta
-#' prior <- matrix(abs(beta),ncol=1)
-#' #temp <- .signdisc(y,X,prior,family="gaussian")
-#' #table(sign(beta),sign(temp))
-#' 
-.signdisc <- function(y,X,prior,family,foldid=NULL,nfolds=10,track=FALSE){
-  cond <- apply(prior,2,function(x) any(x>0) & all(x>=0))
-  if(any(cond)){
-    if(track){message(paste("Sign discovery procedure for source(s):",paste(which(cond),collapse=", ")))}
-    #--- regression of target on features (trial) ---
-    #init <- glmnet::cv.glmnet(x=X,y=y,family=family,alpha=0,foldid=foldid,nfolds=nfolds,penalty.factors=1/abs(prior))
-    #sign <- sign(coef(init,s="lambda.min")[-1])
-    #--- correlation between target and features (original) ---
-    sign <- as.numeric(sign(stats::cor(y,X,method="spearman")))
-    sign[is.na(sign)] <- 0
-    #--- regression of target on prior and features (trial) ---
-    #X_hat <- X * matrix(prior,nrow=nrow(X),ncol=ncol(X),byrow=TRUE)
-    #object <- glmnet::glmnet(y=y,x=X_hat,lower.limits=-1,upper.limits=1,alpha=0,lambda=c(9e99,0))
-    #sign <- sign(coef(object,s=0)[-1])
-    # replacement
-    prior[,cond] <- prior[,cond]*sign
-  }
-  return(prior)
-}
+##### calibrate #####
 
 #' @title 
 #' Internal functions
@@ -758,109 +671,11 @@ NULL
   return(list(alpha=alpha,beta=beta,theta=theta,tau=tau))
 }
 
-#' @describeIn calibrate replaced by `.iso.fast.single`
-.iso.slow.single <- function(y,X,prior,family){
-  
-  n <- length(y)
-  p <- nrow(prior)
-  k <- ncol(prior)
-  
-  prior[-1e-06 < prior & prior < +1e-06] <- 0
-  
-  ALPHA <- rep(NA,times=k)
-  BETA <- posterior <- matrix(data=NA,nrow=p,ncol=k)
-  for(i in seq_len(k)){
-    single.prior <- prior[,i]
-    p <- ncol(X)
-    order <- order(single.prior)
-    prior.order <- single.prior[order]
-    X.order <- X[,order]
-    alpha <- CVXR::Variable(1)
-    beta <- CVXR::Variable(p)
-    constraints <- list()
-    constraints$iso <- CVXR::diff(beta)>=0
-    if(any(prior.order<0)){
-      constraints$neg <- beta[prior.order<0]<=0
-    }
-    if(any(prior.order==0)){
-      constraints$zero <- beta[prior.order==0]==0
-    }
-    if(any(prior.order>0)){
-      constraints$pos <- beta[prior.order>0]>=0
-    }
-    if(family=="gaussian"){
-      loss <- CVXR::sum_squares(y - alpha - X.order %*% beta) / (2 * n)
-    } else if(family=="binomial"){
-      loss <- sum(alpha+X.order[y==0,]%*%beta)+sum(CVXR::logistic(-alpha-X.order%*%beta))
-    } else {
-      stop("Family not yet implemented!")
-    }
-    penalty <- (1e-06)*CVXR::p_norm(beta,p=2) # lasso: p=1, ridge: p=2 # was p=2 (ridge)
-    
-    # The ridge penalty should be multiplied by a very small regularisation parameter (e.g. 1e-6). Why is this insufficient for the binomial case? (For the binomial case, an alternative might be to impose a lower limit of minus one and an upper limit of plus one on the coefficients.)
-    
-    objective <- CVXR::Minimize(loss+penalty)
-    problem <- CVXR::Problem(objective=objective,constraints=constraints)
-    result <- CVXR::solve(problem)
-    
-    if(result$status=="solver_error"){
-      warning("Solver error ...")
-      ALPHA[i] <- mean(y)
-      BETA[,i] <- 0 #was prior[,i]
-    } else {
-      ALPHA[i] <- result$getValue(alpha)
-      beta.r <- result$getValue(beta)
-      BETA[,i] <- beta.r[order(order)]
-    }
-    #post <- stats::coef(stats::glm(y~X,family="binomial"))
-    #cbind(post,c(alpha.r,posterior[,i]))
-  }
-  
-  BETA[-1e-06 < BETA & BETA < +1e-06] <- 0
-  return(list(alpha=ALPHA,beta=BETA))
-}
-
-#' @describeIn calibrate called by `transreg` if `scale="iso"` (via `.iso.multiple`)
-.iso.fast.single <- function(y,X,prior,family){
-  n <- length(y)
-  p <- nrow(prior)
-  k <- ncol(prior)
-  ALPHA <- rep(NA,times=k)
-  BETA <- posterior <- matrix(data=NA,nrow=p,ncol=k)
-  for(i in seq_len(k)){
-    single.prior <- prior[,i]
-    order <- order(single.prior)
-    Xo <- X[,order,drop=FALSE]
-    #cond <- single.prior[order]>=0
-    sign <- sign(single.prior[order])
-    A <- t(apply(Xo[,sign<0,drop=FALSE],1,function(x) cumsum(x))) # was !cond
-    B <- t(apply(Xo[,sign>=0,drop=FALSE],1,function(x)  rev(cumsum(rev(x))))) # was cond
-    if(any(sign<0)&any(sign>=0)){ # new condition
-      if(nrow(A)==1){A <- matrix(A,ncol=1)}
-      if(nrow(B)==1){B <- matrix(B,ncol=1)}
-      Xcs <- cbind(A,B)
-    } else {
-      if(any(sign<0)){
-        Xcs <- A
-      } else if(any(sign>=0)){
-        Xcs <- B
-      }
-    }
-    #Xcs <- cbind(A,B) # original
-    times <- c(sum(sign==-1),sum(sign==0),sum(sign==+1)) # was c(sum(!cond),sum(cond)) 
-    # Bug fix on 2022-03-10: replaced family="gaussian" by family=family
-    inc <- glmnet::glmnet(y=y,x=Xcs,family=family,alpha=0,lambda=0,lower.limits=rep(c(-Inf,0,0),times=times),upper.limits=rep(c(0,0,Inf),times=times))
-    coef <- stats::coef(inc)
-    ALPHA[i] <- coef[1]
-    beta <- coef[-1]
-    new <- c(rev(cumsum(rev(beta[sign<0]))),cumsum(beta[sign>=0])) # was !cond and cond
-    BETA[,i] <- new[order(order)]
-  }
-  return(list(alpha=ALPHA,beta=BETA))
-}
-
-# Speed up this function by only examining the "negative prior" if the "positive prior" is insignificant? Or do some pre-screening based on correlation, and then decide which one to run first and which one to run second (i.e. only if the first one fits poorly).
-
+# Speed up this function by only examining the "negative prior"
+# if the "positive prior" is insignificant?
+# Or do some pre-screening based on correlation,
+# and then decide which one to run first and which one to run second
+# (i.e. only if the first one fits poorly).
 #' @describeIn calibrate called by `transreg` if `scale="iso"`
 .iso.multiple <- function(y,X,prior,family,select=TRUE,switch=TRUE,track=FALSE){
   
@@ -951,117 +766,220 @@ NULL
   return(list(alpha=alpha0,beta=beta0)) # was alpha=NULL # trial 2022-01-04
 }
 
-.sam.multiple <- function(y,X,prior,family,select=TRUE,switch=TRUE,base){
-  
-  #if(!is.null(base)){
-  #  stop("Implement this.")
-  #}
-  glmnet <- glmnet::cv.glmnet(y=y,x=X,family=family,alpha=0)
-  
-  #warning("temporary (faster) solution")
-  # rewrite cv.glmnet to keep not only y_hat but also beta_hat for each cv iteration
-  #glmnet <- base
-  
-  alpha <- stats::coef(glmnet,s="lambda.min")[1]
-  coef <- stats::coef(glmnet,s="lambda.min")[-1]
-  p <- ncol(X)
+#' @describeIn calibrate called by `transreg` if `scale="iso"` (via `.iso.multiple`)
+.iso.fast.single <- function(y,X,prior,family){
+  n <- length(y)
+  p <- nrow(prior)
   k <- ncol(prior)
-  beta <- inc <- dec <- matrix(NA,nrow=p,ncol=k)
-  res.inc <- res.dec <- matrix(NA,nrow=length(y),ncol=k)
-  
-  res <- .residuals(y=y,y_hat=mean(y),family=family)
-  
+  ALPHA <- rep(NA,times=k)
+  BETA <- posterior <- matrix(data=NA,nrow=p,ncol=k)
   for(i in seq_len(k)){
-    scam <- scam::scam(coef~s(prior[,i],bs="mpi"))
-    inc[,i] <- stats::fitted(scam)
-    fit <- joinet:::.mean.function(alpha + X %*% inc[,i],family=family)
-    res.inc[,i] <- .residuals(y=y,y_hat=fit,family=family)
-  }
-  
-  if(switch){
-    for(i in seq_len(k)){
-      scam <- scam::scam(coef~s(prior[,i],bs="mpd"))
-      dec[,i] <- stats::fitted(scam)
-      fit <- joinet:::.mean.function(alpha + X %*% dec[,i],family=family)
-      res.dec[,i] <- .residuals(y=y,y_hat=fit,family=family)
-    }
-  }
-  
-  pval.inc <- apply(res.inc,2,function(x) suppressWarnings(stats::wilcox.test(x=x,y=res,paired=TRUE,alternative="less")$p.value))
-  
-  if(switch){
-    pval.dec <- apply(res.dec,2,function(x) suppressWarnings(stats::wilcox.test(x=x,y=res,paired=TRUE,alternative="less")$p.value))
-  } else {
-    pval.dec <- 1
-  }
-    
-  alpha <- rep(alpha,times=k)
-  for(i in seq_len(k)){
-    if(switch && pval.dec[i]<pval.inc[i]){
-      beta[,i] <- dec[,i]
+    single.prior <- prior[,i]
+    order <- order(single.prior)
+    Xo <- X[,order,drop=FALSE]
+    #cond <- single.prior[order]>=0
+    sign <- sign(single.prior[order])
+    A <- t(apply(Xo[,sign<0,drop=FALSE],1,function(x) cumsum(x))) # was !cond
+    B <- t(apply(Xo[,sign>=0,drop=FALSE],1,function(x)  rev(cumsum(rev(x))))) # was cond
+    if(any(sign<0)&any(sign>=0)){ # new condition
+      if(nrow(A)==1){A <- matrix(A,ncol=1)}
+      if(nrow(B)==1){B <- matrix(B,ncol=1)}
+      Xcs <- cbind(A,B)
     } else {
-      beta[,i] <- inc[,i]
-    }
-  }
-  
-  if(select){
-     beta[,pmin(pval.inc,pval.dec)>0.05/k] <- 0
-     # Decide between nominal and adjused 5% level!
-  }
-  
-  return(list(alpha=alpha,beta=beta))
-}
-
-# combining based on the lowest residuals makes no sense as isotonic calibration
-# will always get closer to the observed values than exponential calibration
-.com.multiple <- function(y,X,prior,family,select=FALSE,switch=FALSE,track=FALSE){
-  if(select){warning("Argument select not implemented.")}
-  n <- length(y); p <- ncol(X); q <- ncol(prior)
-  alpha <- numeric() # rep(NA,times=q)
-  beta <- numeric() # matrix(NA,nrow=p,ncol=q)
-  for(i in seq_len(q)){
-    model <- list()
-    model$iso <- .iso.fast.single(y=y,X=X,prior=prior[,i,drop=FALSE],family=family)
-    if(switch){
-      model$iso_inv <- .iso.fast.single(y=y,X=X,prior=-prior[,i,drop=FALSE],family=family)
-    }
-    model$exp <- .exp.multiple(y=y,X=X,prior=prior[,i,drop=FALSE],family=family,select=FALSE,track=track)
-    y_hat <- matrix(data=NA,nrow=n,ncol=length(model))
-    for(j in seq_along(model)){
-      eta <- model[[j]]$alpha + X %*% model[[j]]$beta
-      y_hat[,j] <- joinet:::.mean.function(eta,family=family)
-    }
-    loss <- apply(y_hat,2,function(x) starnet:::.loss(y=y,x=x,family=family,type.measure="deviance"))
-    #--- selection among all (makes no sense) ---
-    #id <- which.min(loss)
-    #alpha <- c(alpha,model[[id]]$alpha)
-    #beta <- cbind(model[[id]]$beta)
-    #--- select sign of iso, combine iso and exp ---
-    #id <- which.min(loss[c(1,2)])
-    #alpha <- c(alpha,model[[id]]$alpha,model$c$alpha)
-    #beta <- cbind(beta,model[[id]]$beta,model$c$beta)
-    #--- equal weight for iso and exp ---
-    #id <- which.min(loss[c(1,2)])
-    #alpha <- c(alpha,0.5*model[[id]]$alpha + 0.5*model$c$alpha)
-    #beta <- cbind(beta,0.5*model[[id]]$beta + 0.5*model$c$beta)
-    #--- tune weight for iso and exp ---
-    if(switch){
-      if(loss[2]<loss[1]){
-        model$iso <- model$iso_inv
+      if(any(sign<0)){
+        Xcs <- A
+      } else if(any(sign>=0)){
+        Xcs <- B
       }
     }
-    w <- seq(from=0,to=1,by=1)
-    #alpha <- c(alpha,w*model[[id]]$alpha + (1-w)*model$c$alpha)
-    #beta <- cbind(beta,w*model[[id]]$beta + (1-w)*model$c$beta)
-    for(j in seq_along(w)){
-      alpha <- c(alpha,(1-w[j])*model$exp$alpha + w[j]*model$iso$alpha)
-      beta <- cbind(beta,(1-w[j])*model$exp$beta + w[j]*model$iso$beta)
-    }
-    warning("temporary version .com.multiple")
+    #Xcs <- cbind(A,B) # original
+    times <- c(sum(sign==-1),sum(sign==0),sum(sign==+1)) # was c(sum(!cond),sum(cond)) 
+    # Bug fix on 2022-03-10: replaced family="gaussian" by family=family
+    inc <- glmnet::glmnet(y=y,x=Xcs,family=family,alpha=0,lambda=0,lower.limits=rep(c(-Inf,0,0),times=times),upper.limits=rep(c(0,0,Inf),times=times))
+    coef <- stats::coef(inc)
+    ALPHA[i] <- coef[1]
+    beta <- coef[-1]
+    new <- c(rev(cumsum(rev(beta[sign<0]))),cumsum(beta[sign>=0])) # was !cond and cond
+    BETA[,i] <- new[order(order)]
   }
-  return(list(alpha=alpha,beta=beta))
+  return(list(alpha=ALPHA,beta=BETA))
 }
+
+#' @describeIn calibrate replaced by `.iso.fast.single`
+.iso.slow.single <- function(y,X,prior,family){
   
+  n <- length(y)
+  p <- nrow(prior)
+  k <- ncol(prior)
+  
+  prior[-1e-06 < prior & prior < +1e-06] <- 0
+  
+  ALPHA <- rep(NA,times=k)
+  BETA <- posterior <- matrix(data=NA,nrow=p,ncol=k)
+  for(i in seq_len(k)){
+    single.prior <- prior[,i]
+    p <- ncol(X)
+    order <- order(single.prior)
+    prior.order <- single.prior[order]
+    X.order <- X[,order]
+    alpha <- CVXR::Variable(1)
+    beta <- CVXR::Variable(p)
+    constraints <- list()
+    constraints$iso <- CVXR::diff(beta)>=0
+    if(any(prior.order<0)){
+      constraints$neg <- beta[prior.order<0]<=0
+    }
+    if(any(prior.order==0)){
+      constraints$zero <- beta[prior.order==0]==0
+    }
+    if(any(prior.order>0)){
+      constraints$pos <- beta[prior.order>0]>=0
+    }
+    if(family=="gaussian"){
+      loss <- CVXR::sum_squares(y - alpha - X.order %*% beta) / (2 * n)
+    } else if(family=="binomial"){
+      loss <- sum(alpha+X.order[y==0,]%*%beta)+sum(CVXR::logistic(-alpha-X.order%*%beta))
+    } else {
+      stop("Family not yet implemented!")
+    }
+    penalty <- (1e-06)*CVXR::p_norm(beta,p=2) # lasso: p=1, ridge: p=2 # was p=2 (ridge)
+    
+    # The ridge penalty should be multiplied by a very small regularisation parameter (e.g. 1e-6). Why is this insufficient for the binomial case? (For the binomial case, an alternative might be to impose a lower limit of minus one and an upper limit of plus one on the coefficients.)
+    
+    objective <- CVXR::Minimize(loss+penalty)
+    problem <- CVXR::Problem(objective=objective,constraints=constraints)
+    result <- CVXR::solve(problem)
+    
+    if(result$status=="solver_error"){
+      warning("Solver error ...")
+      ALPHA[i] <- mean(y)
+      BETA[,i] <- 0 #was prior[,i]
+    } else {
+      ALPHA[i] <- result$getValue(alpha)
+      beta.r <- result$getValue(beta)
+      BETA[,i] <- beta.r[order(order)]
+    }
+    #post <- stats::coef(stats::glm(y~X,family="binomial"))
+    #cbind(post,c(alpha.r,posterior[,i]))
+  }
+  
+  BETA[-1e-06 < BETA & BETA < +1e-06] <- 0
+  return(list(alpha=ALPHA,beta=BETA))
+}
+
+# .sam.multiple <- function(y,X,prior,family,select=TRUE,switch=TRUE,base){
+#   
+#   #if(!is.null(base)){
+#   #  stop("Implement this.")
+#   #}
+#   glmnet <- glmnet::cv.glmnet(y=y,x=X,family=family,alpha=0)
+#   
+#   #warning("temporary (faster) solution")
+#   # rewrite cv.glmnet to keep not only y_hat but also beta_hat for each cv iteration
+#   #glmnet <- base
+#   
+#   alpha <- stats::coef(glmnet,s="lambda.min")[1]
+#   coef <- stats::coef(glmnet,s="lambda.min")[-1]
+#   p <- ncol(X)
+#   k <- ncol(prior)
+#   beta <- inc <- dec <- matrix(NA,nrow=p,ncol=k)
+#   res.inc <- res.dec <- matrix(NA,nrow=length(y),ncol=k)
+#   
+#   res <- .residuals(y=y,y_hat=mean(y),family=family)
+#   
+#   for(i in seq_len(k)){
+#     scam <- scam::scam(coef~s(prior[,i],bs="mpi"))
+#     inc[,i] <- stats::fitted(scam)
+#     fit <- joinet:::.mean.function(alpha + X %*% inc[,i],family=family)
+#     res.inc[,i] <- .residuals(y=y,y_hat=fit,family=family)
+#   }
+#   
+#   if(switch){
+#     for(i in seq_len(k)){
+#       scam <- scam::scam(coef~s(prior[,i],bs="mpd"))
+#       dec[,i] <- stats::fitted(scam)
+#       fit <- joinet:::.mean.function(alpha + X %*% dec[,i],family=family)
+#       res.dec[,i] <- .residuals(y=y,y_hat=fit,family=family)
+#     }
+#   }
+#   
+#   pval.inc <- apply(res.inc,2,function(x) suppressWarnings(stats::wilcox.test(x=x,y=res,paired=TRUE,alternative="less")$p.value))
+#   
+#   if(switch){
+#     pval.dec <- apply(res.dec,2,function(x) suppressWarnings(stats::wilcox.test(x=x,y=res,paired=TRUE,alternative="less")$p.value))
+#   } else {
+#     pval.dec <- 1
+#   }
+#     
+#   alpha <- rep(alpha,times=k)
+#   for(i in seq_len(k)){
+#     if(switch && pval.dec[i]<pval.inc[i]){
+#       beta[,i] <- dec[,i]
+#     } else {
+#       beta[,i] <- inc[,i]
+#     }
+#   }
+#   
+#   if(select){
+#      beta[,pmin(pval.inc,pval.dec)>0.05/k] <- 0
+#      # Decide between nominal and adjused 5% level!
+#   }
+#   
+#   return(list(alpha=alpha,beta=beta))
+# }
+# 
+# # combining based on the lowest residuals makes no sense as isotonic calibration
+# # will always get closer to the observed values than exponential calibration
+# .com.multiple <- function(y,X,prior,family,select=FALSE,switch=FALSE,track=FALSE){
+#   if(select){warning("Argument select not implemented.")}
+#   n <- length(y); p <- ncol(X); q <- ncol(prior)
+#   alpha <- numeric() # rep(NA,times=q)
+#   beta <- numeric() # matrix(NA,nrow=p,ncol=q)
+#   for(i in seq_len(q)){
+#     model <- list()
+#     model$iso <- .iso.fast.single(y=y,X=X,prior=prior[,i,drop=FALSE],family=family)
+#     if(switch){
+#       model$iso_inv <- .iso.fast.single(y=y,X=X,prior=-prior[,i,drop=FALSE],family=family)
+#     }
+#     model$exp <- .exp.multiple(y=y,X=X,prior=prior[,i,drop=FALSE],family=family,select=FALSE,track=track)
+#     y_hat <- matrix(data=NA,nrow=n,ncol=length(model))
+#     for(j in seq_along(model)){
+#       eta <- model[[j]]$alpha + X %*% model[[j]]$beta
+#       y_hat[,j] <- joinet:::.mean.function(eta,family=family)
+#     }
+#     loss <- apply(y_hat,2,function(x) starnet:::.loss(y=y,x=x,family=family,type.measure="deviance"))
+#     #--- selection among all (makes no sense) ---
+#     #id <- which.min(loss)
+#     #alpha <- c(alpha,model[[id]]$alpha)
+#     #beta <- cbind(model[[id]]$beta)
+#     #--- select sign of iso, combine iso and exp ---
+#     #id <- which.min(loss[c(1,2)])
+#     #alpha <- c(alpha,model[[id]]$alpha,model$c$alpha)
+#     #beta <- cbind(beta,model[[id]]$beta,model$c$beta)
+#     #--- equal weight for iso and exp ---
+#     #id <- which.min(loss[c(1,2)])
+#     #alpha <- c(alpha,0.5*model[[id]]$alpha + 0.5*model$c$alpha)
+#     #beta <- cbind(beta,0.5*model[[id]]$beta + 0.5*model$c$beta)
+#     #--- tune weight for iso and exp ---
+#     if(switch){
+#       if(loss[2]<loss[1]){
+#         model$iso <- model$iso_inv
+#       }
+#     }
+#     w <- seq(from=0,to=1,by=1)
+#     #alpha <- c(alpha,w*model[[id]]$alpha + (1-w)*model$c$alpha)
+#     #beta <- cbind(beta,w*model[[id]]$beta + (1-w)*model$c$beta)
+#     for(j in seq_along(w)){
+#       alpha <- c(alpha,(1-w[j])*model$exp$alpha + w[j]*model$iso$alpha)
+#       beta <- cbind(beta,(1-w[j])*model$exp$beta + w[j]*model$iso$beta)
+#     }
+#     warning("temporary version .com.multiple")
+#   }
+#   return(list(alpha=alpha,beta=beta))
+# }
+  
+##### reproducibility #####
+
 #' @title 
 #' Cross-validation (reproducibility)
 #' 
@@ -1327,7 +1245,8 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
       time["transreg"] <- time["transreg"]+difftime(time1=end,time2=start,units="secs")
       # transreg trial
       if(diffpen){
-        pred[foldid.ext==i,paste0("transreg_",scale[j],"_mf")] <- .predict.test(object,newx=X1)
+        stop("not available")
+        #pred[foldid.ext==i,paste0("transreg_",scale[j],"_mf")] <- .predict.test(object,newx=X1)
       } else {
         pred[foldid.ext==i,paste0("transreg_",scale[j],"_mf")] <- .predict.mf(object,newx=X1)
       }
@@ -1587,108 +1506,7 @@ simulate <- function(p=1000,n.target=100,n.source=150,k=3,family="gaussian",prop
   return(list(source=source,target=target,beta=beta))
 }
 
-.folds <- function(y,nfolds=NULL,nfolds.ext=NULL,nfolds.int=NULL,foldid=NULL,foldid.ext=NULL,foldid.int=NULL){
-  #nfolds <- NULL; nfolds.ext <- nfolds.int <- 10; foldid <- foldid.int <- foldid.ext <- NULL
-  if(is.null(nfolds.int)!=is.null(nfolds.ext)|is.null(nfolds.ext)==is.null(nfolds)){
-    stop("Provide either nfolds.ext and nfolds.int or nfolds.")
-  }
-  if(!is.null(foldid) && !all.equal(seq_len(nfolds),sort(unique(foldid)))){
-    stop("nfolds and foldid are not compatible")
-  }
-  if(!is.null(foldid.ext) && nfolds.ext!=max(foldid.ext)){
-    stop("nfolds.ext and foldid.ext are not compatible")
-  }
-  if(!is.null(foldid.int) && nfolds.int!=max(foldid.int)){
-    stop("nfolds.int and foldid.int are not compatible")
-  }
-  nfolds <- list(all=nfolds,ext=nfolds.ext,int=nfolds.int)
-  foldid <- list(all=foldid,ext=foldid.ext,int=foldid.int)
-  for(i in c("all","ext","int")){
-    if(is.null(nfolds[[i]])|!is.null(foldid[[i]])){next}
-    if(all(y %in% c(0,1))){
-      foldid[[i]] <- rep(x=NA,times=length(y))
-      for(j in c(0,1)){
-        if(i!="int"){
-          foldid[[i]][y==j] <- rep(x=seq_len(nfolds[[i]]),length.out=sum(y==j))
-        } else {
-          if(nfolds.ext==1){
-            foldid[[i]][foldid$ext==1] <- NA
-            foldid[[i]][foldid$ext==0 & y==j] <- rep(x=seq_len(nfolds[[i]]),length.out=sum(foldid$ext==0 & y==j))
-          } else {
-            quotient <- floor(sum(y==j)/nfolds[[i]])
-            remainder <- sum(y==j)%%nfolds[[i]]
-            foldid[[i]][y==j] <- rep(seq_len(nfolds[[i]]),times=rep(c(quotient+1,quotient),times=c(remainder,nfolds[[i]]-remainder)))
-          }
-        }
-      }
-    } else {
-      if(i!="int"){
-        foldid[[i]] <- rep(x=seq_len(nfolds[[i]]),length.out=length(y))
-      } else {
-        if(nfolds.ext==1){
-          foldid[[i]][foldid$ext==1] <- NA
-          foldid[[i]][foldid$ext==0] <- rep(x=seq_len(nfolds[[i]]),length.out=sum(foldid$ext==0))
-        } else {
-          quotient <- floor(length(y)/nfolds[[i]])
-          remainder <- length(y)%%nfolds[[i]]
-          foldid[[i]] <- rep(seq_len(nfolds[[i]]),times=rep(c(quotient+1,quotient),times=c(remainder,nfolds[[i]]-remainder)))
-        }
-      }
-    }
-  }
-  # permute
-  if(all(y %in% c(0,1))){
-    for(j in c(0,1)){
-      order <- sample(seq_len(sum(y==j)))
-      for(i in c("all","ext","int")){
-        foldid[[i]][y==j] <- foldid[[i]][y==j][order]
-      }
-    }
-  } else {
-    order <- sample(seq_along(y))
-    foldid <- lapply(foldid,function(x) x[order])
-  }
-  return(list(foldid=foldid[["all"]],foldid.ext=foldid[["ext"]],foldid.int=foldid[["int"]]))
-}
-
-
-#' @export
-#' 
-#' @title 
-#' Print transreg-object
-#' 
-#' @description
-#' Show summary of transreg-object
-#' 
-#' @param x object of class transreg
-#' @inheritParams predict.transreg
-#' 
-#' @examples
-#' #--- simulation ---
-#' set.seed(1)
-#' n <- 100; p <- 500
-#' X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
-#' beta <- rnorm(p)
-#' prior <- beta + rnorm(p)
-#' y <- X %*% beta
-#' 
-#' #--- print.transreg  ---
-#' object <- transreg(y=y,X=X,prior=prior,alpha=0.5)
-#' object
-#' 
-print.transreg <- function(x,...){
-  cat("----- transreg-object -----\n")
-  cat(paste0("family: '",x$info$family,"'\n"))
-  name <- ifelse(x$info$alpha==0,"ridge",ifelse(x$info$alpha==1,"lasso","elastic net"))
-  cat(paste0("alpha = ",x$info$alpha," (",name,")\n"))
-  cat("n =",x$info$n,"(samples)\n")
-  cat("p =",x$info$p,"(features)\n")
-  cat("k =",x$info$k,"(sources of co-data)\n")
-  cat(paste0("calibration: '",x$scale,"'\n"))
-  names <- c("lp"[!is.null(x$meta.lp)],"mf"[is.null(x$meta.mf)])
-  cat("stacking:",paste(paste0("'",names,"'"),collapse=" and "),"\n")
-  cat("---------------------------")
-}
+##### weights #####
 
 #' @export
 #' @importFrom stats weights
@@ -1739,6 +1557,46 @@ weights.transreg <- function(object,stack=NULL,...){
 #' @describeIn extract called by `weights.transreg` if `stack="mf"`
 .weights.mf <- function(object,...){
   stats::coef(object$meta.mf,s="lambda.min")[2:(object$info$k+1)]
+}
+
+##### other #####
+
+#' @export
+#' 
+#' @title 
+#' Print transreg-object
+#' 
+#' @description
+#' Show summary of transreg-object
+#' 
+#' @param x object of class transreg
+#' @inheritParams predict.transreg
+#' 
+#' @examples
+#' #--- simulation ---
+#' set.seed(1)
+#' n <- 100; p <- 500
+#' X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
+#' beta <- rnorm(p)
+#' prior <- beta + rnorm(p)
+#' y <- X %*% beta
+#' 
+#' #--- print.transreg  ---
+#' object <- transreg(y=y,X=X,prior=prior)
+#' object
+#' 
+print.transreg <- function(x,...){
+  cat("----- transreg-object -----\n")
+  cat(paste0("family: '",x$info$family,"'\n"))
+  name <- ifelse(x$info$alpha==0,"ridge",ifelse(x$info$alpha==1,"lasso","elastic net"))
+  cat(paste0("alpha = ",x$info$alpha," (",name,")\n"))
+  cat("n =",x$info$n,"(samples)\n")
+  cat("p =",x$info$p,"(features)\n")
+  cat("k =",x$info$k,"(sources of co-data)\n")
+  cat(paste0("calibration: '",x$info$scale,"'\n"))
+  names <- c("lp"[!is.null(x$meta.lp)],"mf"[!is.null(x$meta.mf)])
+  cat("stacking:",paste(paste0("'",names,"'"),collapse=" and "),"\n")
+  cat("---------------------------")
 }
 
 #' @export
@@ -1932,4 +1790,165 @@ plot.transreg <- function(x,stack=NULL,...){
   graphics::points(x=y_hat,y=resid,cex=0.5)
   graphics::legend(x="bottomright",legend=paste0("n=",object$info$n),bty="n",cex=0.8)
 
+}
+
+#' @title Calculate residuals
+#' 
+#' @description
+#' Calculates residuals from observed outcome
+#' and predicted values (Gaussian family)
+#' or predicted probabilities (binomial family).
+#' Called by `.exp.multiple` and `.iso.multiple`.
+#' 
+#' @param y
+#' response: vector of length \eqn{n} (see family)
+#' @param y_hat
+#' predicted values or probabilities (see family):
+#' vector of length \eqn{n},
+#' or matrix with \eqn{n} rows (samples) and \eqn{k} columns (methods)
+#' @param family
+#' character
+#' "gaussian" (\eqn{y}: real numbers, \eqn{y_hat}: real numbers)
+#' or "binomial" (\eqn{y}: 0s and 1s, \eqn{y_hat}: unit interval)
+#' 
+#' @examples
+#' n <- 100
+#' p <- 5
+#' X <- matrix(stats::rnorm(n*p),nrow=n,ncol=p)
+#' #y <- stats::rbinom(n,size=1,prob=0.5)
+#' y <- stats::rnorm(n)
+#' glm <- glm(y~X,family="gaussian")
+#' res <- residuals.glm(glm)
+#' y_hat <- predict(glm,type="response")
+#' all.equal(res,y-y_hat)
+#' 
+.residuals <- function(y,y_hat,family){
+  if(length(y_hat)==1){y_hat <- matrix(y_hat,nrow=length(y),ncol=1)}
+  if(family=="gaussian"){
+    res <- apply(y_hat,2,function(x) (x-y)^2)
+  } else if(family=="binomial"){
+    if(any(y_hat<0)){stop("Below range.")}
+    if(any(y_hat>1)){stop("Above range.")}
+    limit <- 1e-5
+    y_hat[y_hat < limit] <- limit
+    y_hat[y_hat > 1 - limit] <- 1 - limit
+    res <- apply(y_hat,2,function(x) -2*(y*log(x)+(1-y)*log(1-x)))
+  } else {
+    stop("Family not implemented.")
+  }
+  return(res)
+}
+
+#' @title 
+#' Sign discovery
+#' 
+#' @description
+#' Assigns signs to prior weights to obtain prior coefficients
+#' 
+#' @inheritParams transreg
+#' 
+#' @examples
+#' n <- 100; p <- 500
+#' X <- matrix(stats::rnorm(n*p),nrow=n,ncol=p)
+#' beta <- stats::rnorm(p)*stats::rbinom(n=p,size=1,prob=0.2)
+#' y <- X %*% beta
+#' prior <- matrix(abs(beta),ncol=1)
+#' #temp <- .signdisc(y,X,prior,family="gaussian")
+#' #table(sign(beta),sign(temp))
+#' 
+.signdisc <- function(y,X,prior,family,foldid=NULL,nfolds=10,track=FALSE){
+  cond <- apply(prior,2,function(x) any(x>0) & all(x>=0))
+  if(any(cond)){
+    if(track){message(paste("Sign discovery procedure for source(s):",paste(which(cond),collapse=", ")))}
+    #--- regression of target on features (trial) ---
+    #init <- glmnet::cv.glmnet(x=X,y=y,family=family,alpha=0,foldid=foldid,nfolds=nfolds,penalty.factors=1/abs(prior))
+    #sign <- sign(coef(init,s="lambda.min")[-1])
+    #--- correlation between target and features (original) ---
+    sign <- as.numeric(sign(stats::cor(y,X,method="spearman")))
+    sign[is.na(sign)] <- 0
+    #--- regression of target on prior and features (trial) ---
+    #X_hat <- X * matrix(prior,nrow=nrow(X),ncol=ncol(X),byrow=TRUE)
+    #object <- glmnet::glmnet(y=y,x=X_hat,lower.limits=-1,upper.limits=1,alpha=0,lambda=c(9e99,0))
+    #sign <- sign(coef(object,s=0)[-1])
+    # replacement
+    prior[,cond] <- prior[,cond]*sign
+  }
+  return(prior)
+}
+
+#' @describeIn extract called by `coef.transreg`, `predict.transreg` and `weights.transreg`
+.which.stack <- function(object,stack){
+  names <- c("lp"[!is.null(object$meta.lp)],"mf"[!is.null(object$meta.mf)])
+  if(is.null(stack) & length(names)==1){
+    return(names)
+  }
+  if(!is.null(stack) & length(stack)==1 & any(names==stack)){
+    return(stack)
+  }
+  names <- paste(paste0("stack='",names,"'"),collapse=" and ")
+  stop(paste0("Choose between ",names,"."))
+}
+
+.folds <- function(y,nfolds=NULL,nfolds.ext=NULL,nfolds.int=NULL,foldid=NULL,foldid.ext=NULL,foldid.int=NULL){
+  #nfolds <- NULL; nfolds.ext <- nfolds.int <- 10; foldid <- foldid.int <- foldid.ext <- NULL
+  if(is.null(nfolds.int)!=is.null(nfolds.ext)|is.null(nfolds.ext)==is.null(nfolds)){
+    stop("Provide either nfolds.ext and nfolds.int or nfolds.")
+  }
+  if(!is.null(foldid) && !all.equal(seq_len(nfolds),sort(unique(foldid)))){
+    stop("nfolds and foldid are not compatible")
+  }
+  if(!is.null(foldid.ext) && nfolds.ext!=max(foldid.ext)){
+    stop("nfolds.ext and foldid.ext are not compatible")
+  }
+  if(!is.null(foldid.int) && nfolds.int!=max(foldid.int)){
+    stop("nfolds.int and foldid.int are not compatible")
+  }
+  nfolds <- list(all=nfolds,ext=nfolds.ext,int=nfolds.int)
+  foldid <- list(all=foldid,ext=foldid.ext,int=foldid.int)
+  for(i in c("all","ext","int")){
+    if(is.null(nfolds[[i]])|!is.null(foldid[[i]])){next}
+    if(all(y %in% c(0,1))){
+      foldid[[i]] <- rep(x=NA,times=length(y))
+      for(j in c(0,1)){
+        if(i!="int"){
+          foldid[[i]][y==j] <- rep(x=seq_len(nfolds[[i]]),length.out=sum(y==j))
+        } else {
+          if(nfolds.ext==1){
+            foldid[[i]][foldid$ext==1] <- NA
+            foldid[[i]][foldid$ext==0 & y==j] <- rep(x=seq_len(nfolds[[i]]),length.out=sum(foldid$ext==0 & y==j))
+          } else {
+            quotient <- floor(sum(y==j)/nfolds[[i]])
+            remainder <- sum(y==j)%%nfolds[[i]]
+            foldid[[i]][y==j] <- rep(seq_len(nfolds[[i]]),times=rep(c(quotient+1,quotient),times=c(remainder,nfolds[[i]]-remainder)))
+          }
+        }
+      }
+    } else {
+      if(i!="int"){
+        foldid[[i]] <- rep(x=seq_len(nfolds[[i]]),length.out=length(y))
+      } else {
+        if(nfolds.ext==1){
+          foldid[[i]][foldid$ext==1] <- NA
+          foldid[[i]][foldid$ext==0] <- rep(x=seq_len(nfolds[[i]]),length.out=sum(foldid$ext==0))
+        } else {
+          quotient <- floor(length(y)/nfolds[[i]])
+          remainder <- length(y)%%nfolds[[i]]
+          foldid[[i]] <- rep(seq_len(nfolds[[i]]),times=rep(c(quotient+1,quotient),times=c(remainder,nfolds[[i]]-remainder)))
+        }
+      }
+    }
+  }
+  # permute
+  if(all(y %in% c(0,1))){
+    for(j in c(0,1)){
+      order <- sample(seq_len(sum(y==j)))
+      for(i in c("all","ext","int")){
+        foldid[[i]][y==j] <- foldid[[i]][y==j][order]
+      }
+    }
+  } else {
+    order <- sample(seq_along(y))
+    foldid <- lapply(foldid,function(x) x[order])
+  }
+  return(list(foldid=foldid[["all"]],foldid.ext=foldid[["ext"]],foldid.int=foldid[["int"]]))
 }

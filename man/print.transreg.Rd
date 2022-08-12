@@ -24,7 +24,7 @@ prior <- beta + rnorm(p)
 y <- X \%*\% beta
 
 #--- print.transreg  ---
-object <- transreg(y=y,X=X,prior=prior,alpha=0.5)
+object <- transreg(y=y,X=X,prior=prior)
 object
 
 }

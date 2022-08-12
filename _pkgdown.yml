@@ -13,7 +13,6 @@ reference:
   - transreg
   - coef.transreg
   - predict.transreg
-  - weights.transreg
 
 - title: "Other functions"
   contents:
@@ -24,6 +23,7 @@ reference:
   - .signdisc
   - extract
   - calibrate
+  - weights.transreg
   - print.transreg
   - fitted.transreg
   - plot.transreg

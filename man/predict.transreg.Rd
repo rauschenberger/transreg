@@ -2,7 +2,7 @@
 % Please edit documentation in R/functions.R
 \name{predict.transreg}
 \alias{predict.transreg}
-\title{Predict}
+\title{Make Predictions}
 \usage{
 \method{predict}{transreg}(object, newx, stack = NULL, ...)
 }

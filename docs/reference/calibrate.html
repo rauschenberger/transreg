@@ -56,11 +56,11 @@ exponential and isotonic calibration.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">.exp.multiple</span><span class="op">(</span><span class="va">y</span>, <span class="va">X</span>, <span class="va">prior</span>, <span class="va">family</span>, <span class="va">select</span>, track <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">.iso.slow.single</span><span class="op">(</span><span class="va">y</span>, <span class="va">X</span>, <span class="va">prior</span>, <span class="va">family</span><span class="op">)</span></span>
+<span><span class="fu">.iso.multiple</span><span class="op">(</span><span class="va">y</span>, <span class="va">X</span>, <span class="va">prior</span>, <span class="va">family</span>, select <span class="op">=</span> <span class="cn">TRUE</span>, switch <span class="op">=</span> <span class="cn">TRUE</span>, track <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">.iso.fast.single</span><span class="op">(</span><span class="va">y</span>, <span class="va">X</span>, <span class="va">prior</span>, <span class="va">family</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">.iso.multiple</span><span class="op">(</span><span class="va">y</span>, <span class="va">X</span>, <span class="va">prior</span>, <span class="va">family</span>, select <span class="op">=</span> <span class="cn">TRUE</span>, switch <span class="op">=</span> <span class="cn">TRUE</span>, track <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">.iso.slow.single</span><span class="op">(</span><span class="va">y</span>, <span class="va">X</span>, <span class="va">prior</span>, <span class="va">family</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -101,9 +101,9 @@ or "poisson" (\(y\): non-negative integers);</p></dd>
     <h2 id="functions">Functions<a class="anchor" aria-label="anchor" href="#functions"></a></h2>
     
 <ul><li><p><code>.exp.multiple</code>: called by <code>transreg</code> if <code>scale="iso"</code></p></li>
-<li><p><code>.iso.slow.single</code>: replaced by <code>.iso.fast.single</code></p></li>
-<li><p><code>.iso.fast.single</code>: called by <code>transreg</code> if <code>scale="iso"</code> (via <code>.iso.multiple</code>)</p></li>
 <li><p><code>.iso.multiple</code>: called by <code>transreg</code> if <code>scale="iso"</code></p></li>
+<li><p><code>.iso.fast.single</code>: called by <code>transreg</code> if <code>scale="iso"</code> (via <code>.iso.multiple</code>)</p></li>
+<li><p><code>.iso.slow.single</code>: replaced by <code>.iso.fast.single</code></p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
