@@ -112,7 +112,8 @@ of "mf" for meta-feature stacking</p></dd>
 
 
 <dt>sign</dt>
-<dd><p>sign discovery procedure: logical</p></dd>
+<dd><p>sign discovery procedure: logical
+(experimental argument)</p></dd>
 
 
 <dt>switch</dt>
@@ -124,11 +125,12 @@ of "mf" for meta-feature stacking</p></dd>
 
 
 <dt>diffpen</dt>
-<dd><p>differential penalisation for features and meta-features: logical</p></dd>
+<dd><p>differential penalisation for features and meta-features: logical
+(experimental argument)</p></dd>
 
 
 <dt>track</dt>
-<dd><p>logical</p></dd>
+<dd><p>show intermediate output (messages and plots): logical</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -156,20 +158,17 @@ Regression of outcome on meta-features
 and original features,
 with \(1 + k + p\) estimated coefficients
 (intercept + sources of co-data + features).</p></li>
-<li><p>slot <code>scale</code>:
-indicates the chosen calibration approach
-("exp": exponential calibration, "iso": isotonic calibration)</p></li>
-<li><p>slot <code>stack</code>:
-indicates the chosen stacking approach
-("lp": linear predictor stacking, "mf": meta-feature stacking)</p></li>
-<li><p>slot <code>data</code>:
-List with slots <code>y</code>, <code>X</code> and <code>prior</code> (see arguments).</p></li>
 <li><p>slot <code>prior.calib</code>:
 Calibrated prior effects.
 Matrix with \(p\) rows and \(k\) columns.</p></li>
+<li><p>slot <code>data</code>:
+Original data.
+List with slots <code>y</code>, <code>X</code> and <code>prior</code> (see arguments).</p></li>
 <li><p>slot <code>info</code>:
-data frame with entries \(n\), \(p\), \(k\),
-<code>family</code> and <code>alpha</code></p></li>
+Information on call.
+Data frame with entries
+\(n\), \(p\), \(k\), <code>family</code>, <code>alpha</code>, <code>scale</code> and <code>stack</code>
+(see details and arguments).</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>

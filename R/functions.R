@@ -37,14 +37,16 @@
 #' of "mf" for meta-feature stacking
 #' @param sign
 #' sign discovery procedure: logical
+#' (experimental argument)
 #' @param switch
 #' choose between positive and negative weights for each source: logical
 #' @param select
 #' select from sources: logical
 #' @param diffpen
 #' differential penalisation for features and meta-features: logical
+#' (experimental argument)
 #' @param track
-#' logical
+#' show intermediate output (messages and plots): logical
 #'
 #' @details
 #' * \eqn{n}: sample size
@@ -78,25 +80,19 @@
 #' with \eqn{1 + k + p} estimated coefficients
 #' (intercept + sources of co-data + features).
 #' 
-#' * slot `scale`:
-#' indicates the chosen calibration approach
-#' ("exp": exponential calibration, "iso": isotonic calibration)
-#' 
-#' * slot `stack`:
-#' indicates the chosen stacking approach
-#' ("lp": linear predictor stacking, "mf": meta-feature stacking)
-#' 
-#' * slot `data`:
-#' List with slots `y`, `X` and `prior` (see arguments).
-#' 
 #' * slot `prior.calib`:
 #' Calibrated prior effects.
 #' Matrix with \eqn{p} rows and \eqn{k} columns.
 #' 
-#' * slot `info`:
-#' data frame with entries \eqn{n}, \eqn{p}, \eqn{k},
-#' `family` and `alpha`
+#' * slot `data`:
+#' Original data.
+#' List with slots `y`, `X` and `prior` (see arguments).
 #' 
+#' * slot `info`:
+#' Information on call.
+#' Data frame with entries
+#' \eqn{n}, \eqn{p}, \eqn{k}, `family`, `alpha`, `scale` and `stack`
+#' (see details and arguments).
 #' 
 #' @inherit transreg-package references
 #' 

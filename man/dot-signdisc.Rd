@@ -24,7 +24,7 @@ with entries from 1 to \code{nfolds}}
 
 \item{nfolds}{number of folds: positive integer}
 
-\item{track}{logical}
+\item{track}{show intermediate output (messages and plots): logical}
 }
 \description{
 Assigns signs to prior weights to obtain prior coefficients

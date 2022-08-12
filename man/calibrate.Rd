@@ -31,7 +31,7 @@ or "poisson" (\eqn{y}: non-negative integers);}
 
 \item{select}{select from sources: logical}
 
-\item{track}{logical}
+\item{track}{show intermediate output (messages and plots): logical}
 
 \item{switch}{choose between positive and negative weights for each source: logical}
 }

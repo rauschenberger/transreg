@@ -50,15 +50,17 @@ with entries from 1 to \code{nfolds}}
 "lp" for linear predictor stacking
 of "mf" for meta-feature stacking}
 
-\item{sign}{sign discovery procedure: logical}
+\item{sign}{sign discovery procedure: logical
+(experimental argument)}
 
 \item{switch}{choose between positive and negative weights for each source: logical}
 
 \item{select}{select from sources: logical}
 
-\item{diffpen}{differential penalisation for features and meta-features: logical}
+\item{diffpen}{differential penalisation for features and meta-features: logical
+(experimental argument)}
 
-\item{track}{logical}
+\item{track}{show intermediate output (messages and plots): logical}
 }
 \value{
 This function returns an object of class \code{transreg}.
@@ -84,20 +86,17 @@ Regression of outcome on meta-features
 and original features,
 with \eqn{1 + k + p} estimated coefficients
 (intercept + sources of co-data + features).
-\item slot \code{scale}:
-indicates the chosen calibration approach
-("exp": exponential calibration, "iso": isotonic calibration)
-\item slot \code{stack}:
-indicates the chosen stacking approach
-("lp": linear predictor stacking, "mf": meta-feature stacking)
-\item slot \code{data}:
-List with slots \code{y}, \code{X} and \code{prior} (see arguments).
 \item slot \code{prior.calib}:
 Calibrated prior effects.
 Matrix with \eqn{p} rows and \eqn{k} columns.
+\item slot \code{data}:
+Original data.
+List with slots \code{y}, \code{X} and \code{prior} (see arguments).
 \item slot \code{info}:
-data frame with entries \eqn{n}, \eqn{p}, \eqn{k},
-\code{family} and \code{alpha}
+Information on call.
+Data frame with entries
+\eqn{n}, \eqn{p}, \eqn{k}, \code{family}, \code{alpha}, \code{scale} and \code{stack}
+(see details and arguments).
 }
 }
 \description{

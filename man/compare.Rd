@@ -48,7 +48,8 @@ number between 0 and 1}
 "exp" for exponential calibration or
 "iso" for isotonic calibration}
 
-\item{sign}{sign discovery procedure: logical}
+\item{sign}{sign discovery procedure: logical
+(experimental argument)}
 
 \item{select}{select from sources: logical}
 
@@ -72,7 +73,8 @@ number between 0 and 1}
 
 \item{naive}{compare with naive transfer learning: logical}
 
-\item{diffpen}{differential penalisation for features and meta-features: logical}
+\item{diffpen}{differential penalisation for features and meta-features: logical
+(experimental argument)}
 }
 \description{
 Function for reproducing hold-out method (simulation)
