@@ -14,7 +14,31 @@
 \item{...}{(not applicable)}
 }
 \value{
-This function plots transreg-objects.
+This function returns four plots.
+\itemize{
+\item top-left:
+Calibrated prior effects (\eqn{y}-axis) against
+original prior effects (\eqn{x}-axis).
+Each line is for one source of prior effects,
+with the colour given by \code{\link[grDevices:palette]{grDevices::palette()}}
+(black: 1, red: 2, green: 3, blue: 4, ...).
+\item top-right:
+Estimated coefficients with transfer learning (\eqn{y}-axis)
+against estimated coefficients without transfer learning (\eqn{x}-axis).
+Each point represents one feature.
+\item bottom-left:
+Estimated weights for sources of prior effects
+(labels 1 to \eqn{k}),
+and either
+estimated weights for \code{lambda.min} and \code{lambda.1se} models
+(linear predictor stacking)
+or estimated weights for features
+(meta-feature stacking).
+\item bottom-right:
+Absolute deviance residuals (\eqn{y}-axis)
+against fitted values (\eqn{x}-axis).
+Each point represents one sample.
+}
 }
 \description{
 Plot transreg-object

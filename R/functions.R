@@ -1799,7 +1799,33 @@ fitted.transreg <- function(object,stack=NULL,...){
 #' @inheritParams predict.transreg
 #'
 #' @return
-#' This function plots transreg-objects.
+#' This function returns four plots.
+#' 
+#' * top-left:
+#' Calibrated prior effects (\eqn{y}-axis) against
+#' original prior effects (\eqn{x}-axis).
+#' Each line is for one source of prior effects,
+#' with the colour given by [grDevices::palette()]
+#' (black: 1, red: 2, green: 3, blue: 4, ...).
+#' 
+#' * top-right:
+#' Estimated coefficients with transfer learning (\eqn{y}-axis)
+#' against estimated coefficients without transfer learning (\eqn{x}-axis).
+#' Each point represents one feature.
+#' 
+#' * bottom-left:
+#' Estimated weights for sources of prior effects
+#' (labels 1 to \eqn{k}),
+#' and either
+#' estimated weights for `lambda.min` and `lambda.1se` models
+#' (linear predictor stacking)
+#' or estimated weights for features
+#' (meta-feature stacking).
+#' 
+#' * bottom-right:
+#' Absolute deviance residuals (\eqn{y}-axis)
+#' against fitted values (\eqn{x}-axis).
+#' Each point represents one sample.
 #'
 #' @inherit transreg-package references
 #' 

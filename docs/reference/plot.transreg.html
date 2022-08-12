@@ -67,8 +67,29 @@
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>This function plots transreg-objects.</p>
-    </div>
+<p>This function returns four plots.</p><ul><li><p>top-left:
+Calibrated prior effects (\(y\)-axis) against
+original prior effects (\(x\)-axis).
+Each line is for one source of prior effects,
+with the colour given by <code><a href="https://rdrr.io/r/grDevices/palette.html" class="external-link">grDevices::palette()</a></code>
+(black: 1, red: 2, green: 3, blue: 4, ...).</p></li>
+<li><p>top-right:
+Estimated coefficients with transfer learning (\(y\)-axis)
+against estimated coefficients without transfer learning (\(x\)-axis).
+Each point represents one feature.</p></li>
+<li><p>bottom-left:
+Estimated weights for sources of prior effects
+(labels 1 to \(k\)),
+and either
+estimated weights for <code>lambda.min</code> and <code>lambda.1se</code> models
+(linear predictor stacking)
+or estimated weights for features
+(meta-feature stacking).</p></li>
+<li><p>bottom-right:
+Absolute deviance residuals (\(y\)-axis)
+against fitted values (\(x\)-axis).
+Each point represents one sample.</p></li>
+</ul></div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
     <p>Armin Rauschenberger
