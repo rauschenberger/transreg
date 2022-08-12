@@ -26,3 +26,4 @@ reference:
   - calibrate
   - print.transreg
   - fitted.transreg
+  - plot.transreg

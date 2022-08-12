@@ -1745,6 +1745,7 @@ weights.transreg <- function(object,stack=NULL,...){
 }
 
 #' @export
+#' @importFrom stats fitted
 #' 
 #' @title
 #' Fitted values
@@ -1793,7 +1794,119 @@ fitted.transreg <- function(object,stack=NULL,...){
   stats::predict(object,newx=object$data$X,stack=stack,...)
 }
 
+#' @export
+#' 
+#' @title
+#' Plot transreg-object
+#'
+#' @description
+#' Plot transreg-object
+#' 
+#' @param x object of type transreg
+#' @inheritParams predict.transreg
+#'
+#' @return
+#' This function plots transreg-objects.
+#'
+#' @inherit transreg-package references
+#' 
+#' @inherit transreg seealso
+#'
+#' @examples
+#' #--- simulation ---
+#' set.seed(1)
+#' n <- 100; p <- 500
+#' X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
+#' beta <- rnorm(p) #*rbinom(n=n,size=1,prob=0.2)
+#' prior1 <- beta + rnorm(p)
+#' prior2 <- beta + rnorm(p)
+#' prior3 <- rnorm(p)
+#' prior4 <- rnorm(p)
+#' y <- X %*% beta
+#' 
+#' prior <- cbind(prior1,prior2,prior3,prior4)
+#' object <- transreg(y=y,X=X,prior=prior,alpha=0,stack=c("lp","mf"))
+#' 
+#' plot(object,stack="lp")
+#' 
+plot.transreg <- function(x,stack=NULL,...){
+  object <- x
+  stack <- .which.stack(object,stack=stack)
+  scale <- switch(object$scale,"exp"="exponential","iso"="isotonic","?")
+  graphics::par(mfrow=c(2,2),mar=c(3,3,1,1))
 
-plot.transreg <- function(x,y,...){
-  graphics::par(mfrow=c(2,2))
+  #--- calibrated vs initial prior effects ---
+  graphics::plot.new()
+  graphics::plot.window(xlim=range(object$data$prior),ylim=range(object$prior.calib))
+  graphics::box()
+  graphics::axis(side=1,cex.axis=0.8)
+  graphics::axis(side=2,cex.axis=0.8)
+  graphics::title(main=paste(scale,"calibration"),cex.main=0.8,line=0.2)
+  graphics::title(xlab="initial prior",ylab="calibrated prior",line=2,cex.lab=0.8)
+  graphics::abline(h=0,col="grey",lty=2)
+  graphics::abline(v=0,col="grey",lty=2)
+  for(i in seq_len(object$info$k)){
+    x <- object$data$prior[,i]
+    y <- object$prior.calib[,i]
+    graphics::lines(x=x[order(x)],y=y[order(x)],col=i)
+  }
+  
+  #--- estimated betas without and with prior effects ---
+  x <- stats::coef(object$base,s="lambda.min")[-1]
+  y <- stats::coef(object,stack=stack)$beta
+  graphics::plot.new()
+  graphics::plot.window(xlim=range(x),ylim=range(y))
+  graphics::box()
+  graphics::axis(side=1,cex.axis=0.8)
+  graphics::axis(side=2,cex.axis=0.8)
+  graphics::title(main="estimated effects",cex.main=0.8,line=0.2)
+  graphics::title(xlab="without prior",ylab="with prior",line=2,cex.lab=0.8)
+  graphics::abline(h=0,col="grey",lty=2)
+  graphics::abline(v=0,col="grey",lty=2)
+  graphics::points(x=x,y=y,cex=0.5)
+  lm <- lm(y~x)
+  graphics::lines(x=x,y=fitted(lm),col="grey")
+  graphics::legend(x="bottomright",legend=paste0("p=",object$info$p),bty="n",cex=0.8)
+  
+  #--- weights for sources of prior effects ---
+  x <- seq_len(object$info$k)
+  y <- weights(object,stack=stack)
+  if(stack=="lp"){
+    z <- stats::coef(object$meta.lp,s="lambda.min")[-c(1:(object$info$k+1))]
+  } else if(stack=="mf"){
+    z <- abs(stats::coef(object$meta.mf,s="lambda.min")[-c(1:(object$info$k+1))])
+  } else {
+    stop("Invalid.")
+  }
+  graphics::plot.new()
+  graphics::plot.window(xlim=c(0.5,object$info$k+2),ylim=c(0,max(c(y,z))))
+  graphics::box()
+  graphics::axis(side=1,cex.axis=0.8,at=seq_len(object$info$k))
+  graphics::axis(side=2,cex.axis=0.8)
+  graphics::title(main="sources",cex.main=0.8,line=0.2)
+  graphics::title(xlab="source",ylab="weight",line=2,cex.lab=0.8)
+  graphics::segments(x0=x,y0=0,y1=y,lwd=3,col=x)
+  graphics::abline(v=object$info$k+0.5,col="grey",lty=3)
+  graphics::segments(x0=seq(from=object$info$k+1,to=object$info$k+2,length.out=length(z)),y0=0,y1=z,lwd=ifelse(stack=="lp",3,1))
+  if(stack=="lp"){
+    graphics::axis(side=1,cex.axis=0.8,at=object$info$k+c(1,2),label=c("min","1se"))
+  } else if(stack=="mf"){
+    graphics::axis(side=1,cex.axis=0.8,at=object$info$k+1.5,label="features",tick=FALSE)
+  }
+  
+  #--- outliers ---
+  y_hat <- stats::fitted(object,stack=stack)
+  resid <- .residuals(y=object$data$y,y_hat=y_hat,family=object$info$family)
+  graphics::plot.new()
+  graphics::plot.window(xlim=range(y_hat),ylim=range(resid))
+  graphics::box()
+  graphics::axis(side=1,cex.axis=0.8)
+  graphics::axis(side=2,cex.axis=0.8)
+  graphics::title(main="samples",cex.main=0.8,line=0.2)
+  xlab <- paste("fitted",ifelse(object$info$family=="binomial","probability","value"))
+  graphics::title(xlab=xlab,ylab="deviance",line=2,cex.lab=0.8)
+  graphics::abline(h=0,col="grey",lty=2)
+  graphics::points(x=y_hat,y=resid,cex=0.5)
+  graphics::legend(x="bottomright",legend=paste0("n=",object$info$n),bty="n",cex=0.8)
+
 }
