@@ -63,7 +63,7 @@ and Enrico Glaab
 \email{armin.rauschenberger@uni.lu}
 }
 \seealso{
-Methods for objects of class \code{transreg}
+Methods for objects of class \link{transreg}
 include \code{\link[=coef.transreg]{coef}}
 and \code{\link[=predict.transreg]{predict}}.
 }

@@ -86,10 +86,22 @@
 #' indicates the chosen stacking approach
 #' ("lp": linear predictor stacking, "mf": meta-feature stacking)
 #' 
+#' * slot `data`:
+#' List with slots `y`, `X` and `prior` (see arguments).
+#' 
+#' * slot `prior.calib`:
+#' Calibrated prior effects.
+#' Matrix with \eqn{p} rows and \eqn{k} columns.
+#' 
+#' * slot `info`:
+#' data frame with entries \eqn{n}, \eqn{p}, \eqn{k},
+#' `family` and `alpha`
+#' 
+#' 
 #' @inherit transreg-package references
 #' 
 #' @seealso
-#' Methods for objects of class `transreg`
+#' Methods for objects of class [transreg]
 #' include \code{\link[=coef.transreg]{coef}} 
 #' and \code{\link[=predict.transreg]{predict}}.
 #' 
@@ -364,8 +376,7 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   #                                 penalty.factor=rep(c(0,1),times=c(k+2,p)),foldid=foldid)
   # end alternative triple
   
-  call <- deparse(sys.call())
-  object <- list(base=base,meta.lp=meta.lp,meta.mf=meta.mf,scale=scale,stack=stack,call=call,data=list(y=y,X=X,prior=prior),prior.calib=prior.ext$beta,info=data.frame(n=n,p=p,k=k,family=family,alpha=alpha))
+  object <- list(base=base,meta.lp=meta.lp,meta.mf=meta.mf,prior.calib=prior.ext$beta,data=list(y=y,X=X,prior=prior),info=data.frame(n=n,p=p,k=k,family=family,alpha=alpha,scale=scale,stack=paste0(stack,collapse="+")))
   class(object) <- "transreg"
   
   #if(sink){
@@ -380,13 +391,14 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
 
 #' @describeIn extract called by `coef.transreg`, `predict.transreg` and `weights.transreg`
 .which.stack <- function(object,stack){
-  if(is.null(stack) & length(object$stack)==1){
-    return(object$stack)
+  names <- c("lp"[!is.null(object$meta.lp)],"mf"[!is.null(object$meta.mf)])
+  if(is.null(stack) & length(names)==1){
+    return(names)
   }
-  if(!is.null(stack) & length(stack)==1 & any(object$stack==stack)){
+  if(!is.null(stack) & length(stack)==1 & any(names==stack)){
     return(stack)
   }
-  names <- paste(paste0("stack='",object$stack,"'"),collapse=" and ")
+  names <- paste(paste0("stack='",names,"'"),collapse=" and ")
   stop(paste0("Choose between ",names,"."))
 }
 
@@ -1676,7 +1688,8 @@ print.transreg <- function(x,...){
   cat("p =",x$info$p,"(features)\n")
   cat("k =",x$info$k,"(sources of co-data)\n")
   cat(paste0("calibration: '",x$scale,"'\n"))
-  cat("stacking:",paste(paste0("'",x$stack,"'"),collapse=" and "),"\n")
+  names <- c("lp"[!is.null(x$meta.lp)],"mf"[is.null(x$meta.mf)])
+  cat("stacking:",paste(paste0("'",names,"'"),collapse=" and "),"\n")
   cat("---------------------------")
 }
 
@@ -1816,7 +1829,7 @@ fitted.transreg <- function(object,stack=NULL,...){
 plot.transreg <- function(x,stack=NULL,...){
   object <- x
   stack <- .which.stack(object,stack=stack)
-  scale <- switch(object$scale,"exp"="exponential","iso"="isotonic","?")
+  scale <- switch(object$info$scale,"exp"="exponential","iso"="isotonic","?")
   graphics::par(mfrow=c(2,2),mar=c(3,3,1,1))
 
   #--- calibrated vs initial prior effects ---

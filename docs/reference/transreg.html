@@ -162,6 +162,14 @@ indicates the chosen calibration approach
 <li><p>slot <code>stack</code>:
 indicates the chosen stacking approach
 ("lp": linear predictor stacking, "mf": meta-feature stacking)</p></li>
+<li><p>slot <code>data</code>:
+List with slots <code>y</code>, <code>X</code> and <code>prior</code> (see arguments).</p></li>
+<li><p>slot <code>prior.calib</code>:
+Calibrated prior effects.
+Matrix with \(p\) rows and \(k\) columns.</p></li>
+<li><p>slot <code>info</code>:
+data frame with entries \(n\), \(p\), \(k\),
+<code>family</code> and <code>alpha</code></p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -187,7 +195,7 @@ and Enrico Glaab
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p>Methods for objects of class <code>transreg</code>
+    <div class="dont-index"><p>Methods for objects of class transreg
 include <code><a href="coef.transreg.html">coef</a></code>
 and <code><a href="predict.transreg.html">predict</a></code>.</p></div>
     </div>

@@ -90,6 +90,14 @@ indicates the chosen calibration approach
 \item slot \code{stack}:
 indicates the chosen stacking approach
 ("lp": linear predictor stacking, "mf": meta-feature stacking)
+\item slot \code{data}:
+List with slots \code{y}, \code{X} and \code{prior} (see arguments).
+\item slot \code{prior.calib}:
+Calibrated prior effects.
+Matrix with \eqn{p} rows and \eqn{k} columns.
+\item slot \code{info}:
+data frame with entries \eqn{n}, \eqn{p}, \eqn{k},
+\code{family} and \code{alpha}
 }
 }
 \description{
@@ -163,7 +171,7 @@ and Enrico Glaab
 \email{armin.rauschenberger@uni.lu}
 }
 \seealso{
-Methods for objects of class \code{transreg}
+Methods for objects of class \link{transreg}
 include \code{\link[=coef.transreg]{coef}}
 and \code{\link[=predict.transreg]{predict}}.
 }
