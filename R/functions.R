@@ -54,10 +54,10 @@
 #' * \eqn{k}: number of sources
 #' 
 #' @return
-#' This function returns an object of class `transreg`.
+#' Returns an object of class `transreg`.
 #' Rather than accessing its slots (see list below),
 #' it is recommended to use methods like
-#' `predict.transreg` and `coef.transreg`.
+#' [coef.transreg()] and [predict.transreg()].
 #' 
 #' * slot `base`:
 #' Object of class `glmnet`.
@@ -429,7 +429,7 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
 #' @param ... (not applicable)
 #' 
 #' @return
-#' This function returns predicted values or predicted probabilities.
+#' Returns predicted values or predicted probabilities.
 #' The output is a column vector with one entry for each sample. 
 #' 
 #' @inherit transreg-package references
@@ -514,18 +514,19 @@ NULL
 #' @export
 #'
 #' @title
-#' Coefficients
+#' Extract Coefficients
 #'
 #' @description
 #' Extracts coefficients
+#' from an object of class [transreg].
 #'
 #' @inheritParams predict.transreg
 #'
 #' @return
-#' This function returns estimated coefficients.
-#' The output is a list with two slots,
-#' namely the slot `alpha` with the estimated intercept (scalar),
-#' and the slot `beta` with the estimated slopes (vector).
+#' Returns estimated coefficients.
+#' The output is a list with two slots:
+#' slot `alpha` with the estimated intercept (scalar),
+#' and slot `beta` with the estimated slopes (vector).
 #'
 #' @inherit transreg-package references
 #' 
@@ -1693,21 +1694,24 @@ print.transreg <- function(x,...){
 #' @importFrom stats weights
 #' 
 #' @title
-#' Extract weights
+#' Extract Weights
 #'
 #' @description
-#' Extracts weights for sources of co-data
+#' Extracts weights from an object of class [transreg].
 #' 
 #' @inheritParams predict.transreg
 #'
 #' @return
-#' This function returns weights.
+#' Returns weights.
 #' The output is a numerical vector
 #' with one entry for each source of co-data.
 #'
 #' @inherit transreg-package references
 #' 
-#' @inherit transreg seealso
+#' @seealso
+#' This function is about weights for sources of prior effects.
+#' To extract weights for features (estimated regression coefficients),
+#' use [coef()].
 #'
 #' @examples
 #' #--- simulation ---
@@ -1718,7 +1722,7 @@ print.transreg <- function(x,...){
 #' prior <- cbind(beta+rnorm(p),beta+rnorm(p),rnorm(p),rnorm(p))
 #' y <- X %*% beta
 #' 
-#' #--- transreg ---
+#' #--- example ---
 #' object <- transreg(y=y,X=X,prior=prior)
 #' weights(object)
 #'
@@ -1749,7 +1753,7 @@ weights.transreg <- function(object,stack=NULL,...){
 #' @inheritParams predict.transreg
 #'
 #' @return
-#' This function returns fitted values.
+#' Returns fitted values.
 #' The output is a numerical vector
 #' with one entry for sample.
 #'
@@ -1799,7 +1803,7 @@ fitted.transreg <- function(object,stack=NULL,...){
 #' @inheritParams predict.transreg
 #'
 #' @return
-#' This function returns four plots.
+#' Returns four plots.
 #' 
 #' * top-left:
 #' Calibrated prior effects (\eqn{y}-axis) against

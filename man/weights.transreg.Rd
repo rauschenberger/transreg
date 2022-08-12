@@ -2,7 +2,7 @@
 % Please edit documentation in R/functions.R
 \name{weights.transreg}
 \alias{weights.transreg}
-\title{Extract weights}
+\title{Extract Weights}
 \usage{
 \method{weights}{transreg}(object, stack = NULL, ...)
 }
@@ -14,12 +14,12 @@
 \item{...}{(not applicable)}
 }
 \value{
-This function returns weights.
+Returns weights.
 The output is a numerical vector
 with one entry for each source of co-data.
 }
 \description{
-Extracts weights for sources of co-data
+Extracts weights from an object of class \link{transreg}.
 }
 \examples{
 #--- simulation ---
@@ -30,7 +30,7 @@ beta <- rnorm(p)
 prior <- cbind(beta+rnorm(p),beta+rnorm(p),rnorm(p),rnorm(p))
 y <- X \%*\% beta
 
-#--- transreg ---
+#--- example ---
 object <- transreg(y=y,X=X,prior=prior)
 weights(object)
 
@@ -50,7 +50,7 @@ and Enrico Glaab
 \email{armin.rauschenberger@uni.lu}
 }
 \seealso{
-Methods for objects of class \link{transreg}
-include \code{\link[=coef.transreg]{coef}}
-and \code{\link[=predict.transreg]{predict}}.
+This function is about weights for sources of prior effects.
+To extract weights for features (estimated regression coefficients),
+use \code{\link[=coef]{coef()}}.
 }

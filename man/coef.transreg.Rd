@@ -2,7 +2,7 @@
 % Please edit documentation in R/functions.R
 \name{coef.transreg}
 \alias{coef.transreg}
-\title{Coefficients}
+\title{Extract Coefficients}
 \usage{
 \method{coef}{transreg}(object, stack = NULL, ...)
 }
@@ -14,13 +14,14 @@
 \item{...}{(not applicable)}
 }
 \value{
-This function returns estimated coefficients.
-The output is a list with two slots,
-namely the slot \code{alpha} with the estimated intercept (scalar),
-and the slot \code{beta} with the estimated slopes (vector).
+Returns estimated coefficients.
+The output is a list with two slots:
+slot \code{alpha} with the estimated intercept (scalar),
+and slot \code{beta} with the estimated slopes (vector).
 }
 \description{
 Extracts coefficients
+from an object of class \link{transreg}.
 }
 \examples{
 #--- simulation ---

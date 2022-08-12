@@ -17,7 +17,7 @@ matrix with \eqn{n} rows (samples) and \eqn{p} columns (variables)}
 \item{...}{(not applicable)}
 }
 \value{
-This function returns predicted values or predicted probabilities.
+Returns predicted values or predicted probabilities.
 The output is a column vector with one entry for each sample.
 }
 \description{

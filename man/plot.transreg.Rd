@@ -14,7 +14,7 @@
 \item{...}{(not applicable)}
 }
 \value{
-This function returns four plots.
+Returns four plots.
 \itemize{
 \item top-left:
 Calibrated prior effects (\eqn{y}-axis) against

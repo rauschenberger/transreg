@@ -63,10 +63,10 @@ of "mf" for meta-feature stacking}
 \item{track}{show intermediate output (messages and plots): logical}
 }
 \value{
-This function returns an object of class \code{transreg}.
+Returns an object of class \code{transreg}.
 Rather than accessing its slots (see list below),
 it is recommended to use methods like
-\code{predict.transreg} and \code{coef.transreg}.
+\code{\link[=coef.transreg]{coef.transreg()}} and \code{\link[=predict.transreg]{predict.transreg()}}.
 \itemize{
 \item slot \code{base}:
 Object of class \code{glmnet}.

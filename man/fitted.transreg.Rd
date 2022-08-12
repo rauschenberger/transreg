@@ -14,7 +14,7 @@
 \item{...}{(not applicable)}
 }
 \value{
-This function returns fitted values.
+Returns fitted values.
 The output is a numerical vector
 with one entry for sample.
 }
