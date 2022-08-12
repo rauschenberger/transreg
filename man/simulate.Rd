@@ -2,7 +2,7 @@
 % Please edit documentation in R/functions.R
 \name{simulate}
 \alias{simulate}
-\title{Simulation}
+\title{Simulation (reproducibility)}
 \usage{
 simulate(
   p = 1000,
@@ -36,9 +36,20 @@ simulate(
 \item{w}{weight between signal and noise}
 }
 \description{
-Simulates data
+Function for reproducing 'internal' simulation study.
+See vignette.
 }
 \examples{
-NA
+set.seed(1)
+data <- transreg:::simulate()
+prior <- numeric()
+for(i in seq_along(data$source)){
+  glmnet <- glmnet::cv.glmnet(y=data$source[[i]]$y,x=data$source[[i]]$x)
+  prior <- cbind(prior,coef(glmnet,s="lambda.min")[-1])
+}
+object <- transreg(y=data$target$y,X=data$target$x,prior=prior)
 
+}
+\seealso{
+Use \code{\link[glmtrans:models]{glmtrans::models()}} for reproducing 'external' simulation study.
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/functions.R
 \name{compare}
 \alias{compare}
-\title{Cross-validation}
+\title{Cross-validation (reproducibility)}
 \usage{
 compare(
   target,
@@ -75,18 +75,20 @@ number between 0 and 1}
 \item{diffpen}{differential penalisation for features and meta-features: logical}
 }
 \description{
-Performs external \eqn{k}-fold cross-validation
-to estimate the predictive performance of different methods.
+Function for reproducing hold-out method (simulation)
+and \eqn{k}-fold cross-validation (application).
+See vignette.
 }
 \examples{
+set.seed(1)
 n <- 100; p <- 500
 X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
 beta <- rnorm(p)*rbinom(n=p,size=1,prob=0.2)
 y <- X \%*\% beta
 \dontshow{
-object <- suppressMessages(compare(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0))}
+object <- suppressMessages(transreg:::compare(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0))}
 \dontrun{
-object <- compare(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0)}
+object <- transreg:::compare(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0)}
 
 }
 \seealso{

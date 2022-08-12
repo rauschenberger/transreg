@@ -378,6 +378,31 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   return(object)
 }
 
+#' @describeIn extract called by `coef.transreg`, `predict.transreg` and `weights.transreg`
+.which.stack <- function(object,stack){
+  if(is.null(stack) & length(object$stack)==1){
+    return(object$stack)
+  }
+  if(!is.null(stack) & length(stack)==1 & any(object$stack==stack)){
+    return(stack)
+  }
+  names <- paste(paste0("stack='",object$stack,"'"),collapse=" and ")
+  stop(paste0("Choose between ",names,"."))
+}
+
+#.predict.test <- function(object,newx,...){
+#  one <- newx %*% object$base$prior$beta
+#  y_hat <- stats::predict(object$test,s="lambda.min",newx=cbind(one,newx),type="response")
+#  return(y_hat)
+#}
+
+#.predict.test <- function(object,newx,...){
+#  one <- newx %*% object$base$prior$beta
+#  two <- stats::predict(object$base,s=c(object$base$lambda.min,object$base$lambda.1se),newx=newx) # was s="lambda.min"
+#  y_hat <- stats::predict(object$test,s="lambda.min",newx=cbind(one,two,newx),type="response")
+#  return(y_hat)
+#}
+
 #' @export
 #' 
 #' @title
@@ -552,58 +577,6 @@ coef.transreg <- function(object,stack=NULL,...){
   }
   return(list(alpha=alpha_star,beta=beta_star))
 }
-
-#' @describeIn extract called by `coef.transreg`, `predict.transreg` and `weights.transreg`
-.which.stack <- function(object,stack){
-  if(is.null(stack) & length(object$stack)==1){
-    return(object$stack)
-  }
-  if(!is.null(stack) & length(stack)==1 & any(object$stack==stack)){
-    return(stack)
-  }
-  names <- paste(paste0("stack='",object$stack,"'"),collapse=" and ")
-  stop(paste0("Choose between ",names,"."))
-  
-  # if(is.null(stack)){
-  #   if(length(object$stack)==1){
-  #     stack <- object$stack
-  #   } else {
-  #     stop(paste0("Choose between ",names,"."))
-  #   }
-  # } else {
-  #   if(length(stack)!=1){
-  #     stop("Invalid argument 'stack'. Provide single name.")
-  #   }
-  #   if(!any(object$stack==stack)){
-  #     stop(paste0("Cannot extract results for stack='",stack,"' from transreg-object fitted with ",names,"."))
-  #   }
-  # }
-  
-  #if(is.null(stack)){
-  #  stack <- object$stack
-  #} else if(length(intersect(stack,object$stack))==0){
-  #  stop("stack='",stack,"' not available in object")
-  #}
-  #if(any(object$stack=="lp") & any(object$stack=="mf")){
-  #  warning("Two options given. Choosing stack='mf'.")
-  #  stack <- "mf"
-  #}
-  #return(stack)
-}
-
-
-#.predict.test <- function(object,newx,...){
-#  one <- newx %*% object$base$prior$beta
-#  y_hat <- stats::predict(object$test,s="lambda.min",newx=cbind(one,newx),type="response")
-#  return(y_hat)
-#}
-
-#.predict.test <- function(object,newx,...){
-#  one <- newx %*% object$base$prior$beta
-#  two <- stats::predict(object$base,s=c(object$base$lambda.min,object$base$lambda.1se),newx=newx) # was s="lambda.min"
-#  y_hat <- stats::predict(object$test,s="lambda.min",newx=cbind(one,two,newx),type="response")
-#  return(y_hat)
-#}
 
 #' @export
 #'
@@ -1080,14 +1053,13 @@ NULL
   return(list(alpha=alpha,beta=beta))
 }
   
-#' @export
-#' 
 #' @title 
-#' Cross-validation
+#' Cross-validation (reproducibility)
 #' 
 #' @description
-#' Performs external \eqn{k}-fold cross-validation
-#' to estimate the predictive performance of different methods.
+#' Function for reproducing hold-out method (simulation)
+#' and \eqn{k}-fold cross-validation (application).
+#' See vignette.
 #' 
 #' @inheritParams transreg
 #' @param target
@@ -1121,14 +1093,15 @@ NULL
 #' [transreg()]
 #' 
 #' @examples
+#' set.seed(1)
 #' n <- 100; p <- 500
 #' X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
 #' beta <- rnorm(p)*rbinom(n=p,size=1,prob=0.2)
 #' y <- X %*% beta
 #' \dontshow{
-#' object <- suppressMessages(compare(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0))}
+#' object <- suppressMessages(transreg:::compare(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0))}
 #' \dontrun{
-#' object <- compare(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0)}
+#' object <- transreg:::compare(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0)}
 #' 
 compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso",sign=FALSE,select=TRUE,switch=TRUE,foldid.ext=NULL,nfolds.ext=10,foldid.int=NULL,nfolds.int=10,type.measure="deviance",alpha.prior=NULL,partitions=NULL,monotone=NULL,naive=TRUE,diffpen=FALSE){
   
@@ -1491,10 +1464,11 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
 }
 
 #' @title
-#' Simulation
+#' Simulation (reproducibility)
 #' 
 #' @description 
-#' Simulates data
+#' Function for reproducing 'internal' simulation study.
+#' See vignette.
 #' 
 #' @param p
 #' number of features
@@ -1515,8 +1489,18 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
 #' @param w
 #' weight between signal and noise
 #' 
+#' @seealso
+#' Use [glmtrans::models()] for reproducing 'external' simulation study.
+#' 
 #' @examples
-#' NA
+#' set.seed(1)
+#' data <- transreg:::simulate()
+#' prior <- numeric()
+#' for(i in seq_along(data$source)){
+#'   glmnet <- glmnet::cv.glmnet(y=data$source[[i]]$y,x=data$source[[i]]$x)
+#'   prior <- cbind(prior,coef(glmnet,s="lambda.min")[-1])
+#' }
+#' object <- transreg(y=data$target$y,X=data$target$x,prior=prior)
 #' 
 simulate <- function(p=1000,n.target=100,n.source=150,k=3,family="gaussian",prop=0.01,rho.beta=0.95,rho.x=0.95,w=0.5){
   
