@@ -868,32 +868,32 @@ NULL
 }
 
 # .sam.multiple <- function(y,X,prior,family,select=TRUE,switch=TRUE,base){
-#   
+# 
 #   #if(!is.null(base)){
 #   #  stop("Implement this.")
 #   #}
 #   glmnet <- glmnet::cv.glmnet(y=y,x=X,family=family,alpha=0)
-#   
+# 
 #   #warning("temporary (faster) solution")
 #   # rewrite cv.glmnet to keep not only y_hat but also beta_hat for each cv iteration
 #   #glmnet <- base
-#   
+# 
 #   alpha <- stats::coef(glmnet,s="lambda.min")[1]
 #   coef <- stats::coef(glmnet,s="lambda.min")[-1]
 #   p <- ncol(X)
 #   k <- ncol(prior)
 #   beta <- inc <- dec <- matrix(NA,nrow=p,ncol=k)
 #   res.inc <- res.dec <- matrix(NA,nrow=length(y),ncol=k)
-#   
+# 
 #   res <- .residuals(y=y,y_hat=mean(y),family=family)
-#   
+# 
 #   for(i in seq_len(k)){
 #     scam <- scam::scam(coef~s(prior[,i],bs="mpi"))
 #     inc[,i] <- stats::fitted(scam)
 #     fit <- joinet:::.mean.function(alpha + X %*% inc[,i],family=family)
 #     res.inc[,i] <- .residuals(y=y,y_hat=fit,family=family)
 #   }
-#   
+# 
 #   if(switch){
 #     for(i in seq_len(k)){
 #       scam <- scam::scam(coef~s(prior[,i],bs="mpd"))
@@ -902,15 +902,15 @@ NULL
 #       res.dec[,i] <- .residuals(y=y,y_hat=fit,family=family)
 #     }
 #   }
-#   
+# 
 #   pval.inc <- apply(res.inc,2,function(x) suppressWarnings(stats::wilcox.test(x=x,y=res,paired=TRUE,alternative="less")$p.value))
-#   
+# 
 #   if(switch){
 #     pval.dec <- apply(res.dec,2,function(x) suppressWarnings(stats::wilcox.test(x=x,y=res,paired=TRUE,alternative="less")$p.value))
 #   } else {
 #     pval.dec <- 1
 #   }
-#     
+# 
 #   alpha <- rep(alpha,times=k)
 #   for(i in seq_len(k)){
 #     if(switch && pval.dec[i]<pval.inc[i]){
@@ -919,12 +919,12 @@ NULL
 #       beta[,i] <- inc[,i]
 #     }
 #   }
-#   
+# 
 #   if(select){
 #      beta[,pmin(pval.inc,pval.dec)>0.05/k] <- 0
 #      # Decide between nominal and adjused 5% level!
 #   }
-#   
+# 
 #   return(list(alpha=alpha,beta=beta))
 # }
 # 
@@ -1015,6 +1015,8 @@ NULL
 #' logical
 #' @param naive
 #' compare with naive transfer learning: logical
+#' @param seed
+#' random seed
 #' 
 #' @seealso 
 #' [transreg()]
@@ -1030,7 +1032,7 @@ NULL
 #' \dontrun{
 #' object <- transreg:::compare(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0)}
 #' 
-compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso",sign=FALSE,select=TRUE,switch=TRUE,foldid.ext=NULL,nfolds.ext=10,foldid.int=NULL,nfolds.int=10,type.measure="deviance",alpha.prior=NULL,partitions=NULL,monotone=NULL,naive=TRUE,diffpen=FALSE){
+compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso",sign=FALSE,select=TRUE,switch=TRUE,foldid.ext=NULL,nfolds.ext=10,foldid.int=NULL,nfolds.int=10,type.measure="deviance",alpha.prior=NULL,partitions=NULL,monotone=NULL,naive=TRUE,diffpen=FALSE,seed=NULL){
   
   if(FALSE){
     if(!exists("source")){source <- NULL}
@@ -1073,10 +1075,13 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
     prior <- matrix(prior,ncol=1)
   }
   
-  if(!exists(".Random.seed")){
-    .Random.seed <- NULL
+  #if(!exists(".Random.seed")){ # trial
+  #  .Random.seed <- NULL # trial
+  #} # trial
+  if(is.null(seed)){
+    seed <- stats::rnorm(1)
   }
-  seed <- .Random.seed
+  #cat(sum(seed),"\n") # delete this line
   
   #  family <- "binomial"; alpha <- 1; foldid.int <- foldid.ext <- NULL; nfolds.ext <- 2; nfolds.int <- 10; type.measure <- "deviance"; scale <- "iso"; sign <- FALSE; select <- FALSE; alpha.prior <- NULL
   
@@ -1185,6 +1190,8 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
   folds <- .folds(y=target$y,nfolds.ext=nfolds.ext,nfolds.int=nfolds.int,foldid.ext=foldid.ext,foldid.int=foldid.int)
   foldid.ext <- folds$foldid.ext
   foldid.int <- folds$foldid.int
+  #cat("ext:",head(foldid.ext),"\n") # remove this
+  #cat("int:",head(foldid.int),"\n") # remove this
   #--- end new ---
   
   temp <- paste0(rep(c("transreg_","transreg_"),each=length(scale)),scale,rep(c("_lp","_mf"),each=length(scale)))
@@ -1444,8 +1451,8 @@ simulate <- function(p=1000,n.target=100,n.source=150,k=3,family="gaussian",prop
   mu <- rep(x=0,times=k+1)
   Sigma <- matrix(data=rho.beta,nrow=k+1,ncol=k+1) # original
   diag(Sigma) <- 1 # original
-  #Sigma <- matrix(data=NA,nrow=k+1,ncol=k+1)
-  #Sigma <- rho.beta^(abs(row(Sigma)-col(Sigma))) # trial 2022-01-10
+  #Sigma <- matrix(data=NA,nrow=k+1,ncol=k+1) # trial
+  #Sigma <- rho.beta^(abs(row(Sigma)-col(Sigma))) # trial
   beta <- mvtnorm::rmvnorm(n=p,mean=mu,sigma=Sigma)
   
   if(FALSE){
@@ -1481,8 +1488,10 @@ simulate <- function(p=1000,n.target=100,n.source=150,k=3,family="gaussian",prop
   #set.seed(seed)
   #w <- 0.50 # weight between signal and noise
   mu <- rep(x=0,times=p)
-  Sigma <- matrix(data=NA,nrow=p,ncol=p)
-  Sigma <- rho.x^abs(row(Sigma)-col(Sigma))
+  Sigma <- matrix(data=NA,nrow=p,ncol=p) # original
+  Sigma <- rho.x^abs(row(Sigma)-col(Sigma)) # original
+  #warning("Remove next line!")
+  #Sigma <- matrix(rho.x,nrow=p,ncol=p) # trial 2022-10-05
   diag(Sigma) <- 1
   
   # source
