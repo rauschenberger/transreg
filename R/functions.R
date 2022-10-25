@@ -632,8 +632,9 @@ NULL
       coefs[i,2] <- ifelse(is.na(temp["eta"]),0,temp["eta"]) # trial
       pred[,i] <- stats::fitted(glm)
     }
-    cvm <- palasso:::.loss(y=y,fit=pred,family=family,type.measure="deviance")[[1]]
+    #cvm <- palasso:::.loss(y=y,fit=pred,family=family,type.measure="deviance")[[1]]
     # replace this by starnet:::.loss
+    cvm <- apply(pred,2,function(x) starnet:::.loss(y=y,x=x,family=family,type.measure="deviance"))
     id.min <- which.min(cvm)
     
     alpha[j] <- coefs[id.min,1]
