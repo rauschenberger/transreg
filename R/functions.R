@@ -1060,14 +1060,12 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
   }
   
   if(!is.list(target)||is.null(names(target))){stop("Expect argument target as list with slots x and y.")}
-  #names(target) <- tolower(names(target))
   if(!any(names(target) %in% c("y","x"))){stop("Expect argument target as list with slots x and y.")}
   
   if(!is.null(source)){
   if(!is.list(source)){stop("Expect argument source as list of lists.")}
   for(i in seq_along(source)){
     if(!is.list(source[[i]])||is.null(names(source[[i]]))){stop("Expect argument source as list of lists with slots x and y.")}
-    #names(source[[i]]) <- tolower(names(source[[i]]))
     if(!any(names(source[[i]]) %in% c("y","x"))){stop("Expect argument source as list of lists with slots x and y.")}
   }
   }
@@ -1079,9 +1077,10 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
   #if(!exists(".Random.seed")){ # trial
   #  .Random.seed <- NULL # trial
   #} # trial
-  if(is.null(seed)){
-    seed <- stats::rnorm(1)
-  }
+  #if(is.null(seed)){
+  #  warning("setting random seed to zero")
+  #  seed <- 0
+  #}
   #cat(sum(seed),"\n") # delete this line
   
   #  family <- "binomial"; alpha <- 1; foldid.int <- foldid.ext <- NULL; nfolds.ext <- 2; nfolds.int <- 10; type.measure <- "deviance"; scale <- "iso"; sign <- FALSE; select <- FALSE; alpha.prior <- NULL
@@ -1186,21 +1185,16 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
   #  nfolds.ext <- max(foldid.ext)
   #}
   
-  #--- start new ---
-  set.seed(seed) # trial
+  if(!is.null(seed)){set.seed(seed)}
   folds <- .folds(y=target$y,nfolds.ext=nfolds.ext,nfolds.int=nfolds.int,foldid.ext=foldid.ext,foldid.int=foldid.int)
   foldid.ext <- folds$foldid.ext
   foldid.int <- folds$foldid.int
-  #cat("ext:",head(foldid.ext),"\n") # remove this
-  #cat("int:",head(foldid.int),"\n") # remove this
-  #--- end new ---
   
   temp <- paste0(rep(c("transreg_","transreg_"),each=length(scale)),scale,rep(c("_lp","_mf"),each=length(scale)))
   names <- c("mean","glmnet","glmtrans"[!is.null(source)],temp,"GRridge"[trial],"NoGroups"[trial],"fwelnet"[trial2],"xtune"[trial2],"CoRF"[trial2],"ecpc"[trial2],"naive"[naive]) # "transreg.test"
   pred <- matrix(data=NA,nrow=length(target$y),ncol=length(names),dimnames=list(NULL,names))
   time <- rep(0,time=length(names)); names(time) <- names
   
-  #set.seed(seed) # trial
   for(i in seq_len(nfolds.ext)){
     y0 <- target$y[foldid.ext!=i]
     X0 <- target$x[foldid.ext!=i,]
@@ -1217,14 +1211,14 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
     #--- end new ---
     
     # mean
-    set.seed(seed)
+    if(!is.null(seed)){set.seed(seed)}
     start <- Sys.time()
     pred[foldid.ext==i,"mean"] <- rep(mean(y0),times=sum(foldid.ext==i))
     end <- Sys.time()
     time["mean"] <- time["mean"]+difftime(time1=end,time2=end,units="secs")
     
     # glmnet
-    set.seed(seed) # trial
+    if(!is.null(seed)){set.seed(seed)}
     start <- Sys.time()
     object <- glmnet::cv.glmnet(y=y0,x=X0,family=family,foldid=foldid,alpha=alpha)
     pred[foldid.ext==i,"glmnet"] <- as.numeric(stats::predict(object,newx=X1,s="lambda.min",type="response"))
@@ -1233,7 +1227,7 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
     
     # glmtrans
     if(!is.null(source)){
-      set.seed(seed) # trial
+      if(!is.null(seed)){set.seed(seed)}
       start <- Sys.time()
       object <- tryCatch(glmtrans::glmtrans(target=list(x=X0,y=y0),source=source,alpha=alpha,family=family,nfolds=nfolds.int),error=function(x) NULL)
       if(!is.null(object)){
@@ -1245,7 +1239,7 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
     
     # transreg
     for(j in seq_along(scale)){
-      set.seed(seed) # trial
+      if(!is.null(seed)){set.seed(seed)}
       start <- Sys.time()
       object <- transreg(y=y0,X=X0,prior=prior,family=family,foldid=foldid,alpha=alpha,scale=scale[j],stack=c("lp","mf"),sign=sign,switch=switch,select=select,diffpen=diffpen)
       pred[foldid.ext==i,paste0("transreg_",scale[j],"_lp")] <- .predict.lp(object,newx=X1)
@@ -1262,7 +1256,7 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
     
     # naive
     if(naive){
-      set.seed(seed)
+      if(!is.null(seed)){set.seed(seed)}
       start <- Sys.time()
       glm <- stats::glm(formula=y0 ~ .,family=family,data=data.frame(x=X0 %*% prior)) # was y~x
       pred[foldid.ext==i,"naive"] <- stats::predict(glm,newdata=data.frame(x=X1 %*% prior),type="response")
@@ -1272,7 +1266,7 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
     
     # GRridge
     if(trial){
-      set.seed(seed) # trial
+      if(!is.null(seed)){set.seed(seed)}
       start <- Sys.time()
       #index <- list()
       #for(j in seq_len(ncol(prior))){
@@ -1298,7 +1292,7 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
     if(trial2){
       
       # fwelnet
-      set.seed(seed)
+      if(!is.null(seed)){set.seed(seed)}
       start <- Sys.time()
       #if(is.vector(z)){z <- as.matrix(z,ncol=1)}
       object <- tryCatch(fwelnet::cv.fwelnet(x=X0,y=y0,z=z,family=family,foldid=foldid,alpha=alpha),error=function(x) NULL)
@@ -1309,7 +1303,7 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
       time["fwelnet"] <- time["fwelnet"]+difftime(time1=end,time2=start,units="secs")
 
       # ecpc - default
-      set.seed(seed)
+      if(!is.null(seed)){set.seed(seed)}
       start <- Sys.time()
       if(is.vector(z)){
         Z <- list(as.numeric(z))
@@ -1335,7 +1329,7 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
       time["ecpc"] <- time["ecpc"]+difftime(time1=end,time2=start,units="secs")
       
       # # xtune
-      # set.seed(seed)
+      # if(!is.null(seed)){set.seed(seed)}
       # start <- Sys.time()
       # model <- switch(family,"gaussian"="linear","binomial"="binary")
       # method <- ifelse(alpha==0,"ridge",ifelse(alpha==1,"lasso",stop()))
@@ -1351,7 +1345,7 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
       # time["xtune"] <- time["xtune"]+difftime(time1=end,time2=start,units="secs")
 
       # # CoRF
-      # set.seed(seed)
+      # if(!is.null(seed)){set.seed(seed)}
       # CoData <- as.data.frame(z)
       # CoDataRelation <- rep("increasing",times=ncol(CoData))
       # start <- Sys.time()
@@ -1448,7 +1442,6 @@ simulate <- function(p=1000,n.target=100,n.source=150,k=3,family="gaussian",prop
   #seed <- .Random.seed
   
   # effects
-  #set.seed(seed) # trial
   mu <- rep(x=0,times=k+1)
   Sigma <- matrix(data=rho.beta,nrow=k+1,ncol=k+1) # original
   diag(Sigma) <- 1 # original
@@ -1486,7 +1479,6 @@ simulate <- function(p=1000,n.target=100,n.source=150,k=3,family="gaussian",prop
   #stats::cor(beta,method="spearman")
   
   # features
-  #set.seed(seed)
   #w <- 0.50 # weight between signal and noise
   mu <- rep(x=0,times=p)
   Sigma <- matrix(data=NA,nrow=p,ncol=p) # original
@@ -1505,7 +1497,6 @@ simulate <- function(p=1000,n.target=100,n.source=150,k=3,family="gaussian",prop
   }
   
   # target
-  #set.seed(seed) # trial
   target$x <- mvtnorm::rmvnorm(n=n.target,mean=mu,sigma=Sigma)
   eta <- sqrt(w)*as.vector(scale(target$x %*% beta[,k+1])) + sqrt(1-w)*stats::rnorm(n.target)
   target$y <- joinet:::.mean.function(eta,family=family)
