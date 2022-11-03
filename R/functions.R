@@ -1432,7 +1432,7 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
 #' }
 #' object <- transreg(y=data$target$y,X=data$target$x,prior=prior)
 #' 
-simulate <- function(p=1000,n.target=100,n.source=150,k=3,family="gaussian",prop=0.01,rho.beta=0.95,rho.x=0.95,w=0.5){
+simulate <- function(p=1000,n.target=100,n.source=150,k=2,family="gaussian",prop=0.01,rho.beta=0.95,rho.x=0.95,w=0.5){
   
   target <- source <- list()
   
@@ -1444,23 +1444,26 @@ simulate <- function(p=1000,n.target=100,n.source=150,k=3,family="gaussian",prop
   # effects
   mu <- rep(x=0,times=k+1)
   Sigma <- matrix(data=rho.beta,nrow=k+1,ncol=k+1) # original
+  warning("temporary next line")
+  Sigma[row(Sigma)==2|col(Sigma)==2] <- 0 # trial 2022-11-02
+  #Sigma[row(Sigma)==2|col(Sigma)==2] <- 0 # delete this line!
   diag(Sigma) <- 1 # original
   #Sigma <- matrix(data=NA,nrow=k+1,ncol=k+1) # trial
   #Sigma <- rho.beta^(abs(row(Sigma)-col(Sigma))) # trial
   beta <- mvtnorm::rmvnorm(n=p,mean=mu,sigma=Sigma)
   
-  if(FALSE){
-    if(track){message("Temporary re-scaling of coefficients!")}
+  if(FALSE){ ### worked! removed on 2022-11-02
+    message("Temporary shuffeling of coefficients!")
 
     # source (with perturbation: exponentiated effects)
-    #exp <- 0.2
-    #beta[,1] <- sign(beta[,1])*abs(beta[,1])^exp
-    #beta[,2] <- sign(beta[,2])*abs(beta[,2])^exp
-    #beta[,3] <- sign(beta[,3])*abs(beta[,3])^exp
-    
+    #exp <- 2
+    #for(i in seq_len(k)){
+    #  beta[,i] <- sign(beta[,i])*abs(beta[,i])^exp
+    #}
+
     # source (with perturbation: partially non-informative source data)
-    #beta[,1] <- sample(beta[,1])
-    #beta[,2] <- sample(beta[,2])
+    beta[,1] <- sample(beta[,1]) ### worked! removed on 2022-11-02
+    #beta[1:(p/2),2] <- sample(beta[1:(p/2),2]) # was active
     #beta[,3] <- beta[,3]
     
     # target
