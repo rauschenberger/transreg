@@ -34,9 +34,7 @@
 #' "exp" for exponential calibration or
 #' "iso" for isotonic calibration
 #' @param stack
-#' character
-#' "lp" for linear predictor stacking
-#' of "mf" for meta-feature stacking
+#' character "sta" (standard stacking) or "sim" (simultaneous stacking)
 #' @param sign
 #' sign discovery procedure: logical
 #' (experimental argument)
@@ -67,14 +65,14 @@
 #' with \eqn{1 + p} estimated coefficients
 #' (intercept + features).
 #' 
-#' * slot `meta.lp`:
+#' * slot `meta.sta`:
 #' `NULL` or object of class `glmnet`.
 #' Regression of outcome on cross-validated linear predictors
 #' from prior effects and estimated effects,
 #' with \eqn{1 + k + 2} estimated coefficients
 #' (intercept + sources of co-data + lambda_min and lambda_1se).
 #' 
-#' * slot `meta.mf`:
+#' * slot `meta.sim`:
 #' `NULL` or object of class `glmnet`.
 #' Regression of outcome on meta-features
 #' (cross-validated linear predictors from prior effects)
@@ -141,14 +139,14 @@
 #' plot(x=prior1,y=exp$prior.calib)
 #' plot(x=prior1,y=iso$prior.calib)
 #' 
-#' #--- linear predictor vs meta-feature stacking ---
+#' #--- standard vs simultaneous stacking ---
 #' prior <- c(prior1[1:250],rep(0,250))
-#' lp <- transreg(y=y_lin,X=X,prior=prior,stack="lp")
-#' mf <- transreg(y=y_lin,X=X,prior=prior,stack="mf")
-#' plot(x=coef(lp$base)[-1],y=coef(lp)$beta)
-#' plot(x=coef(mf$base)[-1],y=coef(mf)$beta)
+#' sta <- transreg(y=y_lin,X=X,prior=prior,stack="sta")
+#' sim <- transreg(y=y_lin,X=X,prior=prior,stack=sim")
+#' plot(x=coef(sta$base)[-1],y=coef(sta)$beta)
+#' plot(x=coef(sim$base)[-1],y=coef(sim)$beta)
 #' 
-transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,scale="iso",stack="mf",sign=FALSE,switch=TRUE,select=TRUE,diffpen=FALSE,track=FALSE){
+transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,scale="iso",stack="sim",sign=FALSE,switch=TRUE,select=TRUE,diffpen=FALSE,track=FALSE){
   
   #if(sink){
   #  temp <- file("temp.txt",open="wt")
@@ -264,7 +262,7 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
     
     # predictions
     for(j in seq_len(k)){
-      y_hat[foldid==i,j] <- X1 %*% prior.int$beta[,j] # original (harmonise with .predict.lp)
+      y_hat[foldid==i,j] <- X1 %*% prior.int$beta[,j] # original (harmonise with .predict.sta)
       #y_hat[foldid==i,j] <- prior.int$alpha[j] + X1 %*% prior.int$beta[,j] # trial 2022-01-04 (see below)
     }
     y_hat[foldid==i,k+1] <- base$fit.preval[base$foldid==i,base$lambda==base$lambda.min]
@@ -288,7 +286,7 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   #id <- which.min(cvm) # trial
   #temp <- Y_hat[,id] # trial
   #all(y_hat[,k+1]==temp) # trial
-  #y_hat[,k+1] <- Y_hat[,id]-int[,id] # trial (harmonise with .predict.lp)
+  #y_hat[,k+1] <- Y_hat[,id]-int[,id] # trial (harmonise with .predict.sta)
   
   if(FALSE & scale=="com"){
     if(track){message("experimental tuning","\n")}
@@ -311,20 +309,20 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
     
   base$prior <- prior.ext
   
-  #--- linear predictor stacking ---
-  if(any(stack=="lp")){
-     meta.lp <- glmnet::cv.glmnet(y=y,x=y_hat,foldid=foldid,alpha=1,family=family,lower.limits=0)
+  #--- standard stacking ---
+  if(any(stack=="sta")){
+     meta.sta <- glmnet::cv.glmnet(y=y,x=y_hat,foldid=foldid,alpha=1,family=family,lower.limits=0)
   } else {
-     meta.lp <- NULL
+     meta.sta <- NULL
   }
   
-  #--- meta-feature stacking ---
-  if(any(stack=="mf")){
-     meta.mf <- glmnet::cv.glmnet(y=y,x=cbind(y_hat[,1:k],X),alpha=alpha,family=family,
+  #--- simultaneous stacking ---
+  if(any(stack=="sim")){
+     meta.sim <- glmnet::cv.glmnet(y=y,x=cbind(y_hat[,1:k],X),alpha=alpha,family=family,
                                lower.limits=rep(c(0,-Inf),times=c(k,p)),
                                penalty.factor=rep(c(0,1),times=c(k,p)),foldid=foldid)
   } else {
-     meta.mf <- NULL
+     meta.sim <- NULL
   }
   
   if(diffpen){
@@ -378,7 +376,7 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   #                                 penalty.factor=rep(c(0,1),times=c(k+2,p)),foldid=foldid)
   # end alternative triple
   
-  object <- list(base=base,meta.lp=meta.lp,meta.mf=meta.mf,prior.calib=prior.ext$beta,data=list(y=y,X=X,prior=prior),info=data.frame(n=n,p=p,k=k,family=family,alpha=alpha,scale=scale,stack=paste0(stack,collapse="+")))
+  object <- list(base=base,meta.sta=meta.sta,meta.sim=meta.sim,prior.calib=prior.ext$beta,data=list(y=y,X=X,prior=prior),info=data.frame(n=n,p=p,k=k,family=family,alpha=alpha,scale=scale,stack=paste0(stack,collapse="+")))
   class(object) <- "transreg"
   
   #if(sink){
@@ -403,11 +401,10 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
 #' 
 #' @param object
 #' object of class `transreg`
+#' @inheritParams transreg
 #' @param newx
 #' features:
 #' matrix with \eqn{n} rows (samples) and \eqn{p} columns (variables)
-#' @param stack
-#' character "lp" (linear predictor stacking) or "mf" (meta-feature stacking)
 #' @param ... (not applicable)
 #' 
 #' @return
@@ -456,8 +453,8 @@ predict.transreg <- function(object,newx,stack=NULL,...){
 #' Internal functions called by
 #' [coef.transreg()], [predict.transreg()] and [weights.transreg()], 
 #' depending on choice between
-#' linear predictor stacking
-#' and meta-feature stacking.
+#' standard stacking
+#' and simultaneous stacking.
 #'
 #' @inheritParams predict.transreg
 #'
@@ -469,20 +466,20 @@ predict.transreg <- function(object,newx,stack=NULL,...){
 #' @name extract
 NULL
 
-#' @describeIn extract called by `predict.transreg` if `stack="lp"`
-.predict.lp <- function(object,newx,...){
+#' @describeIn extract called by `predict.transreg` if `stack="sta"`
+.predict.sta <- function(object,newx,...){
   one <- newx %*% object$base$prior$beta # original (harmonise with transreg)
   #one <- object$base$prior$alpha + newx %*% object$base$prior$beta # trial 2022-01-04 (see above)
   two <- stats::predict(object$base,s=c(object$base$lambda.min,object$base$lambda.1se),newx=newx) # was s="lambda.min"
   #two <- newx %*% coef(object$base,s="lambda.min")[-1] # trial (harmonise with transreg)
-  y_hat <- stats::predict(object$meta.lp,s="lambda.min",newx=cbind(one,two),type="response")
+  y_hat <- stats::predict(object$meta.sta,s="lambda.min",newx=cbind(one,two),type="response")
   return(y_hat)
 }
 
-#' @describeIn extract called by `predict.transreg` if `stack="mf"`
-.predict.mf <- function(object,newx,...){
+#' @describeIn extract called by `predict.transreg` if `stack="sim"`
+.predict.sim <- function(object,newx,...){
   one <- newx %*% object$base$prior$beta
-  y_hat <- stats::predict(object$meta.mf,s="lambda.min",newx=cbind(one,newx),type="response")
+  y_hat <- stats::predict(object$meta.sim,s="lambda.min",newx=cbind(one,newx),type="response")
   return(y_hat)
 }
 
@@ -553,10 +550,10 @@ coef.transreg <- function(object,stack=NULL,...){
   eval(parse(text=paste0(".coef.",stack,"(object=object,...)")))
 }
 
-#' @describeIn extract called by `coef.transreg` if `stack="lp"`
-.coef.lp <- function(object,...){
-  beta <- stats::coef(object$base,s=c(object$meta.lp$lambda.min,object$meta.lp$lambda.1se))
-  omega <- as.numeric(stats::coef(object$meta.lp,s=object$meta.lp$lambda.min))
+#' @describeIn extract called by `coef.transreg` if `stack="sta"`
+.coef.sta <- function(object,...){
+  beta <- stats::coef(object$base,s=c(object$meta.sta$lambda.min,object$meta.sta$lambda.1se))
+  omega <- as.numeric(stats::coef(object$meta.sta,s=object$meta.sta$lambda.min))
   names <- paste0("source",seq_len(ncol(object$base$prior$beta)))
   names(omega) <- c("(Intercept)",names,"lambda.min","lambda.1se")
   p <- nrow(beta)-1
@@ -568,10 +565,10 @@ coef.transreg <- function(object,stack=NULL,...){
   return(list(alpha=alpha_star,beta=beta_star))
 }
 
-#' @describeIn extract called by `coef.transreg` if `stack="mf"`
-.coef.mf <- function(object,...){
+#' @describeIn extract called by `coef.transreg` if `stack="sim"`
+.coef.sim <- function(object,...){
   gamma <- object$base$prior$beta
-  meta <- stats::coef(object$meta.mf,s="lambda.min")
+  meta <- stats::coef(object$meta.sim,s="lambda.min")
   k <- ncol(object$base$prior$beta)
   p <- nrow(object$base$prior$beta)
   alpha_star <- meta[1]
@@ -1190,7 +1187,7 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
   foldid.ext <- folds$foldid.ext
   foldid.int <- folds$foldid.int
   
-  temp <- paste0(rep(c("transreg_","transreg_"),each=length(scale)),scale,rep(c("_lp","_mf"),each=length(scale)))
+  temp <- paste0(rep(c("transreg.","transreg."),each=length(scale)),scale,rep(c(".sta",".sim"),each=length(scale)))
   names <- c("mean","glmnet","glmtrans"[!is.null(source)],temp,"GRridge"[trial],"NoGroups"[trial],"fwelnet"[trial2],"xtune"[trial2],"CoRF"[trial2],"ecpc"[trial2],"naive"[naive]) # "transreg.test"
   pred <- matrix(data=NA,nrow=length(target$y),ncol=length(names),dimnames=list(NULL,names))
   time <- rep(0,time=length(names)); names(time) <- names
@@ -1241,16 +1238,16 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
     for(j in seq_along(scale)){
       if(!is.null(seed)){set.seed(seed)}
       start <- Sys.time()
-      object <- transreg(y=y0,X=X0,prior=prior,family=family,foldid=foldid,alpha=alpha,scale=scale[j],stack=c("lp","mf"),sign=sign,switch=switch,select=select,diffpen=diffpen)
-      pred[foldid.ext==i,paste0("transreg_",scale[j],"_lp")] <- .predict.lp(object,newx=X1)
+      object <- transreg(y=y0,X=X0,prior=prior,family=family,foldid=foldid,alpha=alpha,scale=scale[j],stack=c("sta","sim"),sign=sign,switch=switch,select=select,diffpen=diffpen)
+      pred[foldid.ext==i,paste0("transreg.",scale[j],".sta")] <- .predict.sta(object,newx=X1)
       end <- Sys.time()
       time["transreg"] <- time["transreg"]+difftime(time1=end,time2=start,units="secs")
       # transreg trial
       if(diffpen){
         stop("not available")
-        #pred[foldid.ext==i,paste0("transreg_",scale[j],"_mf")] <- .predict.test(object,newx=X1)
+        #pred[foldid.ext==i,paste0("transreg.",scale[j],".sim")] <- .predict.test(object,newx=X1)
       } else {
-        pred[foldid.ext==i,paste0("transreg_",scale[j],"_mf")] <- .predict.mf(object,newx=X1)
+        pred[foldid.ext==i,paste0("transreg.",scale[j],".sim")] <- .predict.sim(object,newx=X1)
       }
     }
     
@@ -1553,14 +1550,14 @@ weights.transreg <- function(object,stack=NULL,...){
   eval(parse(text=paste0(".weights.",stack,"(object=object,...)")))
 }
 
-#' @describeIn extract called by `weights.transreg` if `stack="lp"`
-.weights.lp <- function(object,...){
-  stats::coef(object$meta.lp,s="lambda.min")[2:(object$info$k+1)]
+#' @describeIn extract called by `weights.transreg` if `stack="sta"`
+.weights.sta <- function(object,...){
+  stats::coef(object$meta.sta,s="lambda.min")[2:(object$info$k+1)]
 }
 
-#' @describeIn extract called by `weights.transreg` if `stack="mf"`
-.weights.mf <- function(object,...){
-  stats::coef(object$meta.mf,s="lambda.min")[2:(object$info$k+1)]
+#' @describeIn extract called by `weights.transreg` if `stack="sim"`
+.weights.sim <- function(object,...){
+  stats::coef(object$meta.sim,s="lambda.min")[2:(object$info$k+1)]
 }
 
 ##### other #####
@@ -1598,7 +1595,7 @@ print.transreg <- function(x,...){
   cat("p =",x$info$p,"(features)\n")
   cat("k =",x$info$k,"(sources of co-data)\n")
   cat(paste0("calibration: '",x$info$scale,"'\n"))
-  names <- c("lp"[!is.null(x$meta.lp)],"mf"[!is.null(x$meta.mf)])
+  names <- c("sta"[!is.null(x$meta.sta)],"sim"[!is.null(x$meta.sim)])
   cat("stacking:",paste(paste0("'",names,"'"),collapse=" and "),"\n")
   cat("---------------------------")
 }
@@ -1684,9 +1681,9 @@ fitted.transreg <- function(object,stack=NULL,...){
 #' (labels 1 to \eqn{k}),
 #' and either
 #' estimated weights for `lambda.min` and `lambda.1se` models
-#' (linear predictor stacking)
+#' (standard stacking)
 #' or estimated weights for features
-#' (meta-feature stacking).
+#' (simultaneous stacking).
 #' 
 #' * bottom-right:
 #' Absolute deviance residuals (\eqn{y}-axis)
@@ -1710,9 +1707,9 @@ fitted.transreg <- function(object,stack=NULL,...){
 #' y <- X %*% beta
 #' 
 #' prior <- cbind(prior1,prior2,prior3,prior4)
-#' object <- transreg(y=y,X=X,prior=prior,alpha=0,stack=c("lp","mf"))
+#' object <- transreg(y=y,X=X,prior=prior,alpha=0,stack=c("sta","sim"))
 #' 
-#' plot(object,stack="lp")
+#' plot(object,stack="sta")
 #' 
 plot.transreg <- function(x,stack=NULL,...){
   object <- x
@@ -1756,10 +1753,10 @@ plot.transreg <- function(x,stack=NULL,...){
   #--- weights for sources of prior effects ---
   x <- seq_len(object$info$k)
   y <- weights(object,stack=stack)
-  if(stack=="lp"){
-    z <- stats::coef(object$meta.lp,s="lambda.min")[-c(1:(object$info$k+1))]
-  } else if(stack=="mf"){
-    z <- abs(stats::coef(object$meta.mf,s="lambda.min")[-c(1:(object$info$k+1))])
+  if(stack=="sta"){
+    z <- stats::coef(object$meta.sta,s="lambda.min")[-c(1:(object$info$k+1))]
+  } else if(stack=="sim"){
+    z <- abs(stats::coef(object$meta.sim,s="lambda.min")[-c(1:(object$info$k+1))])
   } else {
     stop("Invalid.")
   }
@@ -1772,10 +1769,10 @@ plot.transreg <- function(x,stack=NULL,...){
   graphics::title(xlab="source",ylab="weight",line=2,cex.lab=0.8)
   graphics::segments(x0=x,y0=0,y1=y,lwd=3,col=x)
   graphics::abline(v=object$info$k+0.5,col="grey",lty=3)
-  graphics::segments(x0=seq(from=object$info$k+1,to=object$info$k+2,length.out=length(z)),y0=0,y1=z,lwd=ifelse(stack=="lp",3,1))
-  if(stack=="lp"){
+  graphics::segments(x0=seq(from=object$info$k+1,to=object$info$k+2,length.out=length(z)),y0=0,y1=z,lwd=ifelse(stack=="sta",3,1))
+  if(stack=="sta"){
     graphics::axis(side=1,cex.axis=0.8,at=object$info$k+c(1,2),label=c("min","1se"))
-  } else if(stack=="mf"){
+  } else if(stack=="sim"){
     graphics::axis(side=1,cex.axis=0.8,at=object$info$k+1.5,label="features",tick=FALSE)
   }
   
@@ -1882,7 +1879,7 @@ plot.transreg <- function(x,stack=NULL,...){
 
 #' @describeIn extract called by `coef.transreg`, `predict.transreg` and `weights.transreg`
 .which.stack <- function(object,stack){
-  names <- c("lp"[!is.null(object$meta.lp)],"mf"[!is.null(object$meta.mf)])
+  names <- c("sta"[!is.null(object$meta.sta)],"sim"[!is.null(object$meta.sim)])
   if(is.null(stack) & length(names)==1){
     return(names)
   }
