@@ -660,7 +660,7 @@ NULL
   }
   
   if(select){
-    remove <- pvalue > 0.05/k
+    remove <- pvalue > 0.05 # was 0.05/k
     # Use same cut-off for exponential and isotonic calibration!
     beta[,remove] <- 0
     if(track){message(ifelse(remove,".",ifelse(sign==1,"+","-")))}
@@ -748,7 +748,7 @@ NULL
   
   if(select){
     #remove <- pvalue>0.05/((1+switch)*k) # original
-    remove <- pvalue>0.05 # trial
+    remove <- pvalue>0.05 # was 0.05
     
     # Alternatively, include all sources that lead to any improvement
     # (no matter how small).
@@ -920,7 +920,7 @@ NULL
 # 
 #   if(select){
 #      beta[,pmin(pval.inc,pval.dec)>0.05/k] <- 0
-#      # Decide between nominal and adjused 5% level!
+#      # Decide between nominal and adjusted 5% level!
 #   }
 # 
 #   return(list(alpha=alpha,beta=beta))
