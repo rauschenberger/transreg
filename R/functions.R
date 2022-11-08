@@ -142,7 +142,7 @@
 #' #--- standard vs simultaneous stacking ---
 #' prior <- c(prior1[1:250],rep(0,250))
 #' sta <- transreg(y=y_lin,X=X,prior=prior,stack="sta")
-#' sim <- transreg(y=y_lin,X=X,prior=prior,stack=sim")
+#' sim <- transreg(y=y_lin,X=X,prior=prior,stack="sim")
 #' plot(x=coef(sta$base)[-1],y=coef(sta)$beta)
 #' plot(x=coef(sim$base)[-1],y=coef(sim)$beta)
 #' 
@@ -622,7 +622,7 @@ NULL
       temp <- sign(prior[,j])*abs(prior[,j])^exp[i]
       eta <- X %*% temp
       if(switch){ # add this!
-      # Use simple linear/logistic/Poisson regression of y on eta, and extract fitted values. This should solve the scaling issue. => But be aware of negative coefficients!
+        # Use simple linear/logistic/Poisson regression of y on eta, and extract fitted values. This should solve the scaling issue. => But be aware of negative coefficients!
         glm <- stats::glm(y~eta,family=family)
         temp <- stats::coef(glm)
         coefs[i,1] <- temp["(Intercept)"]
@@ -634,7 +634,6 @@ NULL
         coef[i,1] <- temp["(Intercept)",]
         coef[i,2] <- ifelse(is.na(temp["eta",]),0,temp["eta",])
         pred[,i] <- stats::predict(glmnet,newx=cbind(1,eta))
-      }
       }
     }
     #cvm <- palasso:::.loss(y=y,fit=pred,family=family,type.measure="deviance")[[1]]

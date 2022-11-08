@@ -12,7 +12,7 @@
 \item{newx}{features:
 matrix with \eqn{n} rows (samples) and \eqn{p} columns (variables)}
 
-\item{stack}{character "lp" (linear predictor stacking) or "mf" (meta-feature stacking)}
+\item{stack}{character "sta" (standard stacking) or "sim" (simultaneous stacking)}
 
 \item{...}{(not applicable)}
 }

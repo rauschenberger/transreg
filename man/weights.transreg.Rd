@@ -9,7 +9,7 @@
 \arguments{
 \item{object}{object of class \code{transreg}}
 
-\item{stack}{character "lp" (linear predictor stacking) or "mf" (meta-feature stacking)}
+\item{stack}{character "sta" (standard stacking) or "sim" (simultaneous stacking)}
 
 \item{...}{(not applicable)}
 }

@@ -40,7 +40,7 @@ testthat::test_that("correlation (slow, fast)",{
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 for(scale in c("exp","iso")){
-  for(stack in c("lp","mf")){
+  for(stack in c("sta","sim")){
     
     family <- "gaussian"
     
@@ -70,7 +70,7 @@ prior$original <- prior1
 prior$modified <- -stats::runif(1)*prior1
 
 for(scale in c("exp","iso")){
-  for(stack in c("lp","mf")){
+  for(stack in c("sta","sim")){
     
     for(i in seq_along(prior)){
       set.seed(2)

@@ -13,7 +13,7 @@ transreg(
   foldid = NULL,
   nfolds = 10,
   scale = "iso",
-  stack = "mf",
+  stack = "sim",
   sign = FALSE,
   switch = TRUE,
   select = TRUE,
@@ -46,9 +46,7 @@ with entries from 1 to \code{nfolds}}
 "exp" for exponential calibration or
 "iso" for isotonic calibration}
 
-\item{stack}{character
-"lp" for linear predictor stacking
-of "mf" for meta-feature stacking}
+\item{stack}{character "sta" (standard stacking) or "sim" (simultaneous stacking)}
 
 \item{sign}{sign discovery procedure: logical
 (experimental argument)}
@@ -73,13 +71,13 @@ Object of class \code{glmnet}.
 Regression of outcome on features (without prior effects),
 with \eqn{1 + p} estimated coefficients
 (intercept + features).
-\item slot \code{meta.lp}:
+\item slot \code{meta.sta}:
 \code{NULL} or object of class \code{glmnet}.
 Regression of outcome on cross-validated linear predictors
 from prior effects and estimated effects,
 with \eqn{1 + k + 2} estimated coefficients
 (intercept + sources of co-data + lambda_min and lambda_1se).
-\item slot \code{meta.mf}:
+\item slot \code{meta.sim}:
 \code{NULL} or object of class \code{glmnet}.
 Regression of outcome on meta-features
 (cross-validated linear predictors from prior effects)
@@ -147,12 +145,12 @@ iso <- transreg(y=y_lin,X=X,prior=prior1,scale="iso")
 plot(x=prior1,y=exp$prior.calib)
 plot(x=prior1,y=iso$prior.calib)
 
-#--- linear predictor vs meta-feature stacking ---
+#--- standard vs simultaneous stacking ---
 prior <- c(prior1[1:250],rep(0,250))
-lp <- transreg(y=y_lin,X=X,prior=prior,stack="lp")
-mf <- transreg(y=y_lin,X=X,prior=prior,stack="mf")
-plot(x=coef(lp$base)[-1],y=coef(lp)$beta)
-plot(x=coef(mf$base)[-1],y=coef(mf)$beta)
+sta <- transreg(y=y_lin,X=X,prior=prior,stack="sta")
+sim <- transreg(y=y_lin,X=X,prior=prior,stack="sim")
+plot(x=coef(sta$base)[-1],y=coef(sta)$beta)
+plot(x=coef(sim$base)[-1],y=coef(sim)$beta)
 
 }
 \references{

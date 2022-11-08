@@ -2,26 +2,26 @@
 % Please edit documentation in R/functions.R
 \name{extract}
 \alias{extract}
-\alias{.predict.lp}
-\alias{.predict.mf}
-\alias{.coef.lp}
-\alias{.coef.mf}
-\alias{.weights.lp}
-\alias{.weights.mf}
+\alias{.predict.sta}
+\alias{.predict.sim}
+\alias{.coef.sta}
+\alias{.coef.sim}
+\alias{.weights.sta}
+\alias{.weights.sim}
 \alias{.which.stack}
 \title{Internal functions}
 \usage{
-.predict.lp(object, newx, ...)
+.predict.sta(object, newx, ...)
 
-.predict.mf(object, newx, ...)
+.predict.sim(object, newx, ...)
 
-.coef.lp(object, ...)
+.coef.sta(object, ...)
 
-.coef.mf(object, ...)
+.coef.sim(object, ...)
 
-.weights.lp(object, ...)
+.weights.sta(object, ...)
 
-.weights.mf(object, ...)
+.weights.sim(object, ...)
 
 .which.stack(object, stack)
 }
@@ -33,32 +33,32 @@ matrix with \eqn{n} rows (samples) and \eqn{p} columns (variables)}
 
 \item{...}{(not applicable)}
 
-\item{stack}{character "lp" (linear predictor stacking) or "mf" (meta-feature stacking)}
+\item{stack}{character "sta" (standard stacking) or "sim" (simultaneous stacking)}
 }
 \description{
 Internal functions called by
 \code{\link[=coef.transreg]{coef.transreg()}}, \code{\link[=predict.transreg]{predict.transreg()}} and \code{\link[=weights.transreg]{weights.transreg()}},
 depending on choice between
-linear predictor stacking
-and meta-feature stacking.
+standard stacking
+and simultaneous stacking.
 }
 \section{Functions}{
 \itemize{
-\item \code{.predict.lp}: called by \code{predict.transreg} if \code{stack="lp"}
+\item \code{.predict.sta()}: called by \code{predict.transreg} if \code{stack="sta"}
 
-\item \code{.predict.mf}: called by \code{predict.transreg} if \code{stack="mf"}
+\item \code{.predict.sim()}: called by \code{predict.transreg} if \code{stack="sim"}
 
-\item \code{.coef.lp}: called by \code{coef.transreg} if \code{stack="lp"}
+\item \code{.coef.sta()}: called by \code{coef.transreg} if \code{stack="sta"}
 
-\item \code{.coef.mf}: called by \code{coef.transreg} if \code{stack="mf"}
+\item \code{.coef.sim()}: called by \code{coef.transreg} if \code{stack="sim"}
 
-\item \code{.weights.lp}: called by \code{weights.transreg} if \code{stack="lp"}
+\item \code{.weights.sta()}: called by \code{weights.transreg} if \code{stack="sta"}
 
-\item \code{.weights.mf}: called by \code{weights.transreg} if \code{stack="mf"}
+\item \code{.weights.sim()}: called by \code{weights.transreg} if \code{stack="sim"}
 
-\item \code{.which.stack}: called by \code{coef.transreg}, \code{predict.transreg} and \code{weights.transreg}
+\item \code{.which.stack()}: called by \code{coef.transreg}, \code{predict.transreg} and \code{weights.transreg}
+
 }}
-
 \seealso{
 Use \code{\link[=coef.transreg]{coef}},
 \code{\link[=predict.transreg]{predict}}

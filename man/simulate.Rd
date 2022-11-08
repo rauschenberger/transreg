@@ -8,12 +8,14 @@ simulate(
   p = 1000,
   n.target = 100,
   n.source = 150,
-  k = 3,
+  k = 2,
   family = "gaussian",
   prop = 0.01,
   rho.beta = 0.95,
   rho.x = 0.95,
-  w = 0.5
+  w = 0.5,
+  trans = rep(TRUE, times = k),
+  exp = rep(1, times = k)
 )
 }
 \arguments{
@@ -34,6 +36,12 @@ simulate(
 \item{rho.x}{base for decreasing correlation structure for correlation between features}
 
 \item{w}{weight between signal and noise}
+
+\item{trans}{logical vector of length \eqn{k}:
+transferable (TRUE) or non-transferable (FALSE) source}
+
+\item{exp}{non-negative vector of length \eqn{k}
+for transforming beta to sign(beta)*abs(beta)^exp}
 }
 \description{
 Function for reproducing 'internal' simulation study.

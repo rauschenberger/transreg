@@ -8,7 +8,7 @@
 \alias{.iso.slow.single}
 \title{Internal functions}
 \usage{
-.exp.multiple(y, X, prior, family, select, track = FALSE)
+.exp.multiple(y, X, prior, family, select, switch = TRUE, track = FALSE)
 
 .iso.multiple(y, X, prior, family, select = TRUE, switch = TRUE, track = FALSE)
 
@@ -31,9 +31,9 @@ or "poisson" (\eqn{y}: non-negative integers);}
 
 \item{select}{select from sources: logical}
 
-\item{track}{show intermediate output (messages and plots): logical}
-
 \item{switch}{choose between positive and negative weights for each source: logical}
+
+\item{track}{show intermediate output (messages and plots): logical}
 }
 \description{
 Internal functions called by
@@ -43,15 +43,15 @@ exponential and isotonic calibration.
 }
 \section{Functions}{
 \itemize{
-\item \code{.exp.multiple}: called by \code{transreg} if \code{scale="iso"}
+\item \code{.exp.multiple()}: called by \code{transreg} if \code{scale="exp"}
 
-\item \code{.iso.multiple}: called by \code{transreg} if \code{scale="iso"}
+\item \code{.iso.multiple()}: called by \code{transreg} if \code{scale="iso"}
 
-\item \code{.iso.fast.single}: called by \code{transreg} if \code{scale="iso"} (via \code{.iso.multiple})
+\item \code{.iso.fast.single()}: called by \code{transreg} if \code{scale="iso"} (via \code{.iso.multiple})
 
-\item \code{.iso.slow.single}: replaced by \code{.iso.fast.single}
+\item \code{.iso.slow.single()}: replaced by \code{.iso.fast.single}
+
 }}
-
 \seealso{
 Use \code{\link[=transreg]{transreg()}} for model fitting.
 }

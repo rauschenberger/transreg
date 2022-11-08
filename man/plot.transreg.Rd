@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{object of type transreg}
 
-\item{stack}{character "lp" (linear predictor stacking) or "mf" (meta-feature stacking)}
+\item{stack}{character "sta" (standard stacking) or "sim" (simultaneous stacking)}
 
 \item{...}{(not applicable)}
 }
@@ -31,9 +31,9 @@ Estimated weights for sources of prior effects
 (labels 1 to \eqn{k}),
 and either
 estimated weights for \code{lambda.min} and \code{lambda.1se} models
-(linear predictor stacking)
+(standard stacking)
 or estimated weights for features
-(meta-feature stacking).
+(simultaneous stacking).
 \item bottom-right:
 Absolute deviance residuals (\eqn{y}-axis)
 against fitted values (\eqn{x}-axis).
@@ -56,9 +56,9 @@ prior4 <- rnorm(p)
 y <- X \%*\% beta
 
 prior <- cbind(prior1,prior2,prior3,prior4)
-object <- transreg(y=y,X=X,prior=prior,alpha=0,stack=c("lp","mf"))
+object <- transreg(y=y,X=X,prior=prior,alpha=0,stack=c("sta","sim"))
 
-plot(object,stack="lp")
+plot(object,stack="sta")
 
 }
 \references{

@@ -24,7 +24,8 @@ compare(
   partitions = NULL,
   monotone = NULL,
   naive = TRUE,
-  diffpen = FALSE
+  diffpen = FALSE,
+  seed = NULL
 )
 }
 \arguments{
@@ -75,6 +76,8 @@ number between 0 and 1}
 
 \item{diffpen}{differential penalisation for features and meta-features: logical
 (experimental argument)}
+
+\item{seed}{random seed}
 }
 \description{
 Function for reproducing hold-out method (simulation)
