@@ -1415,6 +1415,9 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
 #' base for decreasing correlation structure for correlation between features
 #' @param w
 #' weight between signal and noise
+#' @param exp
+#' non-negative vector of length \eqn{k}
+#' for transforming beta to sign(beta)*abs(beta)^exp
 #' 
 #' @seealso
 #' Use [glmtrans::models()] for reproducing 'external' simulation study.
@@ -1429,7 +1432,7 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
 #' }
 #' object <- transreg(y=data$target$y,X=data$target$x,prior=prior)
 #' 
-simulate <- function(p=1000,n.target=100,n.source=150,k=2,family="gaussian",prop=0.01,rho.beta=0.95,rho.x=0.95,w=0.5){
+simulate <- function(p=1000,n.target=100,n.source=150,k=2,family="gaussian",prop=0.01,rho.beta=0.95,rho.x=0.95,w=0.5,exp=rep(1,times=k)){
   
   target <- source <- list()
   
@@ -1449,8 +1452,16 @@ simulate <- function(p=1000,n.target=100,n.source=150,k=2,family="gaussian",prop
   #Sigma <- rho.beta^(abs(row(Sigma)-col(Sigma))) # trial
   beta <- mvtnorm::rmvnorm(n=p,mean=mu,sigma=Sigma)
   
+  message("This part is temporary!")
+  for(i in seq_len(k)){
+    beta[,i] <- sign(beta[,i])*abs(beta[,i])^exp[i]
+  }
+  
   if(FALSE){ ### worked! removed on 2022-11-02
-    message("Temporary shuffeling of coefficients!")
+    #message("Temporary re-scaling of coefficients!")
+    
+    #beta[,3] <- sign(beta[,3])*abs(beta[,3])^0.5
+    #beta[,4] <- sign(beta[,4])*abs(beta[,4])^2
 
     # source (with perturbation: exponentiated effects)
     #exp <- 2
@@ -1459,7 +1470,7 @@ simulate <- function(p=1000,n.target=100,n.source=150,k=2,family="gaussian",prop
     #}
 
     # source (with perturbation: partially non-informative source data)
-    beta[,1] <- sample(beta[,1]) ### worked! removed on 2022-11-02
+    #beta[,1] <- sample(beta[,1]) ### worked! removed on 2022-11-02
     #beta[1:(p/2),2] <- sample(beta[1:(p/2),2]) # was active
     #beta[,3] <- beta[,3]
     
@@ -1887,7 +1898,7 @@ plot.transreg <- function(x,stack=NULL,...){
     return(stack)
   }
   names <- paste(paste0("stack='",names,"'"),collapse=" and ")
-  stop(paste0("Choose between ",names,"."))
+  stop(paste0("Choose from ",names,"."))
 }
 
 .folds <- function(y,nfolds=NULL,nfolds.ext=NULL,nfolds.int=NULL,foldid=NULL,foldid.ext=NULL,foldid.int=NULL){
