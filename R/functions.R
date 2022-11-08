@@ -1415,6 +1415,9 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
 #' base for decreasing correlation structure for correlation between features
 #' @param w
 #' weight between signal and noise
+#' @param trans
+#' logical vector of length \eqn{k}:
+#' transferable (TRUE) or non-transferable (FALSE) source
 #' @param exp
 #' non-negative vector of length \eqn{k}
 #' for transforming beta to sign(beta)*abs(beta)^exp
@@ -1432,7 +1435,7 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
 #' }
 #' object <- transreg(y=data$target$y,X=data$target$x,prior=prior)
 #' 
-simulate <- function(p=1000,n.target=100,n.source=150,k=2,family="gaussian",prop=0.01,rho.beta=0.95,rho.x=0.95,w=0.5,exp=rep(1,times=k)){
+simulate <- function(p=1000,n.target=100,n.source=150,k=2,family="gaussian",prop=0.01,rho.beta=0.95,rho.x=0.95,w=0.5,trans=rep(TRUE,times=k),exp=rep(1,times=k)){
   
   target <- source <- list()
   
@@ -1445,8 +1448,9 @@ simulate <- function(p=1000,n.target=100,n.source=150,k=2,family="gaussian",prop
   mu <- rep(x=0,times=k+1)
   Sigma <- matrix(data=rho.beta,nrow=k+1,ncol=k+1) # original
   warning("temporary next line")
-  Sigma[row(Sigma)==2|col(Sigma)==2] <- 0 # trial 2022-11-02
-  #Sigma[row(Sigma)==2|col(Sigma)==2] <- 0 # delete this line!
+  #Sigma[row(Sigma)==2|col(Sigma)==2] <- 0 # trial 2022-11-02
+  ##Sigma[row(Sigma)==2|col(Sigma)==2] <- 0 # delete this line!
+  Sigma[c(!trans,FALSE),] <- 0; Sigma[,c(!trans,FALSE)] <- 0
   diag(Sigma) <- 1 # original
   #Sigma <- matrix(data=NA,nrow=k+1,ncol=k+1) # trial
   #Sigma <- rho.beta^(abs(row(Sigma)-col(Sigma))) # trial
