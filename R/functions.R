@@ -205,7 +205,7 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   }
   base$z <- prior.ext
   if(scale=="exp"){
-    prior.ext <- .exp.multiple(y=y,X=X,prior=prior.ext,family=family,select=select,track=track)
+    prior.ext <- .exp.multiple(y=y,X=X,prior=prior.ext,family=family,select=select,switch=switch,track=track)
   } else if(scale=="iso"){
     prior.ext <- .iso.multiple(y=y,X=X,prior=prior.ext,family=family,select=select,switch=switch,track=track)
   } else if(scale=="sam"){
@@ -246,7 +246,7 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
       #prior.int[prior.ext<0] <- -prior.int[prior.ext<0] # temporary
     }
     if(scale=="exp"){
-      prior.int <- .exp.multiple(y=y0,X=X0,prior=prior.int,family=family,select=select,track=track)
+      prior.int <- .exp.multiple(y=y0,X=X0,prior=prior.int,family=family,select=select,switch=switch,track=track)
     } else if(scale=="iso"){
       prior.int <- .iso.multiple(y=y0,X=X0,prior=prior.int,family=family,select=select,switch=switch,track=track)
     } else if(scale=="sam"){
@@ -600,8 +600,8 @@ coef.transreg <- function(object,stack=NULL,...){
 #' @name calibrate
 NULL
 
-#' @describeIn calibrate called by `transreg` if `scale="iso"`
-.exp.multiple <- function(y,X,prior,family,select,track=FALSE){
+#' @describeIn calibrate called by `transreg` if `scale="exp"`
+.exp.multiple <- function(y,X,prior,family,select,switch=TRUE,track=FALSE){
   
   n <- nrow(X); p <- ncol(X); k <- ncol(prior)
   
@@ -621,13 +621,21 @@ NULL
     for(i in seq_along(exp)){
       temp <- sign(prior[,j])*abs(prior[,j])^exp[i]
       eta <- X %*% temp
+      if(switch){ # add this!
       # Use simple linear/logistic/Poisson regression of y on eta, and extract fitted values. This should solve the scaling issue. => But be aware of negative coefficients!
-      glm <- stats::glm(y~eta,family=family)
-      #coefs[i,] <- stats::coef(glm) # original
-      temp <- stats::coef(glm)
-      coefs[i,1] <- temp["(Intercept)"] # trial
-      coefs[i,2] <- ifelse(is.na(temp["eta"]),0,temp["eta"]) # trial
-      pred[,i] <- stats::fitted(glm)
+        glm <- stats::glm(y~eta,family=family)
+        temp <- stats::coef(glm)
+        coefs[i,1] <- temp["(Intercept)"]
+        coefs[i,2] <- ifelse(is.na(temp["eta"]),0,temp["eta"])
+        pred[,i] <- stats::fitted(glm)
+      } else { # add this!
+        glmnet <- glmnet::glmnet(x=cbind(1,eta),y=y,lambda=0,lower.limits=0,intercept=TRUE)
+        temp <- stats::coef(glmnet)
+        coef[i,1] <- temp["(Intercept)",]
+        coef[i,2] <- ifelse(is.na(temp["eta",]),0,temp["eta",])
+        pred[,i] <- stats::predict(glmnet,newx=cbind(1,eta))
+      }
+      }
     }
     #cvm <- palasso:::.loss(y=y,fit=pred,family=family,type.measure="deviance")[[1]]
     # replace this by starnet:::.loss
