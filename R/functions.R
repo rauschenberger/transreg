@@ -146,7 +146,7 @@
 #' plot(x=coef(sta$base)[-1],y=coef(sta)$beta)
 #' plot(x=coef(sim$base)[-1],y=coef(sim)$beta)
 #' 
-transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,scale="iso",stack="sim",sign=FALSE,switch=TRUE,select=TRUE,diffpen=FALSE,track=FALSE){
+transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,scale="iso",stack="sim",sign=FALSE,switch=FALSE,select=TRUE,diffpen=FALSE,track=FALSE){
   
   #if(sink){
   #  temp <- file("temp.txt",open="wt")
@@ -154,7 +154,7 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   #  sink(temp,type="message")
   #}
   
-  # family <- "gaussian"; alpha <- 1; foldid <- NULL; nfolds <- 10; scale <- "exp"; sign <- FALSE; switch <- TRUE; select <- TRUE
+  # family <- "gaussian"; alpha <- 1; foldid <- NULL; nfolds <- 10; scale <- "exp"; sign <- FALSE; switch <- FALSE; select <- TRUE
   
   if(FALSE){
     if(!exists("family")){family <- "gaussian"}
@@ -163,7 +163,7 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
     if(!exists("nfolds")){nfolds <- 10}
     if(!exists("scale")){scale <- "iso"}
     if(!exists("sign")){sign <- FALSE}
-    if(!exists("switch")){switch <- TRUE}
+    if(!exists("switch")){switch <- FALSE}
     if(!exists("select")){select <- TRUE}
     if(!exists("diffpen")){diffpen <- FALSE}
     scale <- "com"; select <- switch <- sign <- FALSE
@@ -176,7 +176,7 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   if(all(y %in% c(0,1)) != (family=="binomial")){stop("Check 'family' of 'y'.")}
   if(length(y)!=nrow(X)){stop("Entries in 'y' must match rows in 'X'.")}
   if(ncol(X)!=nrow(prior)){stop("Columns in 'X' must match rows in 'prior'.")}
-  if(scale=="exp" & !switch){warning("Ignoring 'switch=FALSE'.")}
+  #if(scale=="exp" & !switch){warning("Ignoring 'switch=FALSE'.")}
   if(all(prior>=0) & !sign){warning("Consider sign discovery procedure.")}
   
   #if(is.null(foldid)){
@@ -205,15 +205,15 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   }
   base$z <- prior.ext
   if(scale=="exp"){
-    prior.ext <- .exp.multiple(y=y,X=X,prior=prior.ext,family=family,select=select,switch=switch,track=track)
+    prior.ext <- .exp.multiple(y=y,X=X,prior=prior.ext,family=family,switch=switch,select=select,track=track)
   } else if(scale=="iso"){
-    prior.ext <- .iso.multiple(y=y,X=X,prior=prior.ext,family=family,select=select,switch=switch,track=track)
+    prior.ext <- .iso.multiple(y=y,X=X,prior=prior.ext,family=family,switch=switch,select=select,track=track)
   } else if(scale=="sam"){
     stop("not available")
-    #prior.ext <- .sam.multiple(y=y,X=X,prior=prior.ext,family=family,select=select,switch=switch,base=base)
+    #prior.ext <- .sam.multiple(y=y,X=X,prior=prior.ext,family=family,switch=switch,select=select,base=base)
   } else if(scale=="com"){
     stop("not available")
-    #prior.ext <- .com.multiple(y=y,X=X,prior=prior.ext,family=family,select=select,switch=switch)
+    #prior.ext <- .com.multiple(y=y,X=X,prior=prior.ext,family=family,switch=switchselect=select,)
     #k <- ncol(prior.ext$beta)
   } else {
     stop("Invalid scale.",call.=FALSE)
@@ -246,15 +246,15 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
       #prior.int[prior.ext<0] <- -prior.int[prior.ext<0] # temporary
     }
     if(scale=="exp"){
-      prior.int <- .exp.multiple(y=y0,X=X0,prior=prior.int,family=family,select=select,switch=switch,track=track)
+      prior.int <- .exp.multiple(y=y0,X=X0,prior=prior.int,family=family,switch=switch,select=select,track=track)
     } else if(scale=="iso"){
-      prior.int <- .iso.multiple(y=y0,X=X0,prior=prior.int,family=family,select=select,switch=switch,track=track)
+      prior.int <- .iso.multiple(y=y0,X=X0,prior=prior.int,family=family,switch=switch,select=select,track=track)
     } else if(scale=="sam"){
       stop("not available")
-      #prior.int <- .sam.multiple(y=y0,X=X0,prior=prior.int,family=family,select=select,switch=switch,base=base)
+      #prior.int <- .sam.multiple(y=y0,X=X0,prior=prior.int,family=family,switch=switch,select=select,base=base)
     } else if(scale=="com"){
       stop("not available")
-      #prior.int <- .com.multiple(y=y0,X=X0,prior=prior.int,family=family,select=select,switch=switch)
+      #prior.int <- .com.multiple(y=y0,X=X0,prior=prior.int,family=family,switch=switch,select=select)
       #k <- ncol(prior.int$beta)
     } else {
       stop("Invalid scale.",call.=FALSE)
@@ -601,7 +601,7 @@ coef.transreg <- function(object,stack=NULL,...){
 NULL
 
 #' @describeIn calibrate called by `transreg` if `scale="exp"`
-.exp.multiple <- function(y,X,prior,family,select,switch=TRUE,track=FALSE){
+.exp.multiple <- function(y,X,prior,family,switch=FALSE,select=TRUE,track=FALSE){
   
   n <- nrow(X); p <- ncol(X); k <- ncol(prior)
   
@@ -683,7 +683,7 @@ NULL
 # and then decide which one to run first and which one to run second
 # (i.e. only if the first one fits poorly).
 #' @describeIn calibrate called by `transreg` if `scale="iso"`
-.iso.multiple <- function(y,X,prior,family,select=TRUE,switch=TRUE,track=FALSE){
+.iso.multiple <- function(y,X,prior,family,switch=FALSE,select=TRUE,track=FALSE){
   
   k <- ncol(prior)
   
@@ -873,7 +873,7 @@ NULL
   return(list(alpha=ALPHA,beta=BETA))
 }
 
-# .sam.multiple <- function(y,X,prior,family,select=TRUE,switch=TRUE,base){
+# .sam.multiple <- function(y,X,prior,family,switch=FALSE,select=TRUE,base){
 # 
 #   #if(!is.null(base)){
 #   #  stop("Implement this.")
@@ -936,7 +936,7 @@ NULL
 # 
 # # combining based on the lowest residuals makes no sense as isotonic calibration
 # # will always get closer to the observed values than exponential calibration
-# .com.multiple <- function(y,X,prior,family,select=FALSE,switch=FALSE,track=FALSE){
+# .com.multiple <- function(y,X,prior,family,switch=FALSE,select=FALSE,track=FALSE){
 #   if(select){warning("Argument select not implemented.")}
 #   n <- length(y); p <- ncol(X); q <- ncol(prior)
 #   alpha <- numeric() # rep(NA,times=q)
@@ -1038,7 +1038,7 @@ NULL
 #' \dontrun{
 #' object <- transreg:::compare(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0)}
 #' 
-compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso",sign=FALSE,select=TRUE,switch=TRUE,foldid.ext=NULL,nfolds.ext=10,foldid.int=NULL,nfolds.int=10,type.measure="deviance",alpha.prior=NULL,partitions=NULL,monotone=NULL,naive=TRUE,diffpen=FALSE,seed=NULL){
+compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso",sign=FALSE,switch=FALSE,select=TRUE,foldid.ext=NULL,nfolds.ext=10,foldid.int=NULL,nfolds.int=10,type.measure="deviance",alpha.prior=NULL,partitions=NULL,monotone=NULL,naive=TRUE,diffpen=FALSE,seed=NULL){
   
   if(FALSE){
     if(!exists("source")){source <- NULL}
