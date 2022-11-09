@@ -629,9 +629,9 @@ NULL
         coefs[i,2] <- ifelse(is.na(temp["eta"]),0,temp["eta"])
         pred[,i] <- stats::fitted(glm)
       } else { # add this!
-        glmnet <- glmnet::glmnet(x=cbind(1,eta),y=y,family=family,lambda=0,lower.limits=0,intercept=TRUE)
-        temp <- stats::coef(glmnet)
-        #temp <- glmnet::coef.glmnet(glmnet)
+        glmnet <- glmnet::glmnet(x=cbind(0,eta),y=y,family=family,lambda=0,lower.limits=0,intercept=TRUE)
+        #temp <- stats::coef(glmnet)
+        temp <- glmnet::coef.glmnet(glmnet)
         coefs[i,1] <- temp["(Intercept)","s0"]
         coefs[i,2] <- ifelse(is.na(temp["V2","s0"]),0,temp["V2","s0"])
         pred[,i] <- stats::predict(glmnet,newx=cbind(1,eta))
