@@ -15,7 +15,7 @@ transreg(
   scale = "iso",
   stack = "sim",
   sign = FALSE,
-  switch = TRUE,
+  switch = FALSE,
   select = TRUE,
   diffpen = FALSE,
   track = FALSE

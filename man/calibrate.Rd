@@ -8,9 +8,25 @@
 \alias{.iso.slow.single}
 \title{Internal functions}
 \usage{
-.exp.multiple(y, X, prior, family, select, switch = TRUE, track = FALSE)
+.exp.multiple(
+  y,
+  X,
+  prior,
+  family,
+  switch = FALSE,
+  select = TRUE,
+  track = FALSE
+)
 
-.iso.multiple(y, X, prior, family, select = TRUE, switch = TRUE, track = FALSE)
+.iso.multiple(
+  y,
+  X,
+  prior,
+  family,
+  switch = FALSE,
+  select = TRUE,
+  track = FALSE
+)
 
 .iso.fast.single(y, X, prior, family)
 
@@ -29,9 +45,9 @@ and \eqn{k} columns (sources of co-data)}
 "binomial" (\eqn{y}: 0s and 1s),
 or "poisson" (\eqn{y}: non-negative integers);}
 
-\item{select}{select from sources: logical}
-
 \item{switch}{choose between positive and negative weights for each source: logical}
+
+\item{select}{select from sources: logical}
 
 \item{track}{show intermediate output (messages and plots): logical}
 }

@@ -54,9 +54,25 @@ exponential and isotonic calibration.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">.exp.multiple</span><span class="op">(</span><span class="va">y</span>, <span class="va">X</span>, <span class="va">prior</span>, <span class="va">family</span>, <span class="va">select</span>, switch <span class="op">=</span> <span class="cn">TRUE</span>, track <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">.exp.multiple</span><span class="op">(</span></span>
+<span>  <span class="va">y</span>,</span>
+<span>  <span class="va">X</span>,</span>
+<span>  <span class="va">prior</span>,</span>
+<span>  <span class="va">family</span>,</span>
+<span>  switch <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  select <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  track <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">.iso.multiple</span><span class="op">(</span><span class="va">y</span>, <span class="va">X</span>, <span class="va">prior</span>, <span class="va">family</span>, select <span class="op">=</span> <span class="cn">TRUE</span>, switch <span class="op">=</span> <span class="cn">TRUE</span>, track <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu">.iso.multiple</span><span class="op">(</span></span>
+<span>  <span class="va">y</span>,</span>
+<span>  <span class="va">X</span>,</span>
+<span>  <span class="va">prior</span>,</span>
+<span>  <span class="va">family</span>,</span>
+<span>  switch <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  select <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  track <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">.iso.fast.single</span><span class="op">(</span><span class="va">y</span>, <span class="va">X</span>, <span class="va">prior</span>, <span class="va">family</span><span class="op">)</span></span>
 <span></span>
@@ -85,12 +101,12 @@ and \(k\) columns (sources of co-data)</p></dd>
 or "poisson" (\(y\): non-negative integers);</p></dd>
 
 
-<dt>select</dt>
-<dd><p>select from sources: logical</p></dd>
-
-
 <dt>switch</dt>
 <dd><p>choose between positive and negative weights for each source: logical</p></dd>
+
+
+<dt>select</dt>
+<dd><p>select from sources: logical</p></dd>
 
 
 <dt>track</dt>

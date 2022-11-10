@@ -74,7 +74,7 @@ for(scale in c("exp","iso")){
     
     for(i in seq_along(prior)){
       set.seed(2)
-      object[[i]] <- transreg(y=y,X=X,prior=prior[[i]],family=family,scale=scale,stack=stack)
+      object[[i]] <- transreg(y=y,X=X,prior=prior[[i]],family=family,scale=scale,stack=stack,switch=TRUE)
       pred[[i]] <- predict(object[[i]],newx=X)
     }
     

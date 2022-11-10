@@ -13,8 +13,8 @@ compare(
   alpha,
   scale = "iso",
   sign = FALSE,
+  switch = FALSE,
   select = TRUE,
-  switch = TRUE,
   foldid.ext = NULL,
   nfolds.ext = 10,
   foldid.int = NULL,
@@ -52,9 +52,9 @@ number between 0 and 1}
 \item{sign}{sign discovery procedure: logical
 (experimental argument)}
 
-\item{select}{select from sources: logical}
-
 \item{switch}{choose between positive and negative weights for each source: logical}
+
+\item{select}{select from sources: logical}
 
 \item{foldid.ext}{external fold identifiers}
 
