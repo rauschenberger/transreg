@@ -1198,6 +1198,7 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
   temp <- paste0(rep(c("transreg.","transreg."),each=length(scale)),scale,rep(c(".sta",".sim"),each=length(scale)))
   names <- c("mean","glmnet","glmtrans"[!is.null(source)],temp,"GRridge"[trial],"NoGroups"[trial],"fwelnet"[trial2],"xtune"[trial2],"CoRF"[trial2],"ecpc"[trial2],"naive"[naive]) # "transreg.test"
   pred <- matrix(data=NA,nrow=length(target$y),ncol=length(names),dimnames=list(NULL,names))
+  coef <- sapply(names,function(x) matrix(data=NA,nrow=p,ncol=nfolds.ext),simplify=FALSE)
   time <- rep(0,time=length(names)); names(time) <- names
   
   for(i in seq_len(nfolds.ext)){
@@ -1219,6 +1220,7 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
     if(!is.null(seed)){set.seed(seed)}
     start <- Sys.time()
     pred[foldid.ext==i,"mean"] <- rep(mean(y0),times=sum(foldid.ext==i))
+    coef$mean[,i] <- rep(0,times=p)
     end <- Sys.time()
     time["mean"] <- time["mean"]+difftime(time1=end,time2=end,units="secs")
     
@@ -1226,8 +1228,9 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
     if(!is.null(seed)){set.seed(seed)}
     start <- Sys.time()
     object <- glmnet::cv.glmnet(y=y0,x=X0,family=family,foldid=foldid,alpha=alpha)
-    pred[foldid.ext==i,"glmnet"] <- as.numeric(stats::predict(object,newx=X1,s="lambda.min",type="response"))
     end <- Sys.time()
+    pred[foldid.ext==i,"glmnet"] <- as.numeric(stats::predict(object,newx=X1,s="lambda.min",type="response"))
+    coef$glmnet[,i] <- coef(object,s="lambda.min")[-1]
     time["glmnet"] <-  time["glmnet"]+difftime(time1=end,time2=start,units="secs")
     
     # glmtrans
@@ -1235,10 +1238,11 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
       if(!is.null(seed)){set.seed(seed)}
       start <- Sys.time()
       object <- tryCatch(glmtrans::glmtrans(target=list(x=X0,y=y0),source=source,alpha=alpha,family=family,nfolds=nfolds.int),error=function(x) NULL)
+      end <- Sys.time()
       if(!is.null(object)){
         pred[foldid.ext==i,"glmtrans"] <- stats::predict(object,newx=X1,type="response")
+        coef$glmtrans[,i] <- fit$beta[-1]
       }
-      end <- Sys.time()
       time["glmtrans"] <-  time["glmtrans"]+difftime(time1=end,time2=start,units="secs")
     }
     
@@ -1247,16 +1251,19 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
       if(!is.null(seed)){set.seed(seed)}
       start <- Sys.time()
       object <- transreg(y=y0,X=X0,prior=prior,family=family,foldid=foldid,alpha=alpha,scale=scale[j],stack=c("sta","sim"),sign=sign,switch=switch,select=select,diffpen=diffpen)
-      pred[foldid.ext==i,paste0("transreg.",scale[j],".sta")] <- .predict.sta(object,newx=X1)
       end <- Sys.time()
+      pred[foldid.ext==i,paste0("transreg.",scale[j],".sta")] <- .predict.sta(object,newx=X1)
+      pred[foldid.ext==i,paste0("transreg.",scale[j],".sim")] <- .predict.sim(object,newx=X1)
+      coef[[paste0("transreg.",scale[j],".sta")]][,i] <- coef(object,stack="sta")$beta
+      coef[[paste0("transreg.",scale[j],".sim")]][,i] <- coef(object,stack="sim")$beta
       time["transreg"] <- time["transreg"]+difftime(time1=end,time2=start,units="secs")
       # transreg trial
-      if(diffpen){
-        stop("not available")
-        #pred[foldid.ext==i,paste0("transreg.",scale[j],".sim")] <- .predict.test(object,newx=X1)
-      } else {
-        pred[foldid.ext==i,paste0("transreg.",scale[j],".sim")] <- .predict.sim(object,newx=X1)
-      }
+      #if(diffpen){
+      #  stop("not available")
+      #  #pred[foldid.ext==i,paste0("transreg.",scale[j],".sim")] <- .predict.test(object,newx=X1)
+      #} else {
+      #  pred[foldid.ext==i,paste0("transreg.",scale[j],".sim")] <- .predict.sim(object,newx=X1)
+      #}
     }
     
     # naive
@@ -1264,8 +1271,9 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
       if(!is.null(seed)){set.seed(seed)}
       start <- Sys.time()
       glm <- stats::glm(formula=y0 ~ .,family=family,data=data.frame(x=X0 %*% prior)) # was y~x
-      pred[foldid.ext==i,"naive"] <- stats::predict(glm,newdata=data.frame(x=X1 %*% prior),type="response")
       end <- Sys.time()
+      pred[foldid.ext==i,"naive"] <- stats::predict(glm,newdata=data.frame(x=X1 %*% prior),type="response")
+      coef$naive[,i] <- coef(glm)["x"]*prior
       time["naive"] <- time["naive"] + difftime(time1=end,time2=start,units="secs")
     }
     
@@ -1301,10 +1309,11 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
       start <- Sys.time()
       #if(is.vector(z)){z <- as.matrix(z,ncol=1)}
       object <- tryCatch(fwelnet::cv.fwelnet(x=X0,y=y0,z=z,family=family,foldid=foldid,alpha=alpha),error=function(x) NULL)
+      end <- Sys.time()
       if(!is.null(object)){
         pred[foldid.ext==i,"fwelnet"] <- stats::predict(object,xnew=X1,s="lambda.min",type="response")
+        coef$fwelnet[,i] <- object$glmfit$beta[,which.min(object$cvm)]
       }
-      end <- Sys.time()
       time["fwelnet"] <- time["fwelnet"]+difftime(time1=end,time2=start,units="secs")
 
       # ecpc - default
@@ -1326,11 +1335,12 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
         co.C[[name]] <- ecpc::createCon(G=ncol(co.Z[[name]]),shape="positive+monotone.i")
       }
       object <- tryCatch(ecpc::ecpc(Y=y0,X=X0,Z=co.Z,paraPen=co.S,paraCon=co.C,X2=X1,fold=nfolds.int),error=function(x) NULL)
+      end <- Sys.time()
       #--- splines end ---
       if(!is.null(object)){
         pred[foldid.ext==i,"ecpc"] <- object$Ypred
+        coef$ecpc[,i] <- coef(object)$beta
       }
-      end <- Sys.time()
       time["ecpc"] <- time["ecpc"]+difftime(time1=end,time2=start,units="secs")
       
       # # xtune
@@ -1393,9 +1403,13 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
   #  
   #}
 
-  attributes(loss)$time <- time
+  #attributes(loss)$time <- time
+  #attributes(loss)$coef <- coef
+  list <- loss
+  list$time <- time
+  list$coef <- coef
   
-  return(loss)
+  return(list)
 }
 
 #' @title
