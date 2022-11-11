@@ -1241,7 +1241,7 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
       end <- Sys.time()
       if(!is.null(object)){
         pred[foldid.ext==i,"glmtrans"] <- stats::predict(object,newx=X1,type="response")
-        coef$glmtrans[,i] <- fit$beta[-1]
+        coef$glmtrans[,i] <- object$beta[-1]
       }
       time["glmtrans"] <-  time["glmtrans"]+difftime(time1=end,time2=start,units="secs")
     }
