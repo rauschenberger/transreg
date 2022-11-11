@@ -37,7 +37,8 @@ Choose the directory containing the sub-directories "data", "results" and "manus
 
 ```{r init,eval=TRUE,echo=TRUE}
 rm(list=ls())
-dir <- "~/Desktop/transreg/"
+dir <- "~/Desktop/transreg" # physical machine
+#dir <- "/home/armin.rauschenberger/transreg" # virtual machine
 setwd(dir)
 if(!all(c("data","results","manuscript") %in% dir())){
  stop("Missing folders!") 
@@ -61,7 +62,7 @@ Generate figure for methods section.
 
 ```{r calibration,eval=TRUE,echo=TRUE}
 #<<init>>
-grDevices::pdf(file=paste0(dir,"manuscript/figure_example.pdf"),width=8,height=5,pointsize=15)
+grDevices::pdf(file=paste0(dir,"/manuscript/figure_example.pdf"),width=8,height=5,pointsize=15)
 
 set.seed(1)
 n <- 200; p <- 500
@@ -196,7 +197,7 @@ for(mode in c("ext","int")){
                           seed=frame$seed[iter])
       frame[iter,names(loss$deviance)] <- loss$deviance
     }
-    save(frame,file=paste0(dir,"results/sim_",mode,".RData")))
+    save(frame,file=paste0(dir,"/results/sim_",mode,".RData")))
 }
 writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
       sessioninfo::session_info()),con="results/info_sim.txt")
@@ -271,7 +272,7 @@ Generate \LaTeX\ tables for external and internal simulation. **Requires executi
 }
 
 for(mode in c("ext","int")){
-    file <- paste0(dir,"results/sim_",mode,".RData")
+    file <- paste0(dir,"/results/sim_",mode,".RData")
     if(!file.exists(file)){warning("Missing file ",file,".");next}
     load(file)
     cond <- colnames(frame) %in% c("Ka","h","rho.x","rho.beta","cor.x","cor.beta","cor.t","alpha","family")
@@ -287,7 +288,7 @@ for(mode in c("ext","int")){
     external <- "number of transferable source data sets ($K_a$), differences between source and target coefficients ($h$), dense setting with ridge regularisation ($s=50$, $\\alpha=0$) or sparse setting with lasso regularisation ($s=15$, $\\alpha=1$), family of distribution (`gaussian' or `binomial')."
     internal <- "correlation \\textcolor{blue}{parameter for} features ($\\rho_x$), correlation \\textcolor{blue}{parameter for} coefficients ($\\rho_{\\beta}$), dense setting with ridge regularisation ($\\pi=\\textcolor{blue}{20}\\%$, $\\alpha=0$) or sparse setting with lasso regularisation ($\\pi=\\textcolor{blue}{5}\\%$, $\\alpha=1$), family of distribution (`gaussian' or `binomial')."
     caption <- paste0("Testing loss in ",mode,"ernal simulation\\textcolor{blue}{, as a percentage of the one from prediction by the mean}. Settings: ",ifelse(mode=="ext",external,ifelse(mode=="int",internal,NULL))," \\textcolor{blue}{These parameters determine (i) the average Pearson correlations among the features in the target data set ($\\bar{\\rho}_x$) and (ii) the maximum Pearson correlation between the coefficients in the target data set and the coefficients in the source data sets ($\\max(\\hat{\\rho}_{\\beta})$).} Methods: \\textcolor{blue}{\\sout{prediction by the mean,}} regularised regression (\\texttt{glmnet}), competing transfer learning method (\\texttt{glmtrans}), proposed transfer learning method (\\texttt{transreg}) with exponential/isotonic calibration and \\textcolor{blue}{standard}/\\textcolor{blue}{simultaneous} stacking. In each setting, the colour black highlights methods that are more predictive than \\textcolor{blue}{\\sout{prediction by the mean} regularised regression without transfer learning (\\texttt{glmnet})}, and an underline highlights the most predictive method. \\label{sim_",mode,"}")
-    .table(info=info,loss=loss,caption=caption,file=paste0(dir,"manuscript/table_",mode,".tex"))
+    .table(info=info,loss=loss,caption=caption,file=paste0(dir,"/manuscript/table_",mode,".tex"))
 }
 ```
 
@@ -312,11 +313,11 @@ for(i in 1:10){
   loss[[i]] <- transreg:::compare(target=target,prior=prior,z=as.matrix(z,ncol=1),
                                     family="binomial",alpha=0,scale=c("exp","iso"),sign=FALSE,switch=FALSE,select=FALSE,monotone=NULL,partitions=NULL,type.measure=c("deviance","class","auc"),seed=i)
 }
-save(loss,file=paste0(dir,"results/app_grridge.RData"))
+save(loss,file=paste0(dir,"/results/app_grridge.RData"))
 writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
       sessioninfo::session_info()),con="results/info_app_grridge.txt")
 
-load(paste0(dir,"results/app_grridge.RData"),verbose=TRUE)
+load(paste0(dir,"/results/app_grridge.RData"),verbose=TRUE)
 table <- as.data.frame(t(sapply(loss,function(x) x$deviance)))
 table <- (table-table$glmnet)/table$glmnet
 table <- table[,c("glmnet","transreg.exp.sta","transreg.exp.sim","transreg.iso.sta","transreg.iso.sim","fwelnet","ecpc")]
@@ -420,11 +421,11 @@ for(i in 1:10){
   
   loss[[i]] <- transreg:::compare(target=target,prior=prior,family="binomial",alpha=0,scale=c("exp","iso"),sign=FALSE,switch=FALSE,select=FALSE,z=z,type.measure=c("deviance","class","auc"),seed=i)
 }
-save(loss,file=paste0(dir,"results/app_fwelnet.RData"))
+save(loss,file=paste0(dir,"/results/app_fwelnet.RData"))
 writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
       sessioninfo::session_info()),con="results/info_app_fwelnet.txt")
 
-load(paste0(dir,"results/app_fwelnet0.RData"))
+load(paste0(dir,"/results/app_fwelnet0.RData"))
 table <- as.data.frame(t(sapply(loss,function(x) x$deviance)))
 table <- (table-table$glmnet)/table$glmnet
 table <- table[,c("glmnet","transreg.exp.sta","transreg.exp.sim","transreg.iso.sta","transreg.iso.sim","fwelnet","ecpc")]
@@ -436,12 +437,12 @@ Generate figure for both external applications. **Requires execution of previous
 
 ```{r app_boxplots,eval=TRUE,echo=TRUE}
 
-grDevices::pdf(file=paste0(dir,"manuscript/figure_int.pdf"),width=8,height=6,pointsize=15)
+grDevices::pdf(file=paste0(dir,"/manuscript/figure_int.pdf"),width=8,height=6,pointsize=15)
 
 graphics::par(mfrow=c(2,1),mar=c(2.5,3.5,0.5,0.5))
 
 for(k in c("grridge0","fwelnet0")){
-  file <- paste0(dir,"results/app_",k,".RData")
+  file <- paste0(dir,"/results/app_",k,".RData")
   if(!file.exists(file)){plot.new();next}
   load(file)
   loss <- as.data.frame(t(sapply(loss,function(x) x$deviance)))
@@ -501,7 +502,7 @@ X <- X[names,]; y <- y[names]
 cor <- as.numeric(stats::cor(y,X))
 graphics::plot(x=prior,y=cor)
 
-save(y,X,prior,pvalue,switch,file=paste0(dir,"data/app_int_data.RData"))
+save(y,X,prior,pvalue,switch,file=paste0(dir,"/data/app_int_data.RData"))
 
 # descriptive statistics
 sum(p.adjust(pvalue,method="BH")<=0.05)
@@ -510,7 +511,7 @@ mean(pvalue<=0.05)
 dim(X)
 table(y)
 
-load(paste0(dir,"data/app_int_data.RData"))
+load(paste0(dir,"/data/app_int_data.RData"))
 power <- seq(from=-2,to=-10,by=-1)
 cutoff <- 5*10^power
 frame <- expand.grid(cutoff=cutoff,alpha=0:1,seed=1:10,count=NA)
@@ -524,7 +525,7 @@ for(i in seq_len(nrow(frame))){
   loss[[i]] <- transreg:::compare(target=list(y=y,x=X[,cond]),prior=prior[cond],family="binomial",alpha=frame$alpha[i],scale=c("exp","iso"),sign=FALSE,switch=FALSE,select=FALSE,foldid.ext=foldid$foldid.ext,foldid.int=foldid$foldid.int,type.measure=c("deviance","class","auc")) # was without foldid.int
   frame$count[i] <- sum(cond)
 }
-save(frame,loss,file=paste0(dir,"results/app_int.RData"))
+save(frame,loss,file=paste0(dir,"/results/app_int.RData"))
 writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
       sessioninfo::session_info()),con="results/info_app_int.txt")
 
@@ -536,9 +537,9 @@ Generate figure for internal application. **Requires execution of previous chunk
 
 ```{r prs_plot,eval=TRUE,echo=TRUE}
 #<<init>>
-grDevices::pdf(file=paste0(dir,"manuscript/figure_int.pdf"),width=8,height=6,pointsize=15)
+grDevices::pdf(file=paste0(dir,"/manuscript/figure_int.pdf"),width=8,height=6,pointsize=15)
 
-load(paste0(dir,"results/app_int.RData")) # TO DO: change this line
+load(paste0(dir,"/results/app_int.RData")) # TO DO: change this line
 frame <- frame[seq_along(loss),colnames(frame)!="seed"]
 loss <- as.data.frame(t(sapply(loss,function(x) x$auc))) # temporary AUC
 names(loss)[names(loss)=="prs"] <- "naive" # TO DO: delete this line

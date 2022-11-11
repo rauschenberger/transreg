@@ -1066,6 +1066,7 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
   
   if(!is.list(target)||is.null(names(target))){stop("Expect argument target as list with slots x and y.")}
   if(!any(names(target) %in% c("y","x"))){stop("Expect argument target as list with slots x and y.")}
+  p <- ncol(target$x)
   
   if(!is.null(source)){
   if(!is.list(source)){stop("Expect argument source as list of lists.")}
@@ -1146,7 +1147,6 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
     
     # prior
     k <- length(source)
-    p <- ncol(target$x)
     prior <- matrix(NA,nrow=p,ncol=k)
     for(i in seq_len(k)){
       #foldid.source <- palasso:::.folds(source[[i]]$y,nfolds=10)
