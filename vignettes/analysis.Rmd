@@ -49,7 +49,7 @@ Install missing R packages from CRAN and GitHub. Note that `ecpc` is and `transr
 
 ```{r pkgs,eval=FALSE,echo=TRUE}
 pkgs <- c("devtools","palasso","glmtrans","xtable")
-utils::install.packages(setdiff(pkgs,rownames(installed.packages())))  
+utils::install.packages(setdiff(pkgs,rownames(installed.packages())))
 pkgs <- c("kjytay/fwelnet","Mirrelijn/ecpc/Rpackage","rauschenberger/transreg")
 remotes::install_github(pkgs)
 rm(pkgs)
@@ -476,6 +476,7 @@ grDevices::dev.off()
 Perform internal application. **Execution time: several hours.**
 
 ```{r prs_script,eval=FALSE,echo=TRUE}
+#<<init>>
 geno <- read.table("data/vcf_with_pvalue.tab",header=TRUE)
 
 switch <- ifelse(geno$REF==geno$A1_gwas & geno$ALT==geno$A2_gwas,1,

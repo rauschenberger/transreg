@@ -1198,7 +1198,7 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
   temp <- paste0(rep(c("transreg.","transreg."),each=length(scale)),scale,rep(c(".sta",".sim"),each=length(scale)))
   names <- c("mean","glmnet","glmtrans"[!is.null(source)],temp,"GRridge"[trial],"NoGroups"[trial],"fwelnet"[trial2],"xtune"[trial2],"CoRF"[trial2],"ecpc"[trial2],"naive"[naive]) # "transreg.test"
   pred <- matrix(data=NA,nrow=length(target$y),ncol=length(names),dimnames=list(NULL,names))
-  coef <- sapply(names,function(x) matrix(data=NA,nrow=p,ncol=nfolds.ext),simplify=FALSE)
+  coef <- sapply(names,function(x) matrix(data=NA,nrow=ncol(target$x),ncol=nfolds.ext),simplify=FALSE)
   time <- rep(0,time=length(names)); names(time) <- names
   
   for(i in seq_len(nfolds.ext)){
