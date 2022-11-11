@@ -1408,6 +1408,7 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
   list <- loss
   list$time <- time
   list$coef <- coef
+  list$foldid <- foldid.ext
   
   return(list)
 }
