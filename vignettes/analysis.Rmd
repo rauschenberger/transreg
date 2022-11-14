@@ -3,8 +3,8 @@ title: 'Penalised regression with multiple sources of prior effects'
 subtitle: "$\\qquad \\qquad$ Armin Rauschenberger$~^{1,*}$ \\orcidlink{0000-0001-6498-4801}, Zied Landoulsi$~^{1}$ \\orcidlink{0000-0002-2327-3904}, \\newline Mark A. van de Wiel$~^{2,3,\\dagger}$ \\orcidlink{0000-0003-4780-8472}, Enrico Glaab$~^{1,\\dagger}$ \\orcidlink{0000-0003-3977-7469}"
 date: "`r format(Sys.time(),'%d %B %Y')`"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 editor_options:
   chunk_output_type: console
 header-includes:
@@ -21,8 +21,8 @@ header-includes:
  - \newcommand{\cran}[1]{\href{https://CRAN.R-project.org/package=#1}{\texttt{#1}}}
 vignette: >
   %\VignetteIndexEntry{vignette}
-  %\VignetteEngine{knitr::knitr}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::knitr}
 ---
 
 ## Initialisation
@@ -200,7 +200,7 @@ for(mode in c("ext","int")){
     save(frame,file=paste0(dir,"/results/sim_",mode,".RData")))
 }
 writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
-      sessioninfo::session_info()),con="results/info_sim.txt")
+      sessioninfo::session_info()),con=paste0(dir,"/results/info_sim.txt"))
 
 #colMeans(frame[,paste0("transreg.",c("exp","iso"),".sta")],na.rm=TRUE)
 #colMeans(frame[,paste0("transreg.",c("exp","iso"),".sim")],na.rm=TRUE)
@@ -315,7 +315,7 @@ for(i in 1:10){
 }
 save(loss,file=paste0(dir,"/results/app_grridge.RData"))
 writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
-      sessioninfo::session_info()),con="results/info_app_grridge.txt")
+      sessioninfo::session_info()),con=paste0(dir,"/results/info_app_grridge.txt"))
 
 load(paste0(dir,"/results/app_grridge.RData"),verbose=TRUE)
 table <- as.data.frame(t(sapply(loss,function(x) x$deviance)))
@@ -423,9 +423,9 @@ for(i in 1:10){
 }
 save(loss,file=paste0(dir,"/results/app_fwelnet.RData"))
 writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
-      sessioninfo::session_info()),con="results/info_app_fwelnet.txt")
+      sessioninfo::session_info()),con=paste0(dir,"/results/info_app_fwelnet.txt"))
 
-load(paste0(dir,"/results/app_fwelnet0.RData"))
+load(paste0(dir,"/results/app_fwelnet.RData"))
 table <- as.data.frame(t(sapply(loss,function(x) x$deviance)))
 table <- (table-table$glmnet)/table$glmnet
 table <- table[,c("glmnet","transreg.exp.sta","transreg.exp.sim","transreg.iso.sta","transreg.iso.sim","fwelnet","ecpc")]
@@ -437,11 +437,11 @@ Generate figure for both external applications. **Requires execution of previous
 
 ```{r app_boxplots,eval=TRUE,echo=TRUE}
 
-grDevices::pdf(file=paste0(dir,"/manuscript/figure_int.pdf"),width=8,height=6,pointsize=15)
+grDevices::pdf(file=paste0(dir,"/manuscript/figure_ext.pdf"),width=8,height=6,pointsize=15)
 
 graphics::par(mfrow=c(2,1),mar=c(2.5,3.5,0.5,0.5))
 
-for(k in c("grridge0","fwelnet0")){
+for(k in c("grridge","fwelnet")){
   file <- paste0(dir,"/results/app_",k,".RData")
   if(!file.exists(file)){plot.new();next}
   load(file)
@@ -527,7 +527,7 @@ for(i in seq_len(nrow(frame))){
 }
 save(frame,loss,file=paste0(dir,"/results/app_int.RData"))
 writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
-      sessioninfo::session_info()),con="results/info_app_int.txt")
+      sessioninfo::session_info()),con=paste0(dir,"/results/info_app_int.txt"))
 
 # use repeated 10-fold CV (TO DO)
 # modify function cv.transfer so that it accepts named list with "y and X" (not only "y and x") (TO DO)
@@ -542,7 +542,7 @@ grDevices::pdf(file=paste0(dir,"/manuscript/figure_int.pdf"),width=8,height=6,po
 load(paste0(dir,"/results/app_int.RData")) # TO DO: change this line
 frame <- frame[seq_along(loss),colnames(frame)!="seed"]
 loss <- as.data.frame(t(sapply(loss,function(x) x$auc))) # temporary AUC
-names(loss)[names(loss)=="prs"] <- "naive" # TO DO: delete this line
+#names(loss)[names(loss)=="prs"] <- "naive" # TO DO: delete this line
 
 table <- lapply(loss,function(x) tapply(X=x,INDEX=list(frame$cutoff,frame$alpha),FUN=function(x) mean(x)))
 
@@ -564,9 +564,9 @@ for(scale in c("exp","iso")){
     #graphics::abline(h=unique(table[["mean"]][,alpha]),col="grey",lty=2)
     graphics::abline(h=0.5,col="grey",lty=2)
     for(i in 1:3){
-    for(method in c("glmnet",paste0("transreg_",scale,c("_lp","_mf")),"naive")){
-      lty <- switch(method,"mean"=1,"glmnet"=1,"transreg_exp_lp"=2,"transreg_exp_mf"=2,"transreg_iso_lp"=2,"transreg_iso_mf"=2,"naive"=3)
-      col <- switch(method,"mean"="grey","glmnet"="black","transreg_exp_lp"=rgb(0.2,0.2,1),"transreg_iso_lp"=rgb(0.2,0.2,1),"transreg_exp_mf"=rgb(0,0,0.6),"transreg_iso_mf"=rgb(0,0,0.6),"naive"="red")
+    for(method in c("glmnet",paste0("transreg.",scale,c(".sta",".sim")),"naive")){
+      lty <- switch(method,"mean"=1,"glmnet"=1,"transreg.exp.sta"=2,"transreg.exp.sim"=2,"transreg.iso.sta"=2,"transreg.iso.sim"=2,"naive"=3)
+      col <- switch(method,"mean"="grey","glmnet"="black","transreg.exp.sta"=rgb(0.2,0.2,1),"transreg.iso.sta"=rgb(0.2,0.2,1),"transreg.exp.sim"=rgb(0,0,0.6),"transreg.iso.sim"=rgb(0,0,0.6),"naive"="red")
       y <- table[[method]][,alpha]
       x <- log(as.numeric(names(y)))
       #cond <- x >= log(5e-08)
@@ -631,7 +631,7 @@ paste(paste0("$^{",number,"}$",name),collapse=", ")
 
 Print session information.
 
-```{r sessionInfo,results="asis"}
+```{r sessionInfo,eval=TRUE,echo=TRUE,results="asis"}
 utils::toLatex(utils::sessionInfo())
 ```
 

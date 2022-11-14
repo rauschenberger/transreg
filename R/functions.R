@@ -1273,7 +1273,8 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
       glm <- stats::glm(formula=y0 ~ .,family=family,data=data.frame(x=X0 %*% prior)) # was y~x
       end <- Sys.time()
       pred[foldid.ext==i,"naive"] <- stats::predict(glm,newdata=data.frame(x=X1 %*% prior),type="response")
-      coef$naive[,i] <- coef(glm)["x"]*prior
+      #print(coef(glm))
+      #coef$naive[,i] <- coef(glm)["x"]*prior
       time["naive"] <- time["naive"] + difftime(time1=end,time2=start,units="secs")
     }
     
