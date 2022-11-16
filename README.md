@@ -21,11 +21,12 @@ Install the current release from
 #install.packages("transreg") # not yet released!
 ```
 
-or the latest development version from
+or the latest development version from [GitLab](https://gitlab.lcsb.uni.lu/bds/transreg) or
 [GitHub](https://github.com/rauschenberger/transreg):
 
 ``` r
 #install.packages("remotes")
+remotes::install_gitlab("bds/cornet",host="gitlab.lcsb.uni.lu")
 remotes::install_github("rauschenberger/transreg")
 ```
 
