@@ -47,6 +47,8 @@
 #' (experimental argument)
 #' @param track
 #' show intermediate output (messages and plots): logical
+#' @param parallel
+#' logical (see cv.glmnet)
 #'
 #' @details
 #' * \eqn{n}: sample size
@@ -146,7 +148,7 @@
 #' plot(x=coef(sta$base)[-1],y=coef(sta)$beta)
 #' plot(x=coef(sim$base)[-1],y=coef(sim)$beta)
 #' 
-transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,scale="iso",stack="sim",sign=FALSE,switch=FALSE,select=TRUE,diffpen=FALSE,track=FALSE){
+transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,scale="iso",stack="sim",sign=FALSE,switch=FALSE,select=TRUE,diffpen=FALSE,track=FALSE,parallel=FALSE){
   
   #if(sink){
   #  temp <- file("temp.txt",open="wt")
@@ -192,7 +194,7 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   n <- nrow(X); p <- ncol(X)
   k <- ncol(prior)
   
-  base <- glmnet::cv.glmnet(y=y,x=X,family=family,alpha=alpha,nlambda=100,keep=TRUE,foldid=foldid)
+  base <- glmnet::cv.glmnet(y=y,x=X,family=family,alpha=alpha,nlambda=100,keep=TRUE,foldid=foldid,parallel=cores>1)
   
   #full <- glmnet::glmnet(y=y,x=X,family=family,alpha=alpha) # trial
   ##all(coef(base,s=base$lambda.min)==coef(full,s=base$lambda.min))
@@ -311,7 +313,7 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   
   #--- standard stacking ---
   if(any(stack=="sta")){
-     meta.sta <- glmnet::cv.glmnet(y=y,x=y_hat,foldid=foldid,alpha=1,family=family,lower.limits=0)
+     meta.sta <- glmnet::cv.glmnet(y=y,x=y_hat,foldid=foldid,alpha=1,family=family,lower.limits=0,parallel=cores>1)
   } else {
      meta.sta <- NULL
   }
@@ -320,7 +322,8 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   if(any(stack=="sim")){
      meta.sim <- glmnet::cv.glmnet(y=y,x=cbind(y_hat[,1:k],X),alpha=alpha,family=family,
                                lower.limits=rep(c(0,-Inf),times=c(k,p)),
-                               penalty.factor=rep(c(0,1),times=c(k,p)),foldid=foldid)
+                               penalty.factor=rep(c(0,1),times=c(k,p)),foldid=foldid,
+                               parallel=cores>1)
   } else {
      meta.sim <- NULL
   }
@@ -1023,6 +1026,9 @@ NULL
 #' compare with naive transfer learning: logical
 #' @param seed
 #' random seed
+#' @param cores
+#' number of cores for parallel computing
+#' (requires R package `doMC`)
 #' 
 #' @seealso 
 #' [transreg()]
@@ -1038,7 +1044,7 @@ NULL
 #' \dontrun{
 #' object <- transreg:::compare(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0)}
 #' 
-compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso",sign=FALSE,switch=FALSE,select=TRUE,foldid.ext=NULL,nfolds.ext=10,foldid.int=NULL,nfolds.int=10,type.measure="deviance",alpha.prior=NULL,partitions=NULL,monotone=NULL,naive=TRUE,diffpen=FALSE,seed=NULL){
+compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso",sign=FALSE,switch=FALSE,select=TRUE,foldid.ext=NULL,nfolds.ext=10,foldid.int=NULL,nfolds.int=10,type.measure="deviance",alpha.prior=NULL,partitions=NULL,monotone=NULL,naive=TRUE,diffpen=FALSE,seed=NULL,cores=1){
   
   if(FALSE){
     if(!exists("source")){source <- NULL}
@@ -1054,6 +1060,10 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
     if(!exists("monotone")){monotone <- NULL}
     if(!exists("naive")){naive <- FALSE}
     if(!exists("diffpen")){diffpen <- FALSE}
+  }
+  
+  if(cores>1){
+    doMC::registerDoMC(cores=cores)
   }
   
   if(!is.null(z) && any(z<0)){
@@ -1165,7 +1175,7 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
           stop("Implement correlation test!",call.=FALSE)
         }
       } else {
-        object <- glmnet::cv.glmnet(y=source[[i]]$y,x=source[[i]]$x,family=family,alpha=alpha.prior,foldid=foldid.source) # was alpha=ifelse(alpha==1,0.95,alpha) # added scale()
+        object <- glmnet::cv.glmnet(y=source[[i]]$y,x=source[[i]]$x,family=family,alpha=alpha.prior,foldid=foldid.source,parallel=cores>1) # was alpha=ifelse(alpha==1,0.95,alpha) # added scale()
         # Why not always ridge regression for prior?
         prior[,i] <- as.numeric(stats::coef(object,s="lambda.min"))[-1]
       }
@@ -1227,7 +1237,7 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
     # glmnet
     if(!is.null(seed)){set.seed(seed)}
     start <- Sys.time()
-    object <- glmnet::cv.glmnet(y=y0,x=X0,family=family,foldid=foldid,alpha=alpha)
+    object <- glmnet::cv.glmnet(y=y0,x=X0,family=family,foldid=foldid,alpha=alpha,parallel=cores>1)
     end <- Sys.time()
     pred[foldid.ext==i,"glmnet"] <- as.numeric(stats::predict(object,newx=X1,s="lambda.min",type="response"))
     coef$glmnet[,i] <- coef(object,s="lambda.min")[-1]
@@ -1250,7 +1260,7 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
     for(j in seq_along(scale)){
       if(!is.null(seed)){set.seed(seed)}
       start <- Sys.time()
-      object <- transreg(y=y0,X=X0,prior=prior,family=family,foldid=foldid,alpha=alpha,scale=scale[j],stack=c("sta","sim"),sign=sign,switch=switch,select=select,diffpen=diffpen)
+      object <- transreg(y=y0,X=X0,prior=prior,family=family,foldid=foldid,alpha=alpha,scale=scale[j],stack=c("sta","sim"),sign=sign,switch=switch,select=select,diffpen=diffpen,parallel=cores>1)
       end <- Sys.time()
       pred[foldid.ext==i,paste0("transreg.",scale[j],".sta")] <- .predict.sta(object,newx=X1)
       pred[foldid.ext==i,paste0("transreg.",scale[j],".sim")] <- .predict.sim(object,newx=X1)
