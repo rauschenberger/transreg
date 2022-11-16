@@ -25,7 +25,8 @@ compare(
   monotone = NULL,
   naive = TRUE,
   diffpen = FALSE,
-  seed = NULL
+  seed = NULL,
+  cores = 1
 )
 }
 \arguments{
@@ -78,6 +79,9 @@ number between 0 and 1}
 (experimental argument)}
 
 \item{seed}{random seed}
+
+\item{cores}{number of cores for parallel computing
+(requires R package \code{doMC})}
 }
 \description{
 Function for reproducing hold-out method (simulation)

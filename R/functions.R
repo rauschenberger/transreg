@@ -194,7 +194,7 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   n <- nrow(X); p <- ncol(X)
   k <- ncol(prior)
   
-  base <- glmnet::cv.glmnet(y=y,x=X,family=family,alpha=alpha,nlambda=100,keep=TRUE,foldid=foldid,parallel=cores>1)
+  base <- glmnet::cv.glmnet(y=y,x=X,family=family,alpha=alpha,nlambda=100,keep=TRUE,foldid=foldid,parallel=parallel)
   
   #full <- glmnet::glmnet(y=y,x=X,family=family,alpha=alpha) # trial
   ##all(coef(base,s=base$lambda.min)==coef(full,s=base$lambda.min))
@@ -313,7 +313,7 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   
   #--- standard stacking ---
   if(any(stack=="sta")){
-     meta.sta <- glmnet::cv.glmnet(y=y,x=y_hat,foldid=foldid,alpha=1,family=family,lower.limits=0,parallel=cores>1)
+     meta.sta <- glmnet::cv.glmnet(y=y,x=y_hat,foldid=foldid,alpha=1,family=family,lower.limits=0,parallel=parallel)
   } else {
      meta.sta <- NULL
   }
@@ -323,7 +323,7 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
      meta.sim <- glmnet::cv.glmnet(y=y,x=cbind(y_hat[,1:k],X),alpha=alpha,family=family,
                                lower.limits=rep(c(0,-Inf),times=c(k,p)),
                                penalty.factor=rep(c(0,1),times=c(k,p)),foldid=foldid,
-                               parallel=cores>1)
+                               parallel=parallel)
   } else {
      meta.sim <- NULL
   }

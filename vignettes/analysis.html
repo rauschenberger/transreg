@@ -9,8 +9,9 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Armin Rauschenberger" />
 
-<meta name="date" content="2022-11-14" />
+<meta name="date" content="2022-11-16" />
 
 <title>Penalised regression with multiple sources of prior effects</title>
 
@@ -364,12 +365,8 @@ pre code {
 
 <h1 class="title toc-ignore">Penalised regression with multiple sources
 of prior effects</h1>
-<h3 class="subtitle"><span class="math inline">\(\qquad \qquad\)</span>
-Armin Rauschenberger<span class="math inline">\(~^{1,*}\)</span> , Zied
-Landoulsi<span class="math inline">\(~^{1}\)</span> , Mark A. van de
-Wiel<span class="math inline">\(~^{2,3,\dagger}\)</span> , Enrico
-Glaab<span class="math inline">\(~^{1,\dagger}\)</span> </h3>
-<h4 class="date">14 November 2022</h4>
+<h4 class="author">Armin Rauschenberger</h4>
+<h4 class="date">16 November 2022</h4>
 
 </div>
 
@@ -380,7 +377,7 @@ Glaab<span class="math inline">\(~^{1,\dagger}\)</span> </h3>
 and “manuscript”.</p>
 <ul>
 <li><p>The directory “data” should contain the file
-“data/pone.0181468.s001.csv” for the second external application and the
+“pone.0181468.s001.csv” for the second external application and the
 files “vcf_with_pvalue.tab” and “LuxPark_pheno.txt” for the internal
 application. It will also contain the file “app_int_data.RData” for the
 internal application.</p></li>
@@ -415,7 +412,12 @@ rm(pkgs)</code></pre>
 </div>
 <div id="methods" class="section level1">
 <h1>Methods</h1>
-<p>Generate figure for methods section.</p>
+<p>The following chunk generates the figure for the methods section.</p>
+<ul>
+<li><p>input: none (<em>simulating data</em>)</p></li>
+<li><p>execution time: some seconds</p></li>
+<li><p>output: manuscript/figure_example.pdf</p></li>
+</ul>
 <pre class="r"><code>#&lt;&lt;init&gt;&gt;
 grDevices::pdf(file=paste0(dir,&quot;/manuscript/figure_example.pdf&quot;),width=8,height=5,pointsize=15)
 
@@ -464,8 +466,14 @@ grDevices::dev.off()</code></pre>
 </div>
 <div id="simulations" class="section level1">
 <h1>Simulations</h1>
-<p>Perform internal and external simulation study. <strong>Execution
-time: several minutes.</strong></p>
+<p>The following chunk performs the external (<code>glmtrans</code>) and
+the internal simulation.</p>
+<ul>
+<li><p>input: none (<em>simulating data</em>)</p></li>
+<li><p>execution time: <strong>several minutes</strong></p></li>
+<li><p>output: results/sim_ext.RData, results/sim_int.RData,
+results/info_sim.RData</p></li>
+</ul>
 <pre class="r"><code>#&lt;&lt;init&gt;&gt;
 
 # - - - modify glmtrans::models function - - -
@@ -555,7 +563,7 @@ for(mode in c(&quot;ext&quot;,&quot;int&quot;)){
     save(frame,file=paste0(dir,&quot;/results/sim_&quot;,mode,&quot;.RData&quot;)))
 }
 writeLines(text=capture.output(utils::sessionInfo(),cat(&quot;\n&quot;),
-      sessioninfo::session_info()),con=&quot;results/info_sim.txt&quot;)
+      sessioninfo::session_info()),con=paste0(dir,&quot;/results/info_sim.txt&quot;))
 
 #colMeans(frame[,paste0(&quot;transreg.&quot;,c(&quot;exp&quot;,&quot;iso&quot;),&quot;.sta&quot;)],na.rm=TRUE)
 #colMeans(frame[,paste0(&quot;transreg.&quot;,c(&quot;exp&quot;,&quot;iso&quot;),&quot;.sim&quot;)],na.rm=TRUE)
@@ -569,8 +577,15 @@ writeLines(text=capture.output(utils::sessionInfo(),cat(&quot;\n&quot;),
 #cbind(frame$family,frame$alpha,frame$K,round(100*data,digits=0))
 #colMeans(data)
 #apply(data,2,median)</code></pre>
-<p>Generate  tables for external and internal simulation.
-<strong>Requires execution of previous chunk.</strong></p>
+<p>The following chunk generates the tables for the external
+(<code>glmtrans</code>) and the internal simulation. <strong>Requires
+execution of previous chunk.</strong></p>
+<ul>
+<li><p>input: results/sim_ext.RData, results/sim_int.RData</p></li>
+<li><p>execution time: some seconds</p></li>
+<li><p>output: manuscript/table_ext.tex,
+manuscript/table_int.tex</p></li>
+</ul>
 <pre class="r"><code>.table &lt;- function(loss,info=NULL,hline=NULL,pvalue=NULL,caption=&quot;&quot;,file=&quot;&quot;){
   loss[is.na(loss)] &lt;- Inf
   
@@ -645,8 +660,15 @@ for(mode in c(&quot;ext&quot;,&quot;int&quot;)){
 </div>
 <div id="external-applications" class="section level1">
 <h1>External applications</h1>
-<p>Perform first external application. <strong>Execution time: several
-minutes.</strong></p>
+<p>The following chunk performs the first external application
+(<code>GRridge</code>).</p>
+<ul>
+<li><p>input: none (<em>loading data from <code>GRridge</code>
+package</em>)</p></li>
+<li><p>execution time: <strong>several minutes</strong></p></li>
+<li><p>output: results/app_grridge.RData,
+results/info_app_grridge.txt</p></li>
+</ul>
 <pre class="r"><code>#&lt;&lt;init&gt;&gt;
 data(dataVerlaat,package=&quot;GRridge&quot;)
 
@@ -665,7 +687,7 @@ for(i in 1:10){
 }
 save(loss,file=paste0(dir,&quot;/results/app_grridge.RData&quot;))
 writeLines(text=capture.output(utils::sessionInfo(),cat(&quot;\n&quot;),
-      sessioninfo::session_info()),con=&quot;results/info_app_grridge.txt&quot;)
+      sessioninfo::session_info()),con=paste0(dir,&quot;/results/info_app_grridge.txt&quot;))
 
 load(paste0(dir,&quot;/results/app_grridge.RData&quot;),verbose=TRUE)
 table &lt;- as.data.frame(t(sapply(loss,function(x) x$deviance)))
@@ -673,8 +695,14 @@ table &lt;- (table-table$glmnet)/table$glmnet
 table &lt;- table[,c(&quot;glmnet&quot;,&quot;transreg.exp.sta&quot;,&quot;transreg.exp.sim&quot;,&quot;transreg.iso.sta&quot;,&quot;transreg.iso.sim&quot;,&quot;fwelnet&quot;,&quot;ecpc&quot;)]
 sapply(table[,-1],function(x) sum(x&lt;table$glmnet))
 round(100*colMeans(table[,-1]),digits=2)</code></pre>
-<p>Perform second external application. <strong>Execution time: several
-minutes.</strong></p>
+<p>The following chunk performs the second external application
+(<code>fwelnet</code>).</p>
+<ul>
+<li><p>input: data/pone.0181468.s001.csv</p></li>
+<li><p>execution time: <strong>several minutes</strong></p></li>
+<li><p>output: results/app_fwelnet.RData,
+results/info_app_fwelnet.txt</p></li>
+</ul>
 <pre class="r"><code>table &lt;- utils::read.csv(&quot;data/pone.0181468.s001.csv&quot;,header=TRUE,skip=3)
 
 extract &lt;- function(cond,y,X,id){
@@ -738,21 +766,28 @@ for(i in 1:10){
 }
 save(loss,file=paste0(dir,&quot;/results/app_fwelnet.RData&quot;))
 writeLines(text=capture.output(utils::sessionInfo(),cat(&quot;\n&quot;),
-      sessioninfo::session_info()),con=&quot;results/info_app_fwelnet.txt&quot;)
+      sessioninfo::session_info()),con=paste0(dir,&quot;/results/info_app_fwelnet.txt&quot;))
 
-load(paste0(dir,&quot;/results/app_fwelnet0.RData&quot;))
+load(paste0(dir,&quot;/results/app_fwelnet.RData&quot;))
 table &lt;- as.data.frame(t(sapply(loss,function(x) x$deviance)))
 table &lt;- (table-table$glmnet)/table$glmnet
 table &lt;- table[,c(&quot;glmnet&quot;,&quot;transreg.exp.sta&quot;,&quot;transreg.exp.sim&quot;,&quot;transreg.iso.sta&quot;,&quot;transreg.iso.sim&quot;,&quot;fwelnet&quot;,&quot;ecpc&quot;)]
 sapply(table[,-1],function(x) sum(x&lt;table$glmnet))
 round(100*colMeans(table[,-1]),digits=2)</code></pre>
-<p>Generate figure for both external applications. <strong>Requires
-execution of previous two chunks.</strong></p>
-<pre class="r"><code>grDevices::pdf(file=paste0(dir,&quot;/manuscript/figure_int.pdf&quot;),width=8,height=6,pointsize=15)
+<p>The following chunk generates the figure for both external
+applications (<code>GRridge</code> and <code>fwelnet</code>).
+<strong>Requires execution of previous two chunks.</strong></p>
+<ul>
+<li><p>input: results/app_grridge.RData,
+results/app_fwelnet.RData</p></li>
+<li><p>execution time: some seconds</p></li>
+<li><p>output: manuscript/figure_ext.pdf</p></li>
+</ul>
+<pre class="r"><code>grDevices::pdf(file=paste0(dir,&quot;/manuscript/figure_ext.pdf&quot;),width=8,height=6,pointsize=15)
 
 graphics::par(mfrow=c(2,1),mar=c(2.5,3.5,0.5,0.5))
 
-for(k in c(&quot;grridge0&quot;,&quot;fwelnet0&quot;)){
+for(k in c(&quot;grridge&quot;,&quot;fwelnet&quot;)){
   file &lt;- paste0(dir,&quot;/results/app_&quot;,k,&quot;.RData&quot;)
   if(!file.exists(file)){plot.new();next}
   load(file)
@@ -786,8 +821,13 @@ grDevices::dev.off()</code></pre>
 </div>
 <div id="internal-application" class="section level1">
 <h1>Internal application</h1>
-<p>Perform internal application. <strong>Execution time: several
-hours.</strong></p>
+<p>The following chunk perform the internal application.</p>
+<ul>
+<li><p>input: data/vcf_with_pvalue.tab, data/LuxPark_pheno.txt</p></li>
+<li><p>execution time: <strong>two days</strong></p></li>
+<li><p>output: data/app_int_data.RData, results/app_int.RData,
+results/info_app_int.txt</p></li>
+</ul>
 <pre class="r"><code>#&lt;&lt;init&gt;&gt;
 geno &lt;- read.table(&quot;data/vcf_with_pvalue.tab&quot;,header=TRUE)
 
@@ -838,19 +878,26 @@ for(i in seq_len(nrow(frame))){
 }
 save(frame,loss,file=paste0(dir,&quot;/results/app_int.RData&quot;))
 writeLines(text=capture.output(utils::sessionInfo(),cat(&quot;\n&quot;),
-      sessioninfo::session_info()),con=&quot;results/info_app_int.txt&quot;)
+      sessioninfo::session_info()),con=paste0(dir,&quot;/results/info_app_int.txt&quot;))
 
 # use repeated 10-fold CV (TO DO)
 # modify function cv.transfer so that it accepts named list with &quot;y and X&quot; (not only &quot;y and x&quot;) (TO DO)</code></pre>
-<p>Generate figure for internal application. <strong>Requires execution
-of previous chunk.</strong></p>
+<p>The following chunk generates the figure for the internal
+application. <strong>Requires execution of previous chunk.</strong></p>
+<ul>
+<li><p>input: results/app_int.RData</p></li>
+<li><p>execution time: some seconds</p></li>
+<li><p>output: manuscript/figure_int.pdf</p></li>
+</ul>
 <pre class="r"><code>#&lt;&lt;init&gt;&gt;
 grDevices::pdf(file=paste0(dir,&quot;/manuscript/figure_int.pdf&quot;),width=8,height=6,pointsize=15)
 
 load(paste0(dir,&quot;/results/app_int.RData&quot;)) # TO DO: change this line
 frame &lt;- frame[seq_along(loss),colnames(frame)!=&quot;seed&quot;]
+#foldid &lt;- sapply(loss,function(x) x$foldid)
+#pred &lt;- sapply(loss,function(x) x$pred)
 loss &lt;- as.data.frame(t(sapply(loss,function(x) x$auc))) # temporary AUC
-names(loss)[names(loss)==&quot;prs&quot;] &lt;- &quot;naive&quot; # TO DO: delete this line
+#names(loss)[names(loss)==&quot;prs&quot;] &lt;- &quot;naive&quot; # TO DO: delete this line
 
 table &lt;- lapply(loss,function(x) tapply(X=x,INDEX=list(frame$cutoff,frame$alpha),FUN=function(x) mean(x)))
 
@@ -872,9 +919,9 @@ for(scale in c(&quot;exp&quot;,&quot;iso&quot;)){
     #graphics::abline(h=unique(table[[&quot;mean&quot;]][,alpha]),col=&quot;grey&quot;,lty=2)
     graphics::abline(h=0.5,col=&quot;grey&quot;,lty=2)
     for(i in 1:3){
-    for(method in c(&quot;glmnet&quot;,paste0(&quot;transreg_&quot;,scale,c(&quot;_lp&quot;,&quot;_mf&quot;)),&quot;naive&quot;)){
-      lty &lt;- switch(method,&quot;mean&quot;=1,&quot;glmnet&quot;=1,&quot;transreg_exp_lp&quot;=2,&quot;transreg_exp_mf&quot;=2,&quot;transreg_iso_lp&quot;=2,&quot;transreg_iso_mf&quot;=2,&quot;naive&quot;=3)
-      col &lt;- switch(method,&quot;mean&quot;=&quot;grey&quot;,&quot;glmnet&quot;=&quot;black&quot;,&quot;transreg_exp_lp&quot;=rgb(0.2,0.2,1),&quot;transreg_iso_lp&quot;=rgb(0.2,0.2,1),&quot;transreg_exp_mf&quot;=rgb(0,0,0.6),&quot;transreg_iso_mf&quot;=rgb(0,0,0.6),&quot;naive&quot;=&quot;red&quot;)
+    for(method in c(&quot;glmnet&quot;,paste0(&quot;transreg.&quot;,scale,c(&quot;.sta&quot;,&quot;.sim&quot;)),&quot;naive&quot;)){
+      lty &lt;- switch(method,&quot;mean&quot;=1,&quot;glmnet&quot;=1,&quot;transreg.exp.sta&quot;=2,&quot;transreg.exp.sim&quot;=2,&quot;transreg.iso.sta&quot;=2,&quot;transreg.iso.sim&quot;=2,&quot;naive&quot;=3)
+      col &lt;- switch(method,&quot;mean&quot;=&quot;grey&quot;,&quot;glmnet&quot;=&quot;black&quot;,&quot;transreg.exp.sta&quot;=rgb(0.2,0.2,1),&quot;transreg.iso.sta&quot;=rgb(0.2,0.2,1),&quot;transreg.exp.sim&quot;=rgb(0,0,0.6),&quot;transreg.iso.sim&quot;=rgb(0,0,0.6),&quot;naive&quot;=&quot;red&quot;)
       y &lt;- table[[method]][,alpha]
       x &lt;- log(as.numeric(names(y)))
       #cond &lt;- x &gt;= log(5e-08)
@@ -894,29 +941,7 @@ grDevices::dev.off()</code></pre>
 <p>Reformat list of consortium members for acknowledgements: [see
 source].</p>
 <p>Print session information.</p>
-<pre class="r"><code>utils::sessionInfo()</code></pre>
-<p>R version 4.2.1 (2022-06-23) Platform: aarch64-apple-darwin20
-(64-bit) Running under: macOS Monterey 12.6</p>
-<p>Matrix products: default BLAS:
-/Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/lib/libRblas.0.dylib
-LAPACK:
-/Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/lib/libRlapack.dylib</p>
-<p>locale: [1]
-en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8</p>
-<p>attached base packages: [1] stats graphics grDevices utils datasets
-methods base</p>
-<p>loaded via a namespace (and not attached): [1] Rcpp_1.0.9
-rstudioapi_0.14 knitr_1.40 magrittr_2.0.3<br />
-[5] splines_4.2.1 xtable_1.8-4 lattice_0.20-45 R6_2.5.1<br />
-[9] rlang_1.0.6 fastmap_1.1.0 foreach_1.5.2 stringr_1.4.1<br />
-[13] tools_4.2.1 grid_4.2.1 glmnet_4.1-4 xfun_0.33<br />
-[17] cli_3.4.1 jquerylib_0.1.4 htmltools_0.5.3 iterators_1.0.14 [21]
-survival_3.3-1 yaml_2.3.5 digest_0.6.30 palasso_0.0.8<br />
-[25] transreg_0.0.1 Matrix_1.4-1 codetools_0.2-18 sass_0.4.2<br />
-[29] shape_1.4.6 cachem_1.0.6 evaluate_0.16 rmarkdown_2.16<br />
-[33] stringi_1.7.8 compiler_4.2.1 bslib_0.4.0 starnet_0.0.6<br />
-[37] jsonlite_1.8.0</p>
-<pre class="r"><code>#utils::toLatex(utils::sessionInfo())</code></pre>
+<pre class="r"><code>utils::toLatex(utils::sessionInfo())</code></pre>
 </div>
 </div>
 

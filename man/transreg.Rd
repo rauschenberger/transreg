@@ -18,7 +18,8 @@ transreg(
   switch = FALSE,
   select = TRUE,
   diffpen = FALSE,
-  track = FALSE
+  track = FALSE,
+  parallel = FALSE
 )
 }
 \arguments{
@@ -59,6 +60,8 @@ with entries from 1 to \code{nfolds}}
 (experimental argument)}
 
 \item{track}{show intermediate output (messages and plots): logical}
+
+\item{parallel}{logical (see cv.glmnet)}
 }
 \value{
 Returns an object of class \code{transreg}.

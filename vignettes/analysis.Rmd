@@ -1,6 +1,6 @@
 ---
 title: 'Penalised regression with multiple sources of prior effects'
-subtitle: "$\\qquad \\qquad$ Armin Rauschenberger$~^{1,*}$ \\orcidlink{0000-0001-6498-4801}, Zied Landoulsi$~^{1}$ \\orcidlink{0000-0002-2327-3904}, \\newline Mark A. van de Wiel$~^{2,3,\\dagger}$ \\orcidlink{0000-0003-4780-8472}, Enrico Glaab$~^{1,\\dagger}$ \\orcidlink{0000-0003-3977-7469}"
+author: "Armin Rauschenberger"
 date: "`r format(Sys.time(),'%d %B %Y')`"
 output:
   html_document: default
@@ -29,7 +29,7 @@ vignette: >
 
 Choose the directory containing the sub-directories "data", "results" and "manuscript".
 
-- The directory "data" should contain the file "data/pone.0181468.s001.csv" for the second external application and the files "vcf_with_pvalue.tab" and "LuxPark_pheno.txt" for the internal application. It will also contain the file "app_int_data.RData" for the internal application.
+- The directory "data" should contain the file "pone.0181468.s001.csv" for the second external application and the files "vcf_with_pvalue.tab" and "LuxPark_pheno.txt" for the internal application. It will also contain the file "app_int_data.RData" for the internal application.
 
 - The directory "results" will contain the files "sim_int.RData" and "sim_ext.RData" for the external and internal simulation, the file "app_grridge.RData" for the first external application, the file "app_fwelnet.RData" for the second external application, and the file "app_int.RData" for the internal application.
 
@@ -58,7 +58,13 @@ rm(pkgs)
 
 # Methods
 
-Generate figure for methods section.
+The following chunk generates the figure for the methods section.
+
+- input: none (*simulating data*)
+
+- execution time: some seconds
+
+- output: manuscript/figure_example.pdf
 
 ```{r calibration,eval=TRUE,echo=TRUE}
 #<<init>>
@@ -108,7 +114,13 @@ grDevices::dev.off()
 
 # Simulations
 
-Perform internal and external simulation study. **Execution time: several minutes.**
+The following chunk performs the external (`glmtrans`) and the internal simulation. 
+
+- input: none (*simulating data*)
+
+- execution time: **several minutes**
+
+- output: results/sim_ext.RData, results/sim_int.RData, results/info_sim.RData
 
 ```{r sim_script,eval=FALSE,echo=TRUE}
 #<<init>>
@@ -216,7 +228,13 @@ writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
 #apply(data,2,median)
 ```
 
-Generate \LaTeX\ tables for external and internal simulation. **Requires execution of previous chunk.**
+The following chunk generates the tables for the external (`glmtrans`) and the internal simulation. **Requires execution of previous chunk.**
+
+- input: results/sim_ext.RData, results/sim_int.RData
+
+- execution time: some seconds
+
+- output: manuscript/table_ext.tex, manuscript/table_int.tex
 
 ```{r sim_table,eval=TRUE,echo=TRUE}
 .table <- function(loss,info=NULL,hline=NULL,pvalue=NULL,caption="",file=""){
@@ -294,7 +312,13 @@ for(mode in c("ext","int")){
 
 # External applications
 
-Perform first external application. **Execution time: several minutes.**
+The following chunk performs the first external application (`GRridge`).
+
+- input: none (*loading data from `GRridge` package*)
+
+- execution time: **several minutes**
+
+- output: results/app_grridge.RData, results/info_app_grridge.txt
 
 ```{r grridge_script,eval=FALSE,echo=TRUE}
 #<<init>>
@@ -357,7 +381,13 @@ b - a
 stats::coef(glmnet)
 ```
 
-Perform second external application. **Execution time: several minutes.**
+The following chunk performs the second external application (`fwelnet`).
+
+- input: data/pone.0181468.s001.csv
+
+- execution time: **several minutes**
+
+- output: results/app_fwelnet.RData, results/info_app_fwelnet.txt
 
 ```{r fwelnet_script,eval=FALSE,echo=TRUE}
 table <- utils::read.csv("data/pone.0181468.s001.csv",header=TRUE,skip=3)
@@ -433,7 +463,13 @@ sapply(table[,-1],function(x) sum(x<table$glmnet))
 round(100*colMeans(table[,-1]),digits=2)
 ```
 
-Generate figure for both external applications. **Requires execution of previous two chunks.**
+The following chunk generates the figure for both external applications (`GRridge` and `fwelnet`). **Requires execution of previous two chunks.**
+
+- input: results/app_grridge.RData, results/app_fwelnet.RData
+
+- execution time: some seconds
+
+- output: manuscript/figure_ext.pdf
 
 ```{r app_boxplots,eval=TRUE,echo=TRUE}
 
@@ -474,7 +510,13 @@ grDevices::dev.off()
 
 # Internal application
 
-Perform internal application. **Execution time: several hours.**
+The following chunk perform the internal application.
+
+- input: data/vcf_with_pvalue.tab, data/LuxPark_pheno.txt
+
+- execution time: **two days**
+
+- output: data/app_int_data.RData, results/app_int.RData, results/info_app_int.txt
 
 ```{r prs_script,eval=FALSE,echo=TRUE}
 #<<init>>
@@ -533,7 +575,13 @@ writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
 # modify function cv.transfer so that it accepts named list with "y and X" (not only "y and x") (TO DO)
 ```
 
-Generate figure for internal application. **Requires execution of previous chunk.**
+The following chunk generates the figure for the internal application. **Requires execution of previous chunk.**
+
+- input: results/app_int.RData
+
+- execution time: some seconds
+
+- output: manuscript/figure_int.pdf
 
 ```{r prs_plot,eval=TRUE,echo=TRUE}
 #<<init>>
