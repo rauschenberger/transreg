@@ -25,7 +25,7 @@ vignette: >
   %\VignetteEngine{knitr::knitr}
 ---
 
-## Initialisation
+# Initialisation
 
 Choose the directory containing the sub-directories "data", "results" and "manuscript".
 
@@ -645,7 +645,7 @@ sapply(test$coef,function(x) mean(cor(x,method="spearman"),na.rm=TRUE))
 sapply(test$coef,function(x) mean(cor(x,method="pearson"),na.rm=TRUE))
 ```
 
-## Session information
+# Session information
 
 Reformat list of consortium members for acknowledgements: [see source].
 
