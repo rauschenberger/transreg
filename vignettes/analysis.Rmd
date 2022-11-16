@@ -541,6 +541,8 @@ grDevices::pdf(file=paste0(dir,"/manuscript/figure_int.pdf"),width=8,height=6,po
 
 load(paste0(dir,"/results/app_int.RData")) # TO DO: change this line
 frame <- frame[seq_along(loss),colnames(frame)!="seed"]
+#foldid <- sapply(loss,function(x) x$foldid)
+#pred <- sapply(loss,function(x) x$pred)
 loss <- as.data.frame(t(sapply(loss,function(x) x$auc))) # temporary AUC
 #names(loss)[names(loss)=="prs"] <- "naive" # TO DO: delete this line
 

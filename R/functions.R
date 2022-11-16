@@ -1410,6 +1410,7 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
   list$time <- time
   list$coef <- coef
   list$foldid <- foldid.ext
+  list$pred <- pred
   
   return(list)
 }
