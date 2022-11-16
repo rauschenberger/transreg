@@ -558,15 +558,36 @@ power <- seq(from=-2,to=-10,by=-1)
 cutoff <- 5*10^power
 frame <- expand.grid(cutoff=cutoff,alpha=0:1,seed=1:10,count=NA)
 
-loss <- list()
-for(i in seq_len(nrow(frame))){
-  cat("--- i =",i,"---","\n")
+#- - - classical (start) - - -
+#loss <- list()
+#for(i in seq_len(nrow(frame))){
+#  cat("--- i =",i,"---","\n")
+#  set.seed(frame$seed[i])
+#  foldid <- transreg:::.folds(y=y,nfolds.ext=10,nfolds.int=10)
+#  cond <- switch!=0 & pvalue < frame$cutoff[i]
+#  loss[[i]] <- transreg:::compare(target=list(y=y,x=X[,cond]),prior=prior[cond],family="binomial",alpha=frame$alpha[i],scale=c("exp","iso"),sign=FALSE,switch=FALSE,select=FALSE,foldid.ext=foldid$foldid.ext,foldid.int=foldid$foldid.int,type.measure=c("deviance","class","auc"),seed=frame$seed[i])
+#  frame$count[i] <- sum(cond)
+#}
+# - - - classical (end) - - -
+
+#- - - parallel (start) - - -
+cluster <- snow::makeCluster(8)
+evaluate <- function(frame,i,switch,pvalue,y,X,prior){
   set.seed(frame$seed[i])
   foldid <- transreg:::.folds(y=y,nfolds.ext=10,nfolds.int=10)
   cond <- switch!=0 & pvalue < frame$cutoff[i]
-  loss[[i]] <- transreg:::compare(target=list(y=y,x=X[,cond]),prior=prior[cond],family="binomial",alpha=frame$alpha[i],scale=c("exp","iso"),sign=FALSE,switch=FALSE,select=FALSE,foldid.ext=foldid$foldid.ext,foldid.int=foldid$foldid.int,type.measure=c("deviance","class","auc")) # was without foldid.int
-  frame$count[i] <- sum(cond)
+  transreg:::compare(target=list(y=y,x=X[,cond]),prior=prior[cond],family="binomial",alpha=frame$alpha[i],scale=c("exp","iso"),sign=FALSE,switch=FALSE,select=FALSE,foldid.ext=foldid$foldid.ext,foldid.int=foldid$foldid.int,type.measure=c("deviance","class","auc"),seed=frame$seed[i])
 }
+snow::clusterExport(cl=cluster,list=c("evaluate","frame","switch","pvalue","y","X","prior"))
+loss <- snow::parSapply(cl=cluster,X=seq_len(nrow(frame)),FUN=function(i) evaluate(frame=frame,i=i,switch=switch,pvalue=pvalue,y=y,X=X,prior=prior),simplify=FALSE)
+#names(old[[1]])
+#names(new[[1]])
+#all.equal(old[[1]]$deviance,new[[1]]$deviance)
+#all.equal(old[[1]]$class,new[[1]]$class)
+#all.equal(old[[1]]$auc,new[[1]]$auc)
+#all.equal(old[[1]]$coef,new[[1]]$coef)
+#- - - parallel (end) - - -
+
 save(frame,loss,file=paste0(dir,"/results/app_int.RData"))
 writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
       sessioninfo::session_info()),con=paste0(dir,"/results/info_app_int.txt"))
@@ -633,6 +654,8 @@ grDevices::dev.off()
 
 
 ```{r trial_stability,eval=FALSE,echo=FALSE}
+#<<init>>
+
 # temporary code: measure stability
 
 n <- 100; p <- 500
@@ -643,6 +666,9 @@ prior <- beta + rnorm(p)
 test <- compare(target=list(y=y,x=X),prior=prior,family="gaussian",alpha=1)
 sapply(test$coef,function(x) mean(cor(x,method="spearman"),na.rm=TRUE))
 sapply(test$coef,function(x) mean(cor(x,method="pearson"),na.rm=TRUE))
+
+
+
 ```
 
 # Session information

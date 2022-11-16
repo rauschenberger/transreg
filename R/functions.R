@@ -1421,6 +1421,7 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
   list$coef <- coef
   list$foldid <- foldid.ext
   list$pred <- pred
+  list$p <- p
   
   return(list)
 }
