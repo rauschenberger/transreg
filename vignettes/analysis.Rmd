@@ -53,6 +53,7 @@ pkgs <- c("devtools","palasso","glmtrans","xtable")
 utils::install.packages(setdiff(pkgs,rownames(installed.packages())))
 pkgs <- c("kjytay/fwelnet","Mirrelijn/ecpc/Rpackage","rauschenberger/transreg")
 remotes::install_github(pkgs)
+#remotes::install_gitlab("bds/transreg",host="gitlab.lcsb.uni.lu")
 rm(pkgs)
 ```
 
@@ -571,7 +572,7 @@ frame <- expand.grid(cutoff=cutoff,alpha=0:1,seed=1:10,count=NA)
 # - - - classical (end) - - -
 
 #- - - parallel (start) - - -
-cluster <- snow::makeCluster(8)
+cluster <- snow::makeCluster(4)
 evaluate <- function(frame,i,switch,pvalue,y,X,prior){
   set.seed(frame$seed[i])
   foldid <- transreg:::.folds(y=y,nfolds.ext=10,nfolds.int=10)
@@ -587,7 +588,6 @@ loss <- snow::parSapply(cl=cluster,X=seq_len(nrow(frame)),FUN=function(i) evalua
 #all.equal(old[[1]]$auc,new[[1]]$auc)
 #all.equal(old[[1]]$coef,new[[1]]$coef)
 #- - - parallel (end) - - -
-
 save(frame,loss,file=paste0(dir,"/results/app_int.RData"))
 writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
       sessioninfo::session_info()),con=paste0(dir,"/results/info_app_int.txt"))
