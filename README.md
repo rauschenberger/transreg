@@ -27,14 +27,10 @@ or the latest development version from [GitLab](https://gitlab.lcsb.uni.lu/bds/t
 ``` r
 #install.packages("remotes")
 remotes::install_gitlab("bds/transreg",host="gitlab.lcsb.uni.lu")
-#remotes::install_github("rauschenberger/transreg")
+remotes::install_github("rauschenberger/transreg")
 ```
 
 ## Reference
-
-<!--
-https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png
--->
 
 Armin Rauschenberger 
 [![AR](https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png)](https://orcid.org/0000-0001-6498-4801),
@@ -44,7 +40,6 @@ Mark A van de Wiel
 [![MvdW](https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png)](https://orcid.org/0000-0003-4780-8472),
 and Enrico Glaab
 [![EG](https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png)](https://orcid.org/0000-0003-3977-7469) (2022). "Penalised regression with multiple sets of prior effects". *Manuscript in preparation.*
-
 
 <!--
 [![CRAN
