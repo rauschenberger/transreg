@@ -27,7 +27,7 @@ or the latest development version from [GitLab](https://gitlab.lcsb.uni.lu/bds/t
 ``` r
 #install.packages("remotes")
 remotes::install_gitlab("bds/transreg",host="gitlab.lcsb.uni.lu")
-remotes::install_github("rauschenberger/transreg")
+#remotes::install_github("rauschenberger/transreg")
 ```
 
 ## Reference
