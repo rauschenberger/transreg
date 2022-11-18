@@ -521,12 +521,15 @@ The following chunk perform the internal application.
 
 ```{r prs_script,eval=FALSE,echo=TRUE}
 #<<init>>
-geno <- read.table("data/vcf_with_pvalue.tab",header=TRUE)
+geno <- read.table(paste0(dir,"/data/vcf_with_pvalue.tab"),header=TRUE)
+
+# Pseudo-effect sizes make more sense (see volcano plot)!
+# graphics::plot(x=geno$beta,y=-log10(geno$p_value),xlim=c(-1,1),col=ifelse(stats::p.adjust(geno$p_value)<=0.05,"red","black"))
 
 switch <- ifelse(geno$REF==geno$A1_gwas & geno$ALT==geno$A2_gwas,1,
                  ifelse(geno$REF==geno$A2_gwas & geno$ALT==geno$A1_gwas,-1,0))
-#prior <- log10(geno$p_value)*sign(geno$beta)*switch # pseudo effect sizes
-prior <- -geno$beta*switch # original effect sizes
+#prior <- -geno$beta*switch # original effect sizes
+prior <- log10(geno$p_value)*sign(geno$beta)*switch # pseudo effect sizes
 pvalue <- geno$p_value
 
 X <- geno[,grepl(pattern="ND",colnames(geno))]
@@ -536,16 +539,14 @@ X[X=="1/1"] <- 1
 X <- sapply(X,as.numeric)
 X <- t(X)
 
-pheno <- read.delim("data/LuxPark_pheno.txt",sep=" ",header=FALSE)
+pheno <- read.delim(paste0(dir,"/data/LuxPark_pheno.txt"),sep=" ",header=FALSE)
 y <- ifelse(pheno$V2==1,0,ifelse(pheno$V2==2,1,NA)); names(y) <- pheno$V1
 
 names <- intersect(names(y[!is.na(y)]),rownames(X))
 X <- X[names,]; y <- y[names]
 
-cor <- as.numeric(stats::cor(y,X))
-graphics::plot(x=prior,y=cor)
-
-save(y,X,prior,pvalue,switch,file=paste0(dir,"/data/app_int_data.RData"))
+#cor <- as.numeric(stats::cor(y,X))
+#graphics::plot(x=prior,y=cor)
 
 # descriptive statistics
 sum(p.adjust(pvalue,method="BH")<=0.05)
@@ -553,6 +554,15 @@ sum(p.adjust(pvalue,method="holm")<=0.05)
 mean(pvalue<=0.05)
 dim(X)
 table(y)
+
+# memory reduction
+cond <- pvalue <= 0.05
+X <- X[,cond]
+prior <- prior[cond]
+pvalue <- pvalue[cond]
+switch <- switch[cond]
+
+save(y,X,prior,pvalue,switch,file=paste0(dir,"/data/app_int_data.RData"))
 
 load(paste0(dir,"/data/app_int_data.RData"))
 power <- seq(from=-2,to=-10,by=-1)
@@ -572,7 +582,9 @@ frame <- expand.grid(cutoff=cutoff,alpha=0:1,seed=1:10,count=NA)
 # - - - classical (end) - - -
 
 #- - - parallel (start) - - -
-cluster <- snow::makeCluster(4)
+frame <- expand.grid(cutoff=cutoff,alpha=0:1,seed=1:10,count=NA) # original
+#frame <- expand.grid(cutoff=cutoff[cutoff<=5e-4],alpha=0:1,seed=1:10,count=NA) # temporary
+cluster <- snow::makeCluster(8)
 evaluate <- function(frame,i,switch,pvalue,y,X,prior){
   set.seed(frame$seed[i])
   foldid <- transreg:::.folds(y=y,nfolds.ext=10,nfolds.int=10)
@@ -589,6 +601,8 @@ loss <- snow::parSapply(cl=cluster,X=seq_len(nrow(frame)),FUN=function(i) evalua
 #all.equal(old[[1]]$coef,new[[1]]$coef)
 #- - - parallel (end) - - -
 save(frame,loss,file=paste0(dir,"/results/app_int.RData"))
+#save(frame,loss,file=paste0(dir,"/results/app_effect.RData"))
+#save(frame,loss,file=paste0(dir,"/results/app_pvalue.RData"))
 writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
       sessioninfo::session_info()),con=paste0(dir,"/results/info_app_int.txt"))
 
@@ -596,80 +610,246 @@ writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
 # modify function cv.transfer so that it accepts named list with "y and X" (not only "y and x") (TO DO)
 ```
 
-The following chunk generates the figure for the internal application. **Requires execution of previous chunk.**
+The following chunk generates the figures for the internal application. **Requires execution of previous chunk.**
 
 - input: results/app_int.RData
 
 - execution time: some seconds
 
-- output: manuscript/figure_int.pdf
+- output: manuscript/figure_int.pdf, manuscript/figure_temp.pdf
 
 ```{r prs_plot,eval=TRUE,echo=TRUE}
 #<<init>>
-grDevices::pdf(file=paste0(dir,"/manuscript/figure_int.pdf"),width=8,height=6,pointsize=15)
 
-load(paste0(dir,"/results/app_int.RData")) # TO DO: change this line
-frame <- frame[seq_along(loss),colnames(frame)!="seed"]
-#foldid <- sapply(loss,function(x) x$foldid)
-#pred <- sapply(loss,function(x) x$pred)
-loss <- as.data.frame(t(sapply(loss,function(x) x$auc))) # temporary AUC
-#names(loss)[names(loss)=="prs"] <- "naive" # TO DO: delete this line
-
-table <- lapply(loss,function(x) tapply(X=x,INDEX=list(frame$cutoff,frame$alpha),FUN=function(x) mean(x)))
-
-cutoff <- unique(frame$cutoff)
-number <- unique(frame$count)
-
-graphics::par(mfrow=c(2,2),mar=c(3,1.8,1.0,0.9))
-for(scale in c("exp","iso")){
-  for(alpha in c("0","1")){
-    graphics::plot.new()
-    graphics::plot.window(xlim=range(log(cutoff)),ylim=range(table))
-    graphics::box()
-    graphics::title(main=paste(ifelse(alpha==0,"ridge",ifelse(alpha==1,"lasso",NA)),"-",scale),cex.main=1,line=0.2)
-    on <- rep(c(TRUE,FALSE),length.out=length(cutoff))
-    graphics::axis(side=1,at=log(cutoff),labels=rep("",times=length(on)),cex.axis=0.7)
-    graphics::axis(side=1,at=log(cutoff)[on],labels=paste0(cutoff[on],"\n","(",number[on],")"),cex.axis=0.7)
-    
-    graphics::axis(side=2,cex.axis=0.7)
-    #graphics::abline(h=unique(table[["mean"]][,alpha]),col="grey",lty=2)
-    graphics::abline(h=0.5,col="grey",lty=2)
-    for(i in 1:3){
-    for(method in c("glmnet",paste0("transreg.",scale,c(".sta",".sim")),"naive")){
-      lty <- switch(method,"mean"=1,"glmnet"=1,"transreg.exp.sta"=2,"transreg.exp.sim"=2,"transreg.iso.sta"=2,"transreg.iso.sim"=2,"naive"=3)
-      col <- switch(method,"mean"="grey","glmnet"="black","transreg.exp.sta"=rgb(0.2,0.2,1),"transreg.iso.sta"=rgb(0.2,0.2,1),"transreg.exp.sim"=rgb(0,0,0.6),"transreg.iso.sim"=rgb(0,0,0.6),"naive"="red")
-      y <- table[[method]][,alpha]
-      x <- log(as.numeric(names(y)))
-      #cond <- x >= log(5e-08)
-      if(i==1){graphics::lines(x=x,y=y,col=col,lty=lty)}
-      if(i==2){graphics::points(x=x,y=y,col="white",pch=16)}
-      if(i==3){graphics::points(x=x,y=y,col=col)}
-    }
+plotter <- function(table,cutoff,number,horizontal=FALSE){
+  graphics::par(mfrow=c(2,2),mar=c(3,1.8,1.0,0.9))
+  for(scale in c("exp","iso")){
+    for(alpha in c("0","1")){
+      graphics::plot.new()
+      graphics::plot.window(xlim=range(log(cutoff)),ylim=range(table))
+      graphics::box()
+      graphics::title(main=paste(ifelse(alpha==0,"ridge",ifelse(alpha==1,"lasso",NA)),"-",scale),cex.main=1,line=0.2)
+      on <- rep(c(TRUE,FALSE),length.out=length(cutoff))
+      graphics::axis(side=1,at=log(cutoff),labels=rep("",times=length(on)),cex.axis=0.7)
+      graphics::axis(side=1,at=log(cutoff)[on],labels=paste0(cutoff[on],"\n","(",number[on],")"),cex.axis=0.7)
+      graphics::axis(side=2,cex.axis=0.7)
+      if(horizontal){
+        graphics::abline(h=0.5,col="grey",lty=2)
+        #graphics::abline(h=unique(table[["mean"]][,alpha]),col="grey",lty=2)
+      }
+      for(i in 1:3){
+        for(method in c("glmnet",paste0("transreg.",scale,c(".sta",".sim")),"naive")){
+          lty <- switch(method,"mean"=1,"glmnet"=1,"transreg.exp.sta"=2,"transreg.exp.sim"=2,"transreg.iso.sta"=2,"transreg.iso.sim"=2,"naive"=3)
+          col <- switch(method,"mean"="grey","glmnet"="black","transreg.exp.sta"=rgb(0.2,0.2,1),"transreg.iso.sta"=rgb(0.2,0.2,1),"transreg.exp.sim"=rgb(0,0,0.6),"transreg.iso.sim"=rgb(0,0,0.6),"naive"="red")
+          y <- table[[method]][,alpha]
+          x <- log(as.numeric(names(y)))
+          if(i==1){graphics::lines(x=x,y=y,col=col,lty=lty)}
+          if(i==2){graphics::points(x=x,y=y,col="white",pch=16)}
+          if(i==3){graphics::points(x=x,y=y,col=col)}
+        }
+      }
     }
   }
 }
 
+#load(paste0(dir,"/results/app_int.RData")) # TO DO: change this line
+#load(paste0(dir,"/results/app_effect.RData"))
+load(paste0(dir,"/results/app_pvalue.RData")) # TO DO: change this line
+frame <- frame[seq_along(loss),colnames(frame)!="seed"]
+cutoff <- unique(frame$cutoff)
+number <- unique(sapply(loss,function(x) x$p))
+
+# - - - p-values - - -
+
+tester <- function(y,x){
+  foldid <- x$foldid
+  pred <- x$pred
+  limit <- 1e-06
+  pred[pred < limit] <- limit
+  pred[pred > 1 - limit] <- 1 - limit
+  res <- -2 * (y * log(pred) + (1 - y) * log(1 - pred))
+  method <- paste0("transreg.",c("exp.sta","exp.sim","iso.sta","iso.sim"))
+  pvalue <- matrix(NA,nrow=10,ncol=length(method),dimnames=list(NULL,method))
+  for(i in seq_len(10)){
+    for(j in seq_along(method)){
+      pvalue[i,j] <- stats::wilcox.test(x=res[foldid==i,"glmnet"],y=res[foldid==i,method[j]],paired=TRUE,alternative="greater")$p.value
+    }
+  }
+  return(pvalue)
+}
+
+pvalue <- lapply(loss,function(x) tester(y=y,x=x))
+alpha <- c(0,1)
+method <- paste0("transreg.",c("exp.sta","exp.sim","iso.sta","iso.sim"))
+median <- array(NA,dim=c(length(alpha),length(cutoff),length(method)),dimnames=list(alpha,cutoff,method))
+for(i in seq_along(alpha)){
+  for(j in seq_along(cutoff)){
+      median[i,j,] <- apply(do.call(what="rbind",args=pvalue[frame$alpha==alpha[i] & frame$cutoff==cutoff[j]]),2,median)
+  }
+}
+median # integrate this in plot
+
+#- - - predictive performance - - -
+
+auc <- as.data.frame(t(sapply(loss,function(x) x$auc)))
+table <- lapply(auc,function(x) tapply(X=x,INDEX=list(frame$cutoff,frame$alpha),FUN=function(x) mean(x)))
+
+grDevices::pdf(file=paste0(dir,"/manuscript/figure_int.pdf"),width=8,height=6,pointsize=15)
+plotter(table,cutoff,number)
 grDevices::dev.off()
+
+#- - - estimation stability - - -
+
+stability <- function(x,mode="cor"){
+  if(mode=="cor"){
+    if(all(is.na(x))){
+      return(1)
+    }
+    if(sd(x,na.rm=TRUE)==0){
+      return(1)
+    }
+    cor <- stats::cor(x,method="spearman")
+    cor[is.na(cor)] <- 0
+    diag(cor) <- NA
+    index <- median(cor,na.rm=TRUE)
+  } else if(mode=="rank"){
+    top_sep <- apply(x,2,function(x) order(abs(x),decreasing=TRUE)[1:10])
+    top_all <- order(rowMeans(abs(x)),decreasing=TRUE)[1:10]
+    index <- mean(apply(top_sep,2,function(x) mean(x %in% top_all)))
+  }
+  return(index)
+}
+
+value <- as.data.frame(t(sapply(loss,function(x) sapply(x$coef,function(x) stability(x,mode="rank")))))
+table <- lapply(value,function(x) tapply(X=x,INDEX=list(frame$cutoff,frame$alpha),FUN=function(x) mean(x)))
+
+grDevices::pdf(file=paste0(dir,"/manuscript/figure_temp.pdf"),width=8,height=6,pointsize=15)
+plotter(table,cutoff,number)
+grDevices::dev.off()
+
 ```
 
 
-```{r trial_stability,eval=FALSE,echo=FALSE}
+```{r prs_devel_stability,eval=FALSE,echo=FALSE}
 #<<init>>
 
 # temporary code: measure stability
+#n <- 100; p <- 500
+#X <- matrix(rnorm(n*p),nrow=n,ncol=p)
+#beta <- rnorm(p)
+#y <- X %*% beta
+#prior <- beta + rnorm(p)
+#test <- compare(target=list(y=y,x=X),prior=prior,family="gaussian",alpha=1)
+#sapply(test$coef,function(x) mean(cor(x,method="spearman"),na.rm=TRUE))
+#sapply(test$coef,function(x) mean(cor(x,method="pearson"),na.rm=TRUE))
 
-n <- 100; p <- 500
-X <- matrix(rnorm(n*p),nrow=n,ncol=p)
-beta <- rnorm(p)
-y <- X %*% beta
-prior <- beta + rnorm(p)
-test <- compare(target=list(y=y,x=X),prior=prior,family="gaussian",alpha=1)
-sapply(test$coef,function(x) mean(cor(x,method="spearman"),na.rm=TRUE))
-sapply(test$coef,function(x) mean(cor(x,method="pearson"),na.rm=TRUE))
+load(paste0(dir,"/results/app_int.RData"))
+names(loss[[1]]$coef)
+dim(loss[[1]]$coef$glmnet)
+
+stability <- function(x){
+  ## mean correlation
+  #if(sd(x)==0){
+  #  return(1)
+  #}
+  #cor <- stats::cor(x,method="spearman")
+  #cor[is.na(cor)] <- 0
+  #diag(cor) <- NA
+  #out <- median(cor,na.rm=TRUE)
+  ## ranks top ten
+  top_sep <- apply(x,2,function(x) order(abs(x),decreasing=TRUE)[1:10])
+  top_all <- order(rowMeans(abs(x)),decreasing=TRUE)[1:10]
+  out <- mean(apply(top_sep,2,function(x) mean(x %in% top_all)))
+  ## MSE
+  #mean <- rowMeans(x)
+  #out <- mean(apply(x,2,function(x) mean((x-mean)^2)))
+  ## distance
+  #dist <- dist(t(x),method="manhattan")
+  #out <- mean(dist)
+  return(out)
+}
+value <- as.data.frame(t(sapply(loss,function(x) sapply(x$coef,function(x) stability(x)))))
+table <- lapply(value,function(x) tapply(X=x,INDEX=list(frame$cutoff,frame$alpha),FUN=function(x) mean(x)))
+plotter(table,cutoff,number)
+
+alpha <- c(0,1)
+method <- c("glmnet","transreg.exp.sta","transreg.iso.sta","transreg.exp.sim","transreg.iso.sim","naive")
+coef <- list()
+for(i in seq_along(alpha)){
+  for(j in seq_along(cutoff)){
+    cond <- frame$alpha==alpha[i] & frame$cutoff==cutoff[j]
+    temp <- lapply(loss[cond],function(x) sapply(x$coef,function(x) rowMeans(x)))
+    for(k in seq_along(method)){
+      
+    }
+  }
+}
 
 
+# Instead of computing top ten for each 10-fold cv run separately, compute top ten for all ten runs of 10-fold cv.
+
+# testing
+#foldid <- sapply(loss,function(x) x$foldid)
+#pred <- sapply(loss,function(x) x$pred)
+```
+
+```{r prs_devel_testing,echo=FALSE,eval=FALSE}
+# - - - new - - -
+load(paste0(dir,"/data/app_int_data.RData"))
+load(paste0(dir,"/results/app_pvalue.RData"))
+tester <- function(y,pred,foldid){
+  foldid <- loss[[1]]$foldid
+  pred <- loss[[1]]$pred
+  limit <- 1e-06
+  pred[pred < limit] <- limit
+  pred[pred > 1 - limit] <- 1 - limit
+  res <- -2 * (y * log(pred) + (1 - y) * log(1 - pred))
+  method <- paste0("transreg.",c("exp.sta","exp.sim","iso.sta","iso.sim"))
+  pvalue <- matrix(NA,nrow=10,ncol=length(method),dimnames=list(NULL,method))
+  for(i in seq_len(10)){
+    for(j in seq_along(method)){
+      pvalue[i,j] <- stats::wilcox.test(x=res[foldid==i,"glmnet"],y=res[foldid==i,method[j]],paired=TRUE,alternative="greater")$p.value
+    }
+  }
+  return(pvalue)
+}
+
+pvalue <- lapply(loss,function(x) tester(y=y,pred=x,foldid=foldid))
+
+
+#- - - old - - - 
+
+# <<init>>
+load(paste0(dir,"/results/app_effect.RData"))
+one <- round(sapply(loss,function(x) x$auc),digits=10)
+
+load(paste0(dir,"/results/app_pvalue.RData"))
+two <- round(sapply(loss,function(x) x$auc),digits=10)
+
+rowMeans(two > one)
+
+methods <- c("mean","glmnet","transreg.exp.sta","transreg.iso.sta","transreg.exp.sim","transreg.iso.sim","naive")
+
+aucs <- list()
+for(i in seq_along(loss)){
+  aucs[[i]] <- matrix(NA,nrow=10,ncol=length(methods),dimnames=list(NULL,methods))
+  for(j in 1:10){
+    for(k in seq_along(methods)){
+      cond <- loss[[i]]$foldid==j
+      aucs[[i]][j,k] <- starnet:::.loss(y=y[cond],x=loss[[i]]$pred[cond,methods[k]],family="binomial",type.measure="auc",foldid=rep(1,times=sum(cond)))
+    }
+  }
+}
+
+methods <- paste0("transreg.",c("exp.sta","exp.sim","iso.sta","iso.sim"))
+pvalues <- sapply(methods,function(x) numeric())
+for(i in seq_along(methods)){
+  pvalues[[i]] <- sapply(aucs,function(x) wilcox.test(x=x[,"glmnet"]-x[,methods[i]])$p.value)
+}
 
 ```
+
+
 
 # Session information
 
