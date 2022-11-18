@@ -793,7 +793,7 @@ for(i in seq_along(alpha)){
 #pred <- sapply(loss,function(x) x$pred)
 ```
 
-```{r prs_devel_testing,echo=FALSE,eval=FALSE}
+```{r prs_devel_test,echo=FALSE,eval=FALSE}
 # - - - new - - -
 load(paste0(dir,"/data/app_int_data.RData"))
 load(paste0(dir,"/results/app_pvalue.RData"))
