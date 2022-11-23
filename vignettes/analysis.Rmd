@@ -523,14 +523,14 @@ The following chunk perform the internal application.
 #<<init>>
 geno <- read.table(paste0(dir,"/data/vcf_with_pvalue.tab"),header=TRUE)
 
-# Pseudo-effect sizes make more sense (see volcano plot)!
-# graphics::plot(x=geno$beta,y=-log10(geno$p_value),xlim=c(-1,1),col=ifelse(stats::p.adjust(geno$p_value)<=0.05,"red","black"))
-
 switch <- ifelse(geno$REF==geno$A1_gwas & geno$ALT==geno$A2_gwas,1,
                  ifelse(geno$REF==geno$A2_gwas & geno$ALT==geno$A1_gwas,-1,0))
 #prior <- -geno$beta*switch # original effect sizes
 prior <- log10(geno$p_value)*sign(geno$beta)*switch # pseudo effect sizes
 pvalue <- geno$p_value
+
+# Note: Why are pseudo-effect sizes more suitable as prior effects as compared to original effect sizes?
+# graphics::plot(x=geno$beta,y=-log10(geno$p_value),xlim=c(-1,1),col=ifelse(stats::p.adjust(geno$p_value)<=0.05,"red","black"))
 
 X <- geno[,grepl(pattern="ND",colnames(geno))]
 X[X=="0/0"] <- 0
@@ -545,8 +545,10 @@ y <- ifelse(pheno$V2==1,0,ifelse(pheno$V2==2,1,NA)); names(y) <- pheno$V1
 names <- intersect(names(y[!is.na(y)]),rownames(X))
 X <- X[names,]; y <- y[names]
 
-#cor <- as.numeric(stats::cor(y,X))
-#graphics::plot(x=prior,y=cor)
+# Note: Are prior effects positively correlated with correlation between outcome and features?
+# cor <- as.numeric(stats::cor(y,X,method="spearman"))
+# graphics::plot(x=prior,y=cor,col=ifelse(stats::p.adjust(geno$p_value)<=0.05,"red","black"))
+# graphics::abline(h=0,lty=2,col="grey")
 
 # descriptive statistics
 sum(p.adjust(pvalue,method="BH")<=0.05)
@@ -652,9 +654,10 @@ plotter <- function(table,cutoff,number,horizontal=FALSE){
   }
 }
 
-#load(paste0(dir,"/results/app_int.RData")) # TO DO: change this line
+load(paste0(dir,"/data/app_int_data.RData"))
+load(paste0(dir,"/results/app_int.RData")) # TO DO: change this line
 #load(paste0(dir,"/results/app_effect.RData"))
-load(paste0(dir,"/results/app_pvalue.RData")) # TO DO: change this line
+#load(paste0(dir,"/results/app_pvalue.RData")) # TO DO: change this line
 frame <- frame[seq_along(loss),colnames(frame)!="seed"]
 cutoff <- unique(frame$cutoff)
 number <- unique(sapply(loss,function(x) x$p))
@@ -687,7 +690,7 @@ for(i in seq_along(alpha)){
       median[i,j,] <- apply(do.call(what="rbind",args=pvalue[frame$alpha==alpha[i] & frame$cutoff==cutoff[j]]),2,median)
   }
 }
-median # integrate this in plot
+1*(median<=0.05) # integrate this in plot
 
 #- - - predictive performance - - -
 
@@ -695,7 +698,7 @@ auc <- as.data.frame(t(sapply(loss,function(x) x$auc)))
 table <- lapply(auc,function(x) tapply(X=x,INDEX=list(frame$cutoff,frame$alpha),FUN=function(x) mean(x)))
 
 grDevices::pdf(file=paste0(dir,"/manuscript/figure_int.pdf"),width=8,height=6,pointsize=15)
-plotter(table,cutoff,number)
+plotter(table,cutoff,number,horizontal=TRUE)
 grDevices::dev.off()
 
 #- - - estimation stability - - -
@@ -714,8 +717,13 @@ stability <- function(x,mode="cor"){
     index <- median(cor,na.rm=TRUE)
   } else if(mode=="rank"){
     top_sep <- apply(x,2,function(x) order(abs(x),decreasing=TRUE)[1:10])
-    top_all <- order(rowMeans(abs(x)),decreasing=TRUE)[1:10]
-    index <- mean(apply(top_sep,2,function(x) mean(x %in% top_all)))
+    sign_sep <- matrix(sign(x)[cbind(as.numeric(top_sep),rep(1:ncol(x),each=10))],nrow=10,ncol=10)
+    top_all <- order(abs(rowMeans(x)),decreasing=TRUE)[1:10]
+    sign_all <- sign(rowMeans(x))[top_all]
+    sep <- top_sep * sign_sep
+    all <- top_all * sign_all
+    #index <- mean(apply(top_sep,2,function(x) mean(x %in% top_all)))
+    index <- mean(apply(sep,2,function(x) mean(x %in% all)))
   }
   return(index)
 }
@@ -723,7 +731,7 @@ stability <- function(x,mode="cor"){
 value <- as.data.frame(t(sapply(loss,function(x) sapply(x$coef,function(x) stability(x,mode="rank")))))
 table <- lapply(value,function(x) tapply(X=x,INDEX=list(frame$cutoff,frame$alpha),FUN=function(x) mean(x)))
 
-grDevices::pdf(file=paste0(dir,"/manuscript/figure_temp.pdf"),width=8,height=6,pointsize=15)
+grDevices::pdf(file=paste0(dir,"/manuscript/figure_cor.pdf"),width=8,height=6,pointsize=15)
 plotter(table,cutoff,number)
 grDevices::dev.off()
 
@@ -731,6 +739,7 @@ grDevices::dev.off()
 
 
 ```{r prs_devel_stability,eval=FALSE,echo=FALSE}
+#----- This temporary code chunk will be removed! -----
 #<<init>>
 
 # temporary code: measure stability
@@ -793,7 +802,9 @@ for(i in seq_along(alpha)){
 #pred <- sapply(loss,function(x) x$pred)
 ```
 
-```{r prs_devel_test,echo=FALSE,eval=FALSE}
+```{r prs_devel_testing,echo=FALSE,eval=FALSE}
+#----- This temporary code chunk will be removed! -----
+
 # - - - new - - -
 load(paste0(dir,"/data/app_int_data.RData"))
 load(paste0(dir,"/results/app_pvalue.RData"))
