@@ -519,7 +519,7 @@ The following chunk perform the internal application.
 
 - output: data/app_int_data.RData, results/app_int.RData, results/info_app_int.txt
 
-```{r prs_script,eval=FALSE,echo=TRUE}
+```{r ncerpd_script,eval=FALSE,echo=TRUE}
 #<<init>>
 geno <- read.table(paste0(dir,"/data/vcf_with_pvalue.tab"),header=TRUE)
 
@@ -620,7 +620,7 @@ The following chunk generates the figures for the internal application. **Requir
 
 - output: manuscript/figure_int.pdf, manuscript/figure_temp.pdf
 
-```{r prs_plot,eval=TRUE,echo=TRUE}
+```{r ncerpd_plot,eval=TRUE,echo=TRUE}
 #<<init>>
 
 plotter <- function(table,cutoff,number,horizontal=FALSE){
@@ -738,7 +738,7 @@ grDevices::dev.off()
 ```
 
 
-```{r prs_devel_stability,eval=FALSE,echo=FALSE}
+```{r ncerpd_devel_stability,eval=FALSE,echo=FALSE}
 #----- This temporary code chunk will be removed! -----
 #<<init>>
 
@@ -802,7 +802,7 @@ for(i in seq_along(alpha)){
 #pred <- sapply(loss,function(x) x$pred)
 ```
 
-```{r prs_devel_testing,echo=FALSE,eval=FALSE}
+```{r ncerpd_devel_testing,echo=FALSE,eval=FALSE}
 #----- This temporary code chunk will be removed! -----
 
 # - - - new - - -
