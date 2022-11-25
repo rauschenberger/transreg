@@ -39,7 +39,7 @@ Zied Landoulsi
 Mark A van de Wiel 
 [![MvdW](https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png)](https://orcid.org/0000-0003-4780-8472),
 and Enrico Glaab
-[![EG](https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png)](https://orcid.org/0000-0003-3977-7469) (2022). "Penalised regression with multiple sets of prior effects". *Manuscript in preparation.*
+[![EG](https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png)](https://orcid.org/0000-0003-3977-7469) (2022). 'Penalised regression with multiple sets of prior effects'. *Manuscript in preparation.*
 
 <!--
 [![CRAN
@@ -49,3 +49,15 @@ downloads](https://cranlogs.r-pkg.org/badges/transreg)](https://CRAN.R-project.o
 [![Total CRAN
 downloads](https://cranlogs.r-pkg.org/badges/grand-total/transreg)](https://CRAN.R-project.org/package=transreg)
 -->
+
+## Disclaimer
+
+The R package `transreg` implements penalised regression with multiple sources of prior effects (Rauschenberger et al., 2022).
+
+Copyright &copy; 2022 Armin Rauschenberger, University of Luxembourg, Luxembourg Centre for Systems Biomedicine (LCSB), Biomedical Data Science (BDS)
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
