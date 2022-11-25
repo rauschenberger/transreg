@@ -2,5 +2,6 @@
 ^docs$
 ^pkgdown$
 license.md
+CONTRIBUTING.md
 \.Rhistory
 \.git
