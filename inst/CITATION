@@ -1,0 +1,17 @@
+citHeader("To cite transreg in publications use:")
+
+citEntry(entry="Article",
+    title = "Penalised regression with  multiple sources of prior effects",
+    author = personList(as.person("Armin Rauschenberger"),
+			as.person("Zied Landoulsi"),
+			as.person("Mark A. van de Wiel"),
+			as.person("Enrico Glaab")),
+    journal = "In preparation",
+    volume= "XXX(XXX):XXX-XXX",
+    year = 2021,
+    url = "https://doi.org/XXX",
+    textVersion = paste("Armin Rauschenberger, Zied Landoulsi, Mark A. van de Wiel, and Enrico Glaab (2022).",
+		"\"Penalised regression with  multiple sources of prior effects\",",
+		"In preparation, XXX(XXX):XXX-XXX.",
+		"https://doi.org/XXX")
+)

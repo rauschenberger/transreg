@@ -475,11 +475,11 @@ grDevices::dev.off()
 
 # Internal application
 
-The following chunk perform the internal application.
+The following chunk performs the internal application.
 
 - input: data/vcf_with_pvalue.tab, data/LuxPark_pheno.txt
 
-- execution time: **two days**
+- execution time: **two days** (unless parallel computing)
 
 - output: data/app_int_data.RData, results/app_int.RData, results/info_app_int.txt
 

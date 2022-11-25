@@ -2,6 +2,16 @@ url: ~
 template:
   bootstrap: 5
 
+navbar:
+  title: "starnet"
+  left:
+    - text: "functions"
+      href: reference/index.html
+    - text: "script"
+      href: articles/analysis.html
+    - text: "news"
+      href: news/index.html
+
 reference:
 
 - title: "R Package"

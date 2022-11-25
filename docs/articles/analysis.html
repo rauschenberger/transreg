@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">transreg</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,16 +36,13 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item">
-  <a class="nav-link" href="../reference/index.html">Reference</a>
+  <a class="nav-link" href="../reference/index.html">functions</a>
 </li>
-<li class="active nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/analysis.html">Penalised regression with multiple sources of prior effects</a>
-  </div>
+<li class="active nav-item">
+  <a class="nav-link" href="../articles/analysis.html">script</a>
 </li>
 <li class="nav-item">
-  <a class="nav-link" href="../news/index.html">Changelog</a>
+  <a class="nav-link" href="../news/index.html">news</a>
 </li>
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
@@ -76,6 +73,8 @@ Rauschenberger</h4>
 
     
     
+<p><strong>This file contains the code for reproducing the results shown
+in the related manuscript (numbers, tables, figures).</strong></p>
 <div class="section level2">
 <h2 id="initialisation">Initialisation<a class="anchor" aria-label="anchor" href="#initialisation"></a>
 </h2>
@@ -501,23 +500,19 @@ results/app_fwelnet.RData</p></li>
 </ul>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">grDevices</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grDevices/pdf.html" class="external-link">pdf</a></span><span class="op">(</span>file<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">dir</span>,<span class="st">"/manuscript/figure_ext.pdf"</span><span class="op">)</span>,width<span class="op">=</span><span class="fl">8</span>,height<span class="op">=</span><span class="fl">6</span>,pointsize<span class="op">=</span><span class="fl">15</span><span class="op">)</span></span>
-<span></span>
 <span><span class="fu">graphics</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">1</span><span class="op">)</span>,mar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2.5</span>,<span class="fl">3.5</span>,<span class="fl">0.5</span>,<span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
 <span><span class="kw">for</span><span class="op">(</span><span class="va">k</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"grridge"</span>,<span class="st">"fwelnet"</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="va">file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">dir</span>,<span class="st">"/results/app_"</span>,<span class="va">k</span>,<span class="st">".RData"</span><span class="op">)</span></span>
 <span>  <span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.exists</a></span><span class="op">(</span><span class="va">file</span><span class="op">)</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/graphics/frame.html" class="external-link">plot.new</a></span><span class="op">(</span><span class="op">)</span>;<span class="kw">next</span><span class="op">}</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="va">file</span><span class="op">)</span></span>
 <span>  <span class="va">loss</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">loss</span>,<span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">$</span><span class="va">deviance</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">loss</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">gsub</a></span><span class="op">(</span>pattern<span class="op">=</span><span class="st">"transreg."</span>,replacement<span class="op">=</span><span class="st">""</span>,x<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">loss</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="co">#colnames(loss) &lt;- gsub(pattern="_",replacement=".",x=colnames(loss))</span></span>
 <span>  <span class="va">loss</span> <span class="op">&lt;-</span> <span class="fl">100</span><span class="op">*</span><span class="op">(</span><span class="va">loss</span><span class="op">-</span><span class="va">loss</span><span class="op">$</span><span class="va">glmnet</span><span class="op">)</span><span class="op">/</span><span class="va">loss</span><span class="op">$</span><span class="va">glmnet</span></span>
 <span></span>
 <span>  <span class="va">temp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"exp.sta"</span>,<span class="st">"exp.sim"</span>,<span class="st">"iso.sta"</span>,<span class="st">"iso.sim"</span><span class="op">)</span></span>
 <span>  <span class="va">name</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"fwelnet"</span>,<span class="st">"ecpc"</span>,<span class="va">temp</span><span class="op">)</span></span>
 <span>  <span class="fu">graphics</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/graphics/frame.html" class="external-link">plot.new</a></span><span class="op">(</span><span class="op">)</span></span>
 <span>  <span class="fu">graphics</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html" class="external-link">plot.window</a></span><span class="op">(</span>xlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>,<span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">name</span><span class="op">)</span><span class="op">+</span><span class="fl">0.5</span><span class="op">)</span>,ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">loss</span>,na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="co">#graphics::abline(h=median(loss$mean),lty=2,col="grey")</span></span>
 <span>  <span class="fu">graphics</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span>h<span class="op">=</span><span class="fl">0</span>,lty<span class="op">=</span><span class="fl">2</span>,col<span class="op">=</span><span class="st">"grey"</span><span class="op">)</span></span>
 <span>  <span class="fu">graphics</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/graphics/axis.html" class="external-link">axis</a></span><span class="op">(</span>side<span class="op">=</span><span class="fl">1</span>,at<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">name</span><span class="op">)</span>,labels<span class="op">=</span><span class="va">name</span>,cex.axis<span class="op">=</span><span class="fl">0.7</span><span class="op">)</span></span>
 <span>  <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span>pattern<span class="op">=</span><span class="st">"grridge"</span>,x<span class="op">=</span><span class="va">k</span><span class="op">)</span><span class="op">)</span><span class="op">{</span><span class="va">at</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from<span class="op">=</span><span class="op">-</span><span class="fl">10</span>,to<span class="op">=</span><span class="fl">10</span>,by<span class="op">=</span><span class="fl">5</span><span class="op">)</span><span class="op">}</span></span>
@@ -531,7 +526,6 @@ results/app_fwelnet.RData</p></li>
 <span>    <span class="fu">graphics</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">i</span>,y<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">loss</span><span class="op">[</span>,<span class="va">name</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,pch<span class="op">=</span><span class="fl">22</span>,col<span class="op">=</span><span class="st">"white"</span>,bg<span class="op">=</span><span class="st">"black"</span>,cex<span class="op">=</span><span class="fl">0.7</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span>
-<span></span>
 <span><span class="fu">grDevices</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html" class="external-link">dev.off</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## agg_png </span></span>
 <span><span class="co">##       2</span></span></code></pre>
@@ -539,10 +533,11 @@ results/app_fwelnet.RData</p></li>
 <div class="section level2">
 <h2 id="internal-application">Internal application<a class="anchor" aria-label="anchor" href="#internal-application"></a>
 </h2>
-<p>The following chunk perform the internal application.</p>
+<p>The following chunk performs the internal application.</p>
 <ul>
 <li><p>input: data/vcf_with_pvalue.tab, data/LuxPark_pheno.txt</p></li>
-<li><p>execution time: <strong>two days</strong></p></li>
+<li><p>execution time: <strong>two days</strong> (unless parallel
+computing)</p></li>
 <li><p>output: data/app_int_data.RData, results/app_int.RData,
 results/info_app_int.txt</p></li>
 </ul>
@@ -598,7 +593,7 @@ results/info_app_int.txt</p></li>
 <span><span class="va">cutoff</span> <span class="op">&lt;-</span> <span class="fl">5</span><span class="op">*</span><span class="fl">10</span><span class="op">^</span><span class="va">power</span></span>
 <span><span class="va">frame</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span>cutoff<span class="op">=</span><span class="va">cutoff</span>,alpha<span class="op">=</span><span class="fl">0</span><span class="op">:</span><span class="fl">1</span>,seed<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,count<span class="op">=</span><span class="cn">NA</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">#- - - classical (start) - - -</span></span>
+<span><span class="co">#- - - sequential (start) - - -</span></span>
 <span><span class="co">#loss &lt;- list()</span></span>
 <span><span class="co">#for(i in seq_len(nrow(frame))){</span></span>
 <span><span class="co">#  cat("--- i =",i,"---","\n")</span></span>
@@ -608,11 +603,10 @@ results/info_app_int.txt</p></li>
 <span><span class="co">#  loss[[i]] &lt;- transreg:::compare(target=list(y=y,x=X[,cond]),prior=prior[cond],family="binomial",alpha=frame$alpha[i],scale=c("exp","iso"),sign=FALSE,switch=FALSE,select=FALSE,foldid.ext=foldid$foldid.ext,foldid.int=foldid$foldid.int,type.measure=c("deviance","class","auc"),seed=frame$seed[i])</span></span>
 <span><span class="co">#  frame$count[i] &lt;- sum(cond)</span></span>
 <span><span class="co">#}</span></span>
-<span><span class="co"># - - - classical (end) - - -</span></span>
+<span><span class="co"># - - - sequential (end) - - -</span></span>
 <span></span>
 <span><span class="co">#- - - parallel (start) - - -</span></span>
-<span><span class="va">frame</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span>cutoff<span class="op">=</span><span class="va">cutoff</span>,alpha<span class="op">=</span><span class="fl">0</span><span class="op">:</span><span class="fl">1</span>,seed<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,count<span class="op">=</span><span class="cn">NA</span><span class="op">)</span> <span class="co"># original</span></span>
-<span><span class="co">#frame &lt;- expand.grid(cutoff=cutoff[cutoff&lt;=5e-4],alpha=0:1,seed=1:10,count=NA) # temporary</span></span>
+<span><span class="va">frame</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span>cutoff<span class="op">=</span><span class="va">cutoff</span>,alpha<span class="op">=</span><span class="fl">0</span><span class="op">:</span><span class="fl">1</span>,seed<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,count<span class="op">=</span><span class="cn">NA</span><span class="op">)</span></span>
 <span><span class="va">cluster</span> <span class="op">&lt;-</span> <span class="fu">snow</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/snow/man/snow-startstop.html" class="external-link">makeCluster</a></span><span class="op">(</span><span class="fl">8</span><span class="op">)</span></span>
 <span><span class="va">evaluate</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">frame</span>,<span class="va">i</span>,<span class="va">switch</span>,<span class="va">pvalue</span>,<span class="va">y</span>,<span class="va">X</span>,<span class="va">prior</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="va">frame</span><span class="op">$</span><span class="va">seed</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span></span>
@@ -622,21 +616,11 @@ results/info_app_int.txt</p></li>
 <span><span class="op">}</span></span>
 <span><span class="fu">snow</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/snow/man/snow-cluster.html" class="external-link">clusterExport</a></span><span class="op">(</span>cl<span class="op">=</span><span class="va">cluster</span>,list<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"evaluate"</span>,<span class="st">"frame"</span>,<span class="st">"switch"</span>,<span class="st">"pvalue"</span>,<span class="st">"y"</span>,<span class="st">"X"</span>,<span class="st">"prior"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">loss</span> <span class="op">&lt;-</span> <span class="fu">snow</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/snow/man/snow-parallel.html" class="external-link">parSapply</a></span><span class="op">(</span>cl<span class="op">=</span><span class="va">cluster</span>,X<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">frame</span><span class="op">)</span><span class="op">)</span>,FUN<span class="op">=</span><span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="fu">evaluate</span><span class="op">(</span>frame<span class="op">=</span><span class="va">frame</span>,i<span class="op">=</span><span class="va">i</span>,switch<span class="op">=</span><span class="va">switch</span>,pvalue<span class="op">=</span><span class="va">pvalue</span>,y<span class="op">=</span><span class="va">y</span>,X<span class="op">=</span><span class="va">X</span>,prior<span class="op">=</span><span class="va">prior</span><span class="op">)</span>,simplify<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#names(old[[1]])</span></span>
-<span><span class="co">#names(new[[1]])</span></span>
-<span><span class="co">#all.equal(old[[1]]$deviance,new[[1]]$deviance)</span></span>
-<span><span class="co">#all.equal(old[[1]]$class,new[[1]]$class)</span></span>
-<span><span class="co">#all.equal(old[[1]]$auc,new[[1]]$auc)</span></span>
-<span><span class="co">#all.equal(old[[1]]$coef,new[[1]]$coef)</span></span>
 <span><span class="co">#- - - parallel (end) - - -</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/save.html" class="external-link">save</a></span><span class="op">(</span><span class="va">frame</span>,<span class="va">loss</span>,file<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">dir</span>,<span class="st">"/results/app_int.RData"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#save(frame,loss,file=paste0(dir,"/results/app_effect.RData"))</span></span>
-<span><span class="co">#save(frame,loss,file=paste0(dir,"/results/app_pvalue.RData"))</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/writeLines.html" class="external-link">writeLines</a></span><span class="op">(</span>text<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/utils/capture.output.html" class="external-link">capture.output</a></span><span class="op">(</span><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"\n"</span><span class="op">)</span>,</span>
-<span>      <span class="fu">sessioninfo</span><span class="fu">::</span><span class="fu"><a href="https://r-lib.github.io/sessioninfo/reference/session_info.html" class="external-link">session_info</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,con<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">dir</span>,<span class="st">"/results/info_app_int.txt"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># use repeated 10-fold CV (TO DO)</span></span>
-<span><span class="co"># modify function cv.transfer so that it accepts named list with "y and X" (not only "y and x") (TO DO)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/save.html" class="external-link">save</a></span><span class="op">(</span><span class="va">frame</span>,<span class="va">loss</span>,file<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">dir</span>,<span class="st">"/results/app_int.RData"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/writeLines.html" class="external-link">writeLines</a></span><span class="op">(</span>text<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/utils/capture.output.html" class="external-link">capture.output</a></span><span class="op">(</span><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"\n"</span><span class="op">)</span>,</span>
+<span>      <span class="fu">sessioninfo</span><span class="fu">::</span><span class="fu"><a href="https://r-lib.github.io/sessioninfo/reference/session_info.html" class="external-link">session_info</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,con<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">dir</span>,<span class="st">"/results/info_app_int.txt"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>The following chunk generates the figures for the internal
 application. <strong>Requires execution of previous chunk.</strong></p>
 <ul>
@@ -680,97 +664,10 @@ manuscript/figure_temp.pdf</p></li>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">dir</span>,<span class="st">"/data/app_int_data.RData"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">dir</span>,<span class="st">"/results/app_int.RData"</span><span class="op">)</span><span class="op">)</span> <span class="co"># TO DO: change this line</span></span>
-<span><span class="co">#load(paste0(dir,"/results/app_effect.RData"))</span></span>
-<span><span class="co">#load(paste0(dir,"/results/app_pvalue.RData")) # TO DO: change this line</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">dir</span>,<span class="st">"/results/app_int.RData"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">frame</span> <span class="op">&lt;-</span> <span class="va">frame</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">loss</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">frame</span><span class="op">)</span><span class="op">!=</span><span class="st">"seed"</span><span class="op">]</span></span>
 <span><span class="va">cutoff</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">frame</span><span class="op">$</span><span class="va">cutoff</span><span class="op">)</span></span>
 <span><span class="va">number</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">loss</span>,<span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">$</span><span class="va">p</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># - - - p-values - - -</span></span>
-<span></span>
-<span><span class="va">tester</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">y</span>,<span class="va">x</span><span class="op">)</span><span class="op">{</span></span>
-<span>  <span class="va">foldid</span> <span class="op">&lt;-</span> <span class="va">x</span><span class="op">$</span><span class="va">foldid</span></span>
-<span>  <span class="va">pred</span> <span class="op">&lt;-</span> <span class="va">x</span><span class="op">$</span><span class="va">pred</span></span>
-<span>  <span class="va">limit</span> <span class="op">&lt;-</span> <span class="fl">1e-06</span></span>
-<span>  <span class="va">pred</span><span class="op">[</span><span class="va">pred</span> <span class="op">&lt;</span> <span class="va">limit</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">limit</span></span>
-<span>  <span class="va">pred</span><span class="op">[</span><span class="va">pred</span> <span class="op">&gt;</span> <span class="fl">1</span> <span class="op">-</span> <span class="va">limit</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">-</span> <span class="va">limit</span></span>
-<span>  <span class="va">res</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fl">2</span> <span class="op">*</span> <span class="op">(</span><span class="va">y</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">pred</span><span class="op">)</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">y</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">pred</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="va">method</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"transreg."</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"exp.sta"</span>,<span class="st">"exp.sim"</span>,<span class="st">"iso.sta"</span>,<span class="st">"iso.sim"</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="va">pvalue</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="cn">NA</span>,nrow<span class="op">=</span><span class="fl">10</span>,ncol<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">method</span><span class="op">)</span>,dimnames<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="cn">NULL</span>,<span class="va">method</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
-<span>    <span class="kw">for</span><span class="op">(</span><span class="va">j</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">method</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
-<span>      <span class="va">pvalue</span><span class="op">[</span><span class="va">i</span>,<span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/wilcox.test.html" class="external-link">wilcox.test</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">res</span><span class="op">[</span><span class="va">foldid</span><span class="op">==</span><span class="va">i</span>,<span class="st">"glmnet"</span><span class="op">]</span>,y<span class="op">=</span><span class="va">res</span><span class="op">[</span><span class="va">foldid</span><span class="op">==</span><span class="va">i</span>,<span class="va">method</span><span class="op">[</span><span class="va">j</span><span class="op">]</span><span class="op">]</span>,paired<span class="op">=</span><span class="cn">TRUE</span>,alternative<span class="op">=</span><span class="st">"greater"</span><span class="op">)</span><span class="op">$</span><span class="va">p.value</span></span>
-<span>    <span class="op">}</span></span>
-<span>  <span class="op">}</span></span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">pvalue</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="va">pvalue</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">loss</span>,<span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">tester</span><span class="op">(</span>y<span class="op">=</span><span class="va">y</span>,x<span class="op">=</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning in wilcox.test.default(x = res[foldid == i, "glmnet"], y = res[foldid</span></span>
-<span><span class="co">## == : cannot compute exact p-value with zeroes</span></span>
-<span></span>
-<span><span class="co">## Warning in wilcox.test.default(x = res[foldid == i, "glmnet"], y = res[foldid</span></span>
-<span><span class="co">## == : cannot compute exact p-value with zeroes</span></span>
-<span></span>
-<span><span class="co">## Warning in wilcox.test.default(x = res[foldid == i, "glmnet"], y = res[foldid</span></span>
-<span><span class="co">## == : cannot compute exact p-value with zeroes</span></span>
-<span></span>
-<span><span class="co">## Warning in wilcox.test.default(x = res[foldid == i, "glmnet"], y = res[foldid</span></span>
-<span><span class="co">## == : cannot compute exact p-value with zeroes</span></span>
-<span></span>
-<span><span class="co">## Warning in wilcox.test.default(x = res[foldid == i, "glmnet"], y = res[foldid</span></span>
-<span><span class="co">## == : cannot compute exact p-value with zeroes</span></span>
-<span></span>
-<span><span class="co">## Warning in wilcox.test.default(x = res[foldid == i, "glmnet"], y = res[foldid</span></span>
-<span><span class="co">## == : cannot compute exact p-value with zeroes</span></span>
-<span></span>
-<span><span class="co">## Warning in wilcox.test.default(x = res[foldid == i, "glmnet"], y = res[foldid</span></span>
-<span><span class="co">## == : cannot compute exact p-value with zeroes</span></span>
-<span></span>
-<span><span class="co">## Warning in wilcox.test.default(x = res[foldid == i, "glmnet"], y = res[foldid</span></span>
-<span><span class="co">## == : cannot compute exact p-value with zeroes</span></span>
-<span></span>
-<span><span class="co">## Warning in wilcox.test.default(x = res[foldid == i, "glmnet"], y = res[foldid</span></span>
-<span><span class="co">## == : cannot compute exact p-value with zeroes</span></span>
-<span></span>
-<span><span class="co">## Warning in wilcox.test.default(x = res[foldid == i, "glmnet"], y = res[foldid</span></span>
-<span><span class="co">## == : cannot compute exact p-value with zeroes</span></span></code></pre>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">alpha</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span></span>
-<span><span class="va">method</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"transreg."</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"exp.sta"</span>,<span class="st">"exp.sim"</span>,<span class="st">"iso.sta"</span>,<span class="st">"iso.sim"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">median</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/array.html" class="external-link">array</a></span><span class="op">(</span><span class="cn">NA</span>,dim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">alpha</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">cutoff</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">method</span><span class="op">)</span><span class="op">)</span>,dimnames<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">alpha</span>,<span class="va">cutoff</span>,<span class="va">method</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">alpha</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
-<span>  <span class="kw">for</span><span class="op">(</span><span class="va">j</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">cutoff</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
-<span>      <span class="va">median</span><span class="op">[</span><span class="va">i</span>,<span class="va">j</span>,<span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span>what<span class="op">=</span><span class="st">"rbind"</span>,args<span class="op">=</span><span class="va">pvalue</span><span class="op">[</span><span class="va">frame</span><span class="op">$</span><span class="va">alpha</span><span class="op">==</span><span class="va">alpha</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&amp;</span> <span class="va">frame</span><span class="op">$</span><span class="va">cutoff</span><span class="op">==</span><span class="va">cutoff</span><span class="op">[</span><span class="va">j</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,<span class="fl">2</span>,<span class="va">median</span><span class="op">)</span></span>
-<span>  <span class="op">}</span></span>
-<span><span class="op">}</span></span>
-<span><span class="fl">1</span><span class="op">*</span><span class="op">(</span><span class="va">median</span><span class="op">&lt;=</span><span class="fl">0.05</span><span class="op">)</span> <span class="co"># integrate this in plot</span></span></code></pre></div>
-<pre><code><span><span class="co">## , , transreg.exp.sta</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">##   0.05 0.005 5e-04 5e-05 5e-06 5e-07 5e-08 5e-09 5e-10</span></span>
-<span><span class="co">## 0    0     0     0     0     0     0     0     0     0</span></span>
-<span><span class="co">## 1    0     0     0     0     0     0     0     0     0</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## , , transreg.exp.sim</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">##   0.05 0.005 5e-04 5e-05 5e-06 5e-07 5e-08 5e-09 5e-10</span></span>
-<span><span class="co">## 0    0     0     0     0     0     0     0     0     0</span></span>
-<span><span class="co">## 1    0     0     0     0     0     0     0     0     0</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## , , transreg.iso.sta</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">##   0.05 0.005 5e-04 5e-05 5e-06 5e-07 5e-08 5e-09 5e-10</span></span>
-<span><span class="co">## 0    0     0     0     0     0     0     0     0     0</span></span>
-<span><span class="co">## 1    1     0     0     0     0     0     0     0     0</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## , , transreg.iso.sim</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">##   0.05 0.005 5e-04 5e-05 5e-06 5e-07 5e-08 5e-09 5e-10</span></span>
-<span><span class="co">## 0    0     0     0     0     0     0     0     0     0</span></span>
-<span><span class="co">## 1    1     0     0     0     0     0     0     0     0</span></span></code></pre>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#- - - predictive performance - - -</span></span>
 <span></span>
 <span><span class="va">auc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">loss</span>,<span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">$</span><span class="va">auc</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">table</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">auc</span>,<span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/tapply.html" class="external-link">tapply</a></span><span class="op">(</span>X<span class="op">=</span><span class="va">x</span>,INDEX<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">frame</span><span class="op">$</span><span class="va">cutoff</span>,<span class="va">frame</span><span class="op">$</span><span class="va">alpha</span><span class="op">)</span>,FUN<span class="op">=</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
@@ -780,51 +677,537 @@ manuscript/figure_temp.pdf</p></li>
 <span><span class="fu">grDevices</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html" class="external-link">dev.off</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## agg_png </span></span>
 <span><span class="co">##       2</span></span></code></pre>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#- - - estimation stability - - -</span></span>
-<span></span>
-<span><span class="va">stability</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>,<span class="va">mode</span><span class="op">=</span><span class="st">"cor"</span><span class="op">)</span><span class="op">{</span></span>
-<span>  <span class="kw">if</span><span class="op">(</span><span class="va">mode</span><span class="op">==</span><span class="st">"cor"</span><span class="op">)</span><span class="op">{</span></span>
-<span>    <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
-<span>      <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
-<span>    <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">x</span>,na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">==</span><span class="fl">0</span><span class="op">)</span><span class="op">{</span></span>
-<span>      <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
-<span>    <span class="va">cor</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">x</span>,method<span class="op">=</span><span class="st">"spearman"</span><span class="op">)</span></span>
-<span>    <span class="va">cor</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">cor</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">cor</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
-<span>    <span class="va">index</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">cor</span>,na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
-<span>  <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span><span class="op">(</span><span class="va">mode</span><span class="op">==</span><span class="st">"rank"</span><span class="op">)</span><span class="op">{</span></span>
-<span>    <span class="va">top_sep</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">x</span>,<span class="fl">2</span>,<span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,decreasing<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span><span class="op">)</span></span>
-<span>    <span class="va">sign_sep</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sign.html" class="external-link">sign</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">top_sep</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,each<span class="op">=</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span><span class="op">]</span>,nrow<span class="op">=</span><span class="fl">10</span>,ncol<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span>
-<span>    <span class="va">top_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowMeans</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>,decreasing<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span></span>
-<span>    <span class="va">sign_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sign.html" class="external-link">sign</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowMeans</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="va">top_all</span><span class="op">]</span></span>
-<span>    <span class="va">sep</span> <span class="op">&lt;-</span> <span class="va">top_sep</span> <span class="op">*</span> <span class="va">sign_sep</span></span>
-<span>    <span class="va">all</span> <span class="op">&lt;-</span> <span class="va">top_all</span> <span class="op">*</span> <span class="va">sign_all</span></span>
-<span>    <span class="co">#index &lt;- mean(apply(top_sep,2,function(x) mean(x %in% top_all)))</span></span>
-<span>    <span class="va">index</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">sep</span>,<span class="fl">2</span>,<span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">x</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">all</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="op">}</span></span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">index</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="va">value</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">loss</span>,<span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">coef</span>,<span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">stability</span><span class="op">(</span><span class="va">x</span>,mode<span class="op">=</span><span class="st">"rank"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">table</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">value</span>,<span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/tapply.html" class="external-link">tapply</a></span><span class="op">(</span>X<span class="op">=</span><span class="va">x</span>,INDEX<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">frame</span><span class="op">$</span><span class="va">cutoff</span>,<span class="va">frame</span><span class="op">$</span><span class="va">alpha</span><span class="op">)</span>,FUN<span class="op">=</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">grDevices</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grDevices/pdf.html" class="external-link">pdf</a></span><span class="op">(</span>file<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">dir</span>,<span class="st">"/manuscript/figure_cor.pdf"</span><span class="op">)</span>,width<span class="op">=</span><span class="fl">8</span>,height<span class="op">=</span><span class="fl">6</span>,pointsize<span class="op">=</span><span class="fl">15</span><span class="op">)</span></span>
-<span><span class="fu">plotter</span><span class="op">(</span><span class="va">table</span>,<span class="va">cutoff</span>,<span class="va">number</span><span class="op">)</span></span>
-<span><span class="fu">grDevices</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grDevices/dev.html" class="external-link">dev.off</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## agg_png </span></span>
-<span><span class="co">##       2</span></span></code></pre>
+</div>
+<div class="section level2">
+<h2 id="acknowledgements">Acknowledgements<a class="anchor" aria-label="anchor" href="#acknowledgements"></a>
+</h2>
+<p>Reformat list of consortium members for acknowledgements: [see
+source].</p>
 </div>
 <div class="section level2">
 <h2 id="session-information">Session information<a class="anchor" aria-label="anchor" href="#session-information"></a>
 </h2>
-<p>Reformat list of consortium members for acknowledgements: [see
-source].</p>
 <p>Print session information.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/toLatex.html" class="external-link">toLatex</a></span><span class="op">(</span><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<table class="table">
+<colgroup>
+<col width="9%">
+<col width="90%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">setting</th>
+<th align="left">value</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">version</td>
+<td align="left">R version 4.2.2 (2022-10-31)</td>
+</tr>
+<tr class="even">
+<td align="left">os</td>
+<td align="left">macOS Monterey 12.6</td>
+</tr>
+<tr class="odd">
+<td align="left">system</td>
+<td align="left">aarch64, darwin20</td>
+</tr>
+<tr class="even">
+<td align="left">ui</td>
+<td align="left">X11</td>
+</tr>
+<tr class="odd">
+<td align="left">language</td>
+<td align="left">en</td>
+</tr>
+<tr class="even">
+<td align="left">collate</td>
+<td align="left">en_US.UTF-8</td>
+</tr>
+<tr class="odd">
+<td align="left">ctype</td>
+<td align="left">en_US.UTF-8</td>
+</tr>
+<tr class="even">
+<td align="left">tz</td>
+<td align="left">Europe/Luxembourg</td>
+</tr>
+<tr class="odd">
+<td align="left">date</td>
+<td align="left">2022-11-25</td>
+</tr>
+<tr class="even">
+<td align="left">pandoc</td>
+<td align="left">2.19.2 @
+/Applications/RStudio.app/Contents/MacOS/quarto/bin/tools/ (via
+rmarkdown)</td>
+</tr>
+</tbody>
+</table>
+<table class="table">
+<thead><tr class="header">
+<th align="left"></th>
+<th align="left">package</th>
+<th align="left">loadedversion</th>
+<th align="left">date</th>
+<th align="left">source</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">bslib</td>
+<td align="left">bslib</td>
+<td align="left">0.4.0</td>
+<td align="left">2022-07-16</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="even">
+<td align="left">cachem</td>
+<td align="left">cachem</td>
+<td align="left">1.0.6</td>
+<td align="left">2021-08-19</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="odd">
+<td align="left">callr</td>
+<td align="left">callr</td>
+<td align="left">3.7.2</td>
+<td align="left">2022-08-22</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="even">
+<td align="left">cli</td>
+<td align="left">cli</td>
+<td align="left">3.4.1</td>
+<td align="left">2022-09-23</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="odd">
+<td align="left">codetools</td>
+<td align="left">codetools</td>
+<td align="left">0.2-18</td>
+<td align="left">2020-11-04</td>
+<td align="left">CRAN (R 4.2.2)</td>
+</tr>
+<tr class="even">
+<td align="left">crayon</td>
+<td align="left">crayon</td>
+<td align="left">1.5.2</td>
+<td align="left">2022-09-29</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="odd">
+<td align="left">desc</td>
+<td align="left">desc</td>
+<td align="left">1.4.2</td>
+<td align="left">2022-09-08</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="even">
+<td align="left">devtools</td>
+<td align="left">devtools</td>
+<td align="left">2.4.5</td>
+<td align="left">2022-10-11</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="odd">
+<td align="left">digest</td>
+<td align="left">digest</td>
+<td align="left">0.6.30</td>
+<td align="left">2022-10-18</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="even">
+<td align="left">ellipsis</td>
+<td align="left">ellipsis</td>
+<td align="left">0.3.2</td>
+<td align="left">2021-04-29</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="odd">
+<td align="left">evaluate</td>
+<td align="left">evaluate</td>
+<td align="left">0.16</td>
+<td align="left">2022-08-09</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="even">
+<td align="left">fastmap</td>
+<td align="left">fastmap</td>
+<td align="left">1.1.0</td>
+<td align="left">2021-01-25</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="odd">
+<td align="left">foreach</td>
+<td align="left">foreach</td>
+<td align="left">1.5.2</td>
+<td align="left">2022-02-02</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="even">
+<td align="left">fs</td>
+<td align="left">fs</td>
+<td align="left">1.5.2</td>
+<td align="left">2021-12-08</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="odd">
+<td align="left">glmnet</td>
+<td align="left">glmnet</td>
+<td align="left">4.1-4</td>
+<td align="left">2022-04-15</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="even">
+<td align="left">glue</td>
+<td align="left">glue</td>
+<td align="left">1.6.2</td>
+<td align="left">2022-02-24</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="odd">
+<td align="left">htmltools</td>
+<td align="left">htmltools</td>
+<td align="left">0.5.3</td>
+<td align="left">2022-07-18</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="even">
+<td align="left">htmlwidgets</td>
+<td align="left">htmlwidgets</td>
+<td align="left">1.5.4</td>
+<td align="left">2021-09-08</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="odd">
+<td align="left">httpuv</td>
+<td align="left">httpuv</td>
+<td align="left">1.6.6</td>
+<td align="left">2022-09-08</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="even">
+<td align="left">iterators</td>
+<td align="left">iterators</td>
+<td align="left">1.0.14</td>
+<td align="left">2022-02-05</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="odd">
+<td align="left">jquerylib</td>
+<td align="left">jquerylib</td>
+<td align="left">0.1.4</td>
+<td align="left">2021-04-26</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="even">
+<td align="left">jsonlite</td>
+<td align="left">jsonlite</td>
+<td align="left">1.8.0</td>
+<td align="left">2022-02-22</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="odd">
+<td align="left">knitr</td>
+<td align="left">knitr</td>
+<td align="left">1.40</td>
+<td align="left">2022-08-24</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="even">
+<td align="left">later</td>
+<td align="left">later</td>
+<td align="left">1.3.0</td>
+<td align="left">2021-08-18</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="odd">
+<td align="left">lattice</td>
+<td align="left">lattice</td>
+<td align="left">0.20-45</td>
+<td align="left">2021-09-22</td>
+<td align="left">CRAN (R 4.2.2)</td>
+</tr>
+<tr class="even">
+<td align="left">lifecycle</td>
+<td align="left">lifecycle</td>
+<td align="left">1.0.3</td>
+<td align="left">2022-10-07</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="odd">
+<td align="left">magrittr</td>
+<td align="left">magrittr</td>
+<td align="left">2.0.3</td>
+<td align="left">2022-03-30</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="even">
+<td align="left">Matrix</td>
+<td align="left">Matrix</td>
+<td align="left">1.5-1</td>
+<td align="left">2022-09-13</td>
+<td align="left">CRAN (R 4.2.2)</td>
+</tr>
+<tr class="odd">
+<td align="left">memoise</td>
+<td align="left">memoise</td>
+<td align="left">2.0.1</td>
+<td align="left">2021-11-26</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="even">
+<td align="left">mime</td>
+<td align="left">mime</td>
+<td align="left">0.12</td>
+<td align="left">2021-09-28</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="odd">
+<td align="left">miniUI</td>
+<td align="left">miniUI</td>
+<td align="left">0.1.1.1</td>
+<td align="left">2018-05-18</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="even">
+<td align="left">palasso</td>
+<td align="left">palasso</td>
+<td align="left">0.0.8</td>
+<td align="left">2021-04-19</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="odd">
+<td align="left">pkgbuild</td>
+<td align="left">pkgbuild</td>
+<td align="left">1.3.1</td>
+<td align="left">2021-12-20</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="even">
+<td align="left">pkgdown</td>
+<td align="left">pkgdown</td>
+<td align="left">2.0.6</td>
+<td align="left">2022-07-16</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="odd">
+<td align="left">pkgload</td>
+<td align="left">pkgload</td>
+<td align="left">1.3.0</td>
+<td align="left">2022-06-27</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="even">
+<td align="left">prettyunits</td>
+<td align="left">prettyunits</td>
+<td align="left">1.1.1</td>
+<td align="left">2020-01-24</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="odd">
+<td align="left">processx</td>
+<td align="left">processx</td>
+<td align="left">3.7.0</td>
+<td align="left">2022-07-07</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="even">
+<td align="left">profvis</td>
+<td align="left">profvis</td>
+<td align="left">0.3.7</td>
+<td align="left">2020-11-02</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="odd">
+<td align="left">promises</td>
+<td align="left">promises</td>
+<td align="left">1.2.0.1</td>
+<td align="left">2021-02-11</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="even">
+<td align="left">ps</td>
+<td align="left">ps</td>
+<td align="left">1.7.1</td>
+<td align="left">2022-06-18</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="odd">
+<td align="left">purrr</td>
+<td align="left">purrr</td>
+<td align="left">0.3.4</td>
+<td align="left">2020-04-17</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="even">
+<td align="left">R6</td>
+<td align="left">R6</td>
+<td align="left">2.5.1</td>
+<td align="left">2021-08-19</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="odd">
+<td align="left">ragg</td>
+<td align="left">ragg</td>
+<td align="left">1.2.3</td>
+<td align="left">2022-09-29</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="even">
+<td align="left">Rcpp</td>
+<td align="left">Rcpp</td>
+<td align="left">1.0.9</td>
+<td align="left">2022-07-08</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="odd">
+<td align="left">remotes</td>
+<td align="left">remotes</td>
+<td align="left">2.4.2</td>
+<td align="left">2021-11-30</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="even">
+<td align="left">rlang</td>
+<td align="left">rlang</td>
+<td align="left">1.0.6</td>
+<td align="left">2022-09-24</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="odd">
+<td align="left">rmarkdown</td>
+<td align="left">rmarkdown</td>
+<td align="left">2.16</td>
+<td align="left">2022-08-24</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="even">
+<td align="left">rprojroot</td>
+<td align="left">rprojroot</td>
+<td align="left">2.0.3</td>
+<td align="left">2022-04-02</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="odd">
+<td align="left">rstudioapi</td>
+<td align="left">rstudioapi</td>
+<td align="left">0.14</td>
+<td align="left">2022-08-22</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="even">
+<td align="left">sass</td>
+<td align="left">sass</td>
+<td align="left">0.4.2</td>
+<td align="left">2022-07-16</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="odd">
+<td align="left">sessioninfo</td>
+<td align="left">sessioninfo</td>
+<td align="left">1.2.2</td>
+<td align="left">2021-12-06</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="even">
+<td align="left">shape</td>
+<td align="left">shape</td>
+<td align="left">1.4.6</td>
+<td align="left">2021-05-19</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="odd">
+<td align="left">shiny</td>
+<td align="left">shiny</td>
+<td align="left">1.7.2</td>
+<td align="left">2022-07-19</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="even">
+<td align="left">starnet</td>
+<td align="left">starnet</td>
+<td align="left">0.0.6</td>
+<td align="left">2020-11-24</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="odd">
+<td align="left">stringi</td>
+<td align="left">stringi</td>
+<td align="left">1.7.8</td>
+<td align="left">2022-07-11</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="even">
+<td align="left">stringr</td>
+<td align="left">stringr</td>
+<td align="left">1.4.1</td>
+<td align="left">2022-08-20</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="odd">
+<td align="left">survival</td>
+<td align="left">survival</td>
+<td align="left">3.4-0</td>
+<td align="left">2022-08-09</td>
+<td align="left">CRAN (R 4.2.2)</td>
+</tr>
+<tr class="even">
+<td align="left">systemfonts</td>
+<td align="left">systemfonts</td>
+<td align="left">1.0.4</td>
+<td align="left">2022-02-11</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="odd">
+<td align="left">textshaping</td>
+<td align="left">textshaping</td>
+<td align="left">0.3.6</td>
+<td align="left">2021-10-13</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="even">
+<td align="left">transreg</td>
+<td align="left">transreg</td>
+<td align="left">1.0.0</td>
+<td align="left">2022-11-25</td>
+<td align="left">local</td>
+</tr>
+<tr class="odd">
+<td align="left">urlchecker</td>
+<td align="left">urlchecker</td>
+<td align="left">1.0.1</td>
+<td align="left">2021-11-30</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="even">
+<td align="left">usethis</td>
+<td align="left">usethis</td>
+<td align="left">2.1.6</td>
+<td align="left">2022-05-25</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="odd">
+<td align="left">xfun</td>
+<td align="left">xfun</td>
+<td align="left">0.33</td>
+<td align="left">2022-09-12</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="even">
+<td align="left">xtable</td>
+<td align="left">xtable</td>
+<td align="left">1.8-4</td>
+<td align="left">2019-04-21</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+<tr class="odd">
+<td align="left">yaml</td>
+<td align="left">yaml</td>
+<td align="left">2.3.5</td>
+<td align="left">2022-02-21</td>
+<td align="left">CRAN (R 4.2.0)</td>
+</tr>
+</tbody>
+</table>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
