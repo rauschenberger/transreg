@@ -1,9 +1,10 @@
 
+[![AppVeyor build
+status](https://ci.appveyor.com/api/projects/status/github/rauschenberger/transreg?svg=true)](https://ci.appveyor.com/project/rauschenberger/transreg)
+
 <!--
 [![Travis-CI Build
 Status](https://travis-ci.org/rauschenberger/transreg.svg)](https://travis-ci.com/rauschenberger/transreg)
-[![AppVeyor build
-status](https://ci.appveyor.com/api/projects/status/github/rauschenberger/transreg?svg=true)](https://ci.appveyor.com/project/rauschenberger/transreg)
 [![Coverage
 Status](https://codecov.io/github/rauschenberger/transreg/coverage.svg?branch=master)](https://codecov.io/github/rauschenberger/transreg)
 -->
