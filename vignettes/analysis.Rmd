@@ -25,6 +25,8 @@ vignette: >
   %\VignetteEngine{knitr::knitr}
 ---
 
+**This file contains the code for reproducing the results shown in the related manuscript (numbers, tables, figures).**
+
 # Initialisation
 
 Choose the directory containing the sub-directories "data", "results" and "manuscript".
@@ -350,38 +352,6 @@ sapply(table[,-1],function(x) sum(x<table$glmnet))
 round(100*colMeans(table[,-1]),digits=2)
 ```
 
-```{r trial_grridge_sign,eval=FALSE,echo=FALSE}
-# temporary code: exp/iso calibration with/without non-negativity constraint
-
-# visualise exponential and isotonic calibration
-cond <- stats::rbinom(n=length(target$y),prob=0.3,size=1) # decrease prob!
-graphics::par(mfrow=c(1,2),mar=c(1,2,2,1))
-exp <- .exp.multiple(y=target$y[cond==1],X=target$x[cond==1,],prior=as.matrix(prior,ncol=1),family="binomial",switch=FALSE,select=FALSE)
-iso <- .iso.multiple(y=target$y[cond==1],X=target$x[cond==1,],prior=as.matrix(prior,ncol=1),family="binomial",switch=FALSE,select=FALSE)
-ylim <- range(c(exp$beta,iso$beta))
-
-graphics::plot(x=prior,y=exp$beta,ylim=ylim)
-graphics::plot(x=prior,y=iso$beta,ylim=ylim)
-
-# non-negative least squares
-y <- stats::rbinom(n=100,prob=0.3,size=1)
-eta <- stats::rnorm(n=100)
-
-a <- Sys.time()
-glm <- stats::glm(y~eta)
-b <- Sys.time()
-b - a
-
-coef(glm)
-
-a <- Sys.time()
-glmnet <- glmnet::glmnet(x=cbind(0,eta),y=y,lambda=0,lower.limits=0,intercept=TRUE)
-b <- Sys.time()
-b - a
-
-stats::coef(glmnet)
-```
-
 The following chunk performs the second external application (`fwelnet`).
 
 - input: data/pone.0181468.s001.csv
@@ -473,25 +443,20 @@ The following chunk generates the figure for both external applications (`GRridg
 - output: manuscript/figure_ext.pdf
 
 ```{r app_boxplots,eval=TRUE,echo=TRUE}
-
 grDevices::pdf(file=paste0(dir,"/manuscript/figure_ext.pdf"),width=8,height=6,pointsize=15)
-
 graphics::par(mfrow=c(2,1),mar=c(2.5,3.5,0.5,0.5))
-
 for(k in c("grridge","fwelnet")){
   file <- paste0(dir,"/results/app_",k,".RData")
   if(!file.exists(file)){plot.new();next}
   load(file)
   loss <- as.data.frame(t(sapply(loss,function(x) x$deviance)))
   colnames(loss) <- gsub(pattern="transreg.",replacement="",x=colnames(loss))
-  #colnames(loss) <- gsub(pattern="_",replacement=".",x=colnames(loss))
   loss <- 100*(loss-loss$glmnet)/loss$glmnet
 
   temp <- c("exp.sta","exp.sim","iso.sta","iso.sim")
   name <- c("fwelnet","ecpc",temp)
   graphics::plot.new()
   graphics::plot.window(xlim=c(0.5,length(name)+0.5),ylim=range(loss,na.rm=TRUE))
-  #graphics::abline(h=median(loss$mean),lty=2,col="grey")
   graphics::abline(h=0,lty=2,col="grey")
   graphics::axis(side=1,at=seq_along(name),labels=name,cex.axis=0.7)
   if(grepl(pattern="grridge",x=k)){at <- seq(from=-10,to=10,by=5)}
@@ -505,7 +470,6 @@ for(k in c("grridge","fwelnet")){
     graphics::points(x=i,y=mean(loss[,name[i]]),pch=22,col="white",bg="black",cex=0.7)
   }
 }
-
 grDevices::dev.off()
 ```
 
@@ -571,7 +535,7 @@ power <- seq(from=-2,to=-10,by=-1)
 cutoff <- 5*10^power
 frame <- expand.grid(cutoff=cutoff,alpha=0:1,seed=1:10,count=NA)
 
-#- - - classical (start) - - -
+#- - - sequential (start) - - -
 #loss <- list()
 #for(i in seq_len(nrow(frame))){
 #  cat("--- i =",i,"---","\n")
@@ -581,11 +545,10 @@ frame <- expand.grid(cutoff=cutoff,alpha=0:1,seed=1:10,count=NA)
 #  loss[[i]] <- transreg:::compare(target=list(y=y,x=X[,cond]),prior=prior[cond],family="binomial",alpha=frame$alpha[i],scale=c("exp","iso"),sign=FALSE,switch=FALSE,select=FALSE,foldid.ext=foldid$foldid.ext,foldid.int=foldid$foldid.int,type.measure=c("deviance","class","auc"),seed=frame$seed[i])
 #  frame$count[i] <- sum(cond)
 #}
-# - - - classical (end) - - -
+# - - - sequential (end) - - -
 
 #- - - parallel (start) - - -
-frame <- expand.grid(cutoff=cutoff,alpha=0:1,seed=1:10,count=NA) # original
-#frame <- expand.grid(cutoff=cutoff[cutoff<=5e-4],alpha=0:1,seed=1:10,count=NA) # temporary
+frame <- expand.grid(cutoff=cutoff,alpha=0:1,seed=1:10,count=NA)
 cluster <- snow::makeCluster(8)
 evaluate <- function(frame,i,switch,pvalue,y,X,prior){
   set.seed(frame$seed[i])
@@ -595,21 +558,11 @@ evaluate <- function(frame,i,switch,pvalue,y,X,prior){
 }
 snow::clusterExport(cl=cluster,list=c("evaluate","frame","switch","pvalue","y","X","prior"))
 loss <- snow::parSapply(cl=cluster,X=seq_len(nrow(frame)),FUN=function(i) evaluate(frame=frame,i=i,switch=switch,pvalue=pvalue,y=y,X=X,prior=prior),simplify=FALSE)
-#names(old[[1]])
-#names(new[[1]])
-#all.equal(old[[1]]$deviance,new[[1]]$deviance)
-#all.equal(old[[1]]$class,new[[1]]$class)
-#all.equal(old[[1]]$auc,new[[1]]$auc)
-#all.equal(old[[1]]$coef,new[[1]]$coef)
 #- - - parallel (end) - - -
+
 save(frame,loss,file=paste0(dir,"/results/app_int.RData"))
-#save(frame,loss,file=paste0(dir,"/results/app_effect.RData"))
-#save(frame,loss,file=paste0(dir,"/results/app_pvalue.RData"))
 writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
       sessioninfo::session_info()),con=paste0(dir,"/results/info_app_int.txt"))
-
-# use repeated 10-fold CV (TO DO)
-# modify function cv.transfer so that it accepts named list with "y and X" (not only "y and x") (TO DO)
 ```
 
 The following chunk generates the figures for the internal application. **Requires execution of previous chunk.**
@@ -655,14 +608,23 @@ plotter <- function(table,cutoff,number,horizontal=FALSE){
 }
 
 load(paste0(dir,"/data/app_int_data.RData"))
-load(paste0(dir,"/results/app_int.RData")) # TO DO: change this line
-#load(paste0(dir,"/results/app_effect.RData"))
-#load(paste0(dir,"/results/app_pvalue.RData")) # TO DO: change this line
+load(paste0(dir,"/results/app_int.RData"))
 frame <- frame[seq_along(loss),colnames(frame)!="seed"]
 cutoff <- unique(frame$cutoff)
 number <- unique(sapply(loss,function(x) x$p))
 
-# - - - p-values - - -
+auc <- as.data.frame(t(sapply(loss,function(x) x$auc)))
+table <- lapply(auc,function(x) tapply(X=x,INDEX=list(frame$cutoff,frame$alpha),FUN=function(x) mean(x)))
+
+grDevices::pdf(file=paste0(dir,"/manuscript/figure_int.pdf"),width=8,height=6,pointsize=15)
+plotter(table,cutoff,number,horizontal=TRUE)
+grDevices::dev.off()
+```
+
+```{r development,eval=FALSE,echo=FALSE}
+#--- This code chunk is under development! ---
+
+# - - - multi-split test - - -
 
 tester <- function(y,x){
   foldid <- x$foldid
@@ -690,16 +652,7 @@ for(i in seq_along(alpha)){
       median[i,j,] <- apply(do.call(what="rbind",args=pvalue[frame$alpha==alpha[i] & frame$cutoff==cutoff[j]]),2,median)
   }
 }
-1*(median<=0.05) # integrate this in plot
-
-#- - - predictive performance - - -
-
-auc <- as.data.frame(t(sapply(loss,function(x) x$auc)))
-table <- lapply(auc,function(x) tapply(X=x,INDEX=list(frame$cutoff,frame$alpha),FUN=function(x) mean(x)))
-
-grDevices::pdf(file=paste0(dir,"/manuscript/figure_int.pdf"),width=8,height=6,pointsize=15)
-plotter(table,cutoff,number,horizontal=TRUE)
-grDevices::dev.off()
+1*(median<=0.05)
 
 #- - - estimation stability - - -
 
@@ -722,7 +675,6 @@ stability <- function(x,mode="cor"){
     sign_all <- sign(rowMeans(x))[top_all]
     sep <- top_sep * sign_sep
     all <- top_all * sign_all
-    #index <- mean(apply(top_sep,2,function(x) mean(x %in% top_all)))
     index <- mean(apply(sep,2,function(x) mean(x %in% all)))
   }
   return(index)
@@ -730,139 +682,10 @@ stability <- function(x,mode="cor"){
 
 value <- as.data.frame(t(sapply(loss,function(x) sapply(x$coef,function(x) stability(x,mode="rank")))))
 table <- lapply(value,function(x) tapply(X=x,INDEX=list(frame$cutoff,frame$alpha),FUN=function(x) mean(x)))
-
-grDevices::pdf(file=paste0(dir,"/manuscript/figure_cor.pdf"),width=8,height=6,pointsize=15)
 plotter(table,cutoff,number)
-grDevices::dev.off()
-
 ```
 
-
-```{r ncerpd_devel_stability,eval=FALSE,echo=FALSE}
-#----- This temporary code chunk will be removed! -----
-#<<init>>
-
-# temporary code: measure stability
-#n <- 100; p <- 500
-#X <- matrix(rnorm(n*p),nrow=n,ncol=p)
-#beta <- rnorm(p)
-#y <- X %*% beta
-#prior <- beta + rnorm(p)
-#test <- compare(target=list(y=y,x=X),prior=prior,family="gaussian",alpha=1)
-#sapply(test$coef,function(x) mean(cor(x,method="spearman"),na.rm=TRUE))
-#sapply(test$coef,function(x) mean(cor(x,method="pearson"),na.rm=TRUE))
-
-load(paste0(dir,"/results/app_int.RData"))
-names(loss[[1]]$coef)
-dim(loss[[1]]$coef$glmnet)
-
-stability <- function(x){
-  ## mean correlation
-  #if(sd(x)==0){
-  #  return(1)
-  #}
-  #cor <- stats::cor(x,method="spearman")
-  #cor[is.na(cor)] <- 0
-  #diag(cor) <- NA
-  #out <- median(cor,na.rm=TRUE)
-  ## ranks top ten
-  top_sep <- apply(x,2,function(x) order(abs(x),decreasing=TRUE)[1:10])
-  top_all <- order(rowMeans(abs(x)),decreasing=TRUE)[1:10]
-  out <- mean(apply(top_sep,2,function(x) mean(x %in% top_all)))
-  ## MSE
-  #mean <- rowMeans(x)
-  #out <- mean(apply(x,2,function(x) mean((x-mean)^2)))
-  ## distance
-  #dist <- dist(t(x),method="manhattan")
-  #out <- mean(dist)
-  return(out)
-}
-value <- as.data.frame(t(sapply(loss,function(x) sapply(x$coef,function(x) stability(x)))))
-table <- lapply(value,function(x) tapply(X=x,INDEX=list(frame$cutoff,frame$alpha),FUN=function(x) mean(x)))
-plotter(table,cutoff,number)
-
-alpha <- c(0,1)
-method <- c("glmnet","transreg.exp.sta","transreg.iso.sta","transreg.exp.sim","transreg.iso.sim","naive")
-coef <- list()
-for(i in seq_along(alpha)){
-  for(j in seq_along(cutoff)){
-    cond <- frame$alpha==alpha[i] & frame$cutoff==cutoff[j]
-    temp <- lapply(loss[cond],function(x) sapply(x$coef,function(x) rowMeans(x)))
-    for(k in seq_along(method)){
-      
-    }
-  }
-}
-
-
-# Instead of computing top ten for each 10-fold cv run separately, compute top ten for all ten runs of 10-fold cv.
-
-# testing
-#foldid <- sapply(loss,function(x) x$foldid)
-#pred <- sapply(loss,function(x) x$pred)
-```
-
-```{r ncerpd_devel_testing,echo=FALSE,eval=FALSE}
-#----- This temporary code chunk will be removed! -----
-
-# - - - new - - -
-load(paste0(dir,"/data/app_int_data.RData"))
-load(paste0(dir,"/results/app_pvalue.RData"))
-tester <- function(y,pred,foldid){
-  foldid <- loss[[1]]$foldid
-  pred <- loss[[1]]$pred
-  limit <- 1e-06
-  pred[pred < limit] <- limit
-  pred[pred > 1 - limit] <- 1 - limit
-  res <- -2 * (y * log(pred) + (1 - y) * log(1 - pred))
-  method <- paste0("transreg.",c("exp.sta","exp.sim","iso.sta","iso.sim"))
-  pvalue <- matrix(NA,nrow=10,ncol=length(method),dimnames=list(NULL,method))
-  for(i in seq_len(10)){
-    for(j in seq_along(method)){
-      pvalue[i,j] <- stats::wilcox.test(x=res[foldid==i,"glmnet"],y=res[foldid==i,method[j]],paired=TRUE,alternative="greater")$p.value
-    }
-  }
-  return(pvalue)
-}
-
-pvalue <- lapply(loss,function(x) tester(y=y,pred=x,foldid=foldid))
-
-
-#- - - old - - - 
-
-# <<init>>
-load(paste0(dir,"/results/app_effect.RData"))
-one <- round(sapply(loss,function(x) x$auc),digits=10)
-
-load(paste0(dir,"/results/app_pvalue.RData"))
-two <- round(sapply(loss,function(x) x$auc),digits=10)
-
-rowMeans(two > one)
-
-methods <- c("mean","glmnet","transreg.exp.sta","transreg.iso.sta","transreg.exp.sim","transreg.iso.sim","naive")
-
-aucs <- list()
-for(i in seq_along(loss)){
-  aucs[[i]] <- matrix(NA,nrow=10,ncol=length(methods),dimnames=list(NULL,methods))
-  for(j in 1:10){
-    for(k in seq_along(methods)){
-      cond <- loss[[i]]$foldid==j
-      aucs[[i]][j,k] <- starnet:::.loss(y=y[cond],x=loss[[i]]$pred[cond,methods[k]],family="binomial",type.measure="auc",foldid=rep(1,times=sum(cond)))
-    }
-  }
-}
-
-methods <- paste0("transreg.",c("exp.sta","exp.sim","iso.sta","iso.sim"))
-pvalues <- sapply(methods,function(x) numeric())
-for(i in seq_along(methods)){
-  pvalues[[i]] <- sapply(aucs,function(x) wilcox.test(x=x[,"glmnet"]-x[,methods[i]])$p.value)
-}
-
-```
-
-
-
-# Session information
+# Acknowledgements
 
 Reformat list of consortium members for acknowledgements: [see source].
 
@@ -896,9 +719,12 @@ name <- substring(name,first=2,last=nchar(name))
 paste(paste0("$^{",number,"}$",name),collapse=", ")
 ```
 
+# Session information
+
 Print session information.
 
-```{r sessionInfo,eval=TRUE,echo=TRUE,results="asis"}
-utils::toLatex(utils::sessionInfo())
+```{r sessionInfo,eval=TRUE,echo=FALSE,results="asis"}
+info <- devtools::session_info()
+knitr::kable(data.frame(setting=names(info[[1]]),value=unlist(info[[1]]),row.names=NULL))
+knitr::kable(info[[2]][,c("package","loadedversion","date","source")])
 ```
-
