@@ -1,7 +1,7 @@
 citHeader("To cite transreg in publications use:")
 
 citEntry(entry="Article",
-    title = "Penalised regression with  multiple sources of prior effects",
+    title = "Penalised regression with multiple sources of prior effects",
     author = personList(as.person("Armin Rauschenberger"),
 			as.person("Zied Landoulsi"),
 			as.person("Mark A. van de Wiel"),

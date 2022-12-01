@@ -5,3 +5,4 @@ license.md
 CONTRIBUTING.md
 \.Rhistory
 \.git
+appveyor.yml
