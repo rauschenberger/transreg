@@ -22,13 +22,13 @@ Install the current release from
 #install.packages("transreg") # not yet released!
 ```
 
-or the latest development version from [GitLab](https://gitlab.lcsb.uni.lu/bds/transreg) or
-[GitHub](https://github.com/rauschenberger/transreg):
+or the latest development version from [GitHub](https://github.com/lcsb-bds/transreg) or [GitLab](https://gitlab.lcsb.uni.lu/bds/transreg):
 
 ``` r
 #install.packages("remotes")
-remotes::install_gitlab("bds/transreg",host="gitlab.lcsb.uni.lu")
-remotes::install_github("rauschenberger/transreg")
+remotes::install_github("lcsb-bds/transreg") # upstream
+remotes::install_github("rauschenberger/transreg") # fork
+remotes::install_gitlab("bds/transreg",host="gitlab.lcsb.uni.lu") # mirror
 ```
 
 ## Reference
