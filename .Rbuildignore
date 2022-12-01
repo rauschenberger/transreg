@@ -7,3 +7,4 @@ CONTRIBUTING.md
 \.git
 appveyor.yml
 ^\.github
+^\.github$
