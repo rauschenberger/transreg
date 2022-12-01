@@ -2,6 +2,10 @@ url: ~
 template:
   bootstrap: 5
 
+home:
+  sidebar:
+    structure: [links, community, citation, authors, dev]
+
 navbar:
   title: "starnet"
   left:
