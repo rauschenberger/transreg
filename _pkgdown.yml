@@ -1,28 +1,33 @@
+url: ~
 template:
-   bootstrap: 5
+  bootstrap: 5
 
- home:
-   sidebar:
-     structure: [links, community, citation, authors, dev]
+home:
+  sidebar:
+    structure: [links, community, citation, authors, dev]
 
- navbar:
-   title: "transreg"
-   left:
+navbar:
+  title: "transreg"
+  left:
     - text: "functions"
       href: reference/index.html
     - text: "analysis"
       href: articles/analysis.html
     - text: "news"
       href: news/index.html
+
 reference:
+
 - title: "R Package"
   contents:
   - transreg-package
+
 - title: "Main functions"
   contents:
   - transreg
   - coef.transreg
   - predict.transreg
+
 - title: "Other functions"
   contents:
   - multiridge
