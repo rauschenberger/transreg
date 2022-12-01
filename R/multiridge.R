@@ -18,7 +18,7 @@
 #'@param ... (not applicable)
 #'
 #'@examples
-#'\donttest{
+#'\dontrun{
 #'# simulation
 #'n0 <- 100 # training samples
 #'n1 <- 10000 # testing samples
