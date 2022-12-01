@@ -6,3 +6,4 @@ CONTRIBUTING.md
 \.Rhistory
 \.git
 appveyor.yml
+^\.github
