@@ -56,6 +56,7 @@ fold <- rep(c(0,1),times=c(n0,n1))
 glmnet <- glmnet::cv.glmnet(x=cbind(X1[fold==0,],X2[fold==0,]),y=y[fold==0],family=family,alpha=0)
 y_hat0 <- predict(glmnet,newx=cbind(X1[fold==1,],X2[fold==1,]),s="lambda.min",type="response")
 
+if("multiridge" \%in\% installed.packages()){
 # multiple penalties
 object <- multiridge(X=list(X1[fold==0,],X2[fold==0,]),Y=y[fold==0],family=family)
 y_hat1 <- predict(object,newx=list(X1[fold==1,],X2[fold==1,]))
@@ -80,7 +81,7 @@ y_hat2 <- eta2
 y_hat2 <- 1/(1 + exp(-eta2))
 }
 all.equal(y_hat1,y_hat2)
-
+}
 }
 \references{
 Mark A. van de Wiel
