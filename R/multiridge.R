@@ -18,6 +18,7 @@
 #'@param ... (not applicable)
 #'
 #'@examples
+#'\dontrun{
 #'# simulation
 #'n0 <- 100 # training samples
 #'n1 <- 10000 # testing samples
@@ -64,7 +65,7 @@
 #'} else if(family=="binomial"){
 #' y_hat2 <- 1/(1 + exp(-eta2))
 #'}
-#'all.equal(y_hat1,y_hat2)
+#'all.equal(y_hat1,y_hat2)}
 #'
 #'@references
 #'Mark A. van de Wiel
