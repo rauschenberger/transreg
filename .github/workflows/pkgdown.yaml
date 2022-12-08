@@ -30,7 +30,7 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::pkgdown, local::.
+          extra-packages: any::pkgdown, local::., glmtrans=?ignore, GRridge=?ignore, fwelnet=?ignore, CVXR=?ignore, ecpc=?ignore, multiridge=?ignore, scam=?ignore, doMC=?ignore, palasso=?ignore, xtable=?ignore, devtools=?ignore
           needs: website
 
       - name: Build site
