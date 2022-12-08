@@ -37,7 +37,11 @@ Choose the directory containing the sub-directories "data", "results" and "manus
 
 - The directory "manuscript" will contain the files "table_int.tex" and "table_ext.tex" for the internal and external simulations, the file "figure_example.pdf" for the methods section, the file "figure_ext.pdf" for the external applications, and the file "figure_int.pdf" for the internal application.
 
-```{r init,eval=TRUE,echo=TRUE}
+```{r,echo=FALSE}
+knitr::opts_chunk$set(eval=FALSE,echo=TRUE)
+```
+
+```{r init,echo=TRUE}
 rm(list=ls())
 dir <- "~/Desktop/transreg" # physical machine
 #dir <- "/home/armin.rauschenberger/transreg" # virtual machine
@@ -45,7 +49,6 @@ setwd(dir)
 if(!all(c("data","results","manuscript") %in% dir())){
  stop("Missing folders!") 
 }
-knitr::opts_chunk$set(eval=TRUE,echo=TRUE)
 ```
 
 Install missing R packages from CRAN and GitHub. Note that `ecpc` is and `transreg` will also be available on CRAN. For package versions, see session information at the end of this document and in the text files associated with each R data file.
@@ -69,7 +72,7 @@ The following chunk generates the figure for the methods section.
 
 - output: manuscript/figure_example.pdf
 
-```{r calibration,eval=TRUE,echo=TRUE}
+```{r calibration,echo=TRUE}
 #<<init>>
 grDevices::pdf(file=paste0(dir,"/manuscript/figure_example.pdf"),width=8,height=5,pointsize=15)
 
@@ -239,7 +242,7 @@ The following chunk generates the tables for the external (`glmtrans`) and the i
 
 - output: manuscript/table_ext.tex, manuscript/table_int.tex
 
-```{r sim_table,eval=TRUE,echo=TRUE}
+```{r sim_table,echo=TRUE}
 .table <- function(loss,info=NULL,hline=NULL,pvalue=NULL,caption="",file=""){
   loss[is.na(loss)] <- Inf
   
@@ -442,7 +445,7 @@ The following chunk generates the figure for both external applications (`GRridg
 
 - output: manuscript/figure_ext.pdf
 
-```{r app_boxplots,eval=TRUE,echo=TRUE}
+```{r app_boxplots,echo=TRUE}
 grDevices::pdf(file=paste0(dir,"/manuscript/figure_ext.pdf"),width=8,height=6,pointsize=15)
 graphics::par(mfrow=c(2,1),mar=c(2.5,3.5,0.5,0.5))
 for(k in c("grridge","fwelnet")){
@@ -573,7 +576,7 @@ The following chunk generates the figures for the internal application. **Requir
 
 - output: manuscript/figure_int.pdf, manuscript/figure_temp.pdf
 
-```{r ncerpd_plot,eval=TRUE,echo=TRUE}
+```{r ncerpd_plot,echo=TRUE}
 #<<init>>
 
 plotter <- function(table,cutoff,number,horizontal=FALSE){
@@ -723,7 +726,7 @@ paste(paste0("$^{",number,"}$",name),collapse=", ")
 
 Print session information.
 
-```{r sessionInfo,eval=TRUE,echo=FALSE,results="asis"}
+```{r sessionInfo,echo=FALSE,results="asis"}
 info <- devtools::session_info()
 knitr::kable(data.frame(setting=names(info[[1]]),value=unlist(info[[1]]),row.names=NULL))
 knitr::kable(info[[2]][,c("package","loadedversion","date","source")])
