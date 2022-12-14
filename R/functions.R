@@ -637,7 +637,7 @@ NULL
         temp <- glmnet::coef.glmnet(glmnet)
         coefs[i,1] <- temp["(Intercept)","s0"]
         coefs[i,2] <- ifelse(is.na(temp["V2","s0"]),0,temp["V2","s0"])
-        pred[,i] <- stats::predict(glmnet,newx=cbind(1,eta))
+        pred[,i] <- stats::predict(glmnet,newx=cbind(0,eta))
       }
     }
     #cvm <- palasso:::.loss(y=y,fit=pred,family=family,type.measure="deviance")[[1]]
