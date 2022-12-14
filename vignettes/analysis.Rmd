@@ -54,11 +54,10 @@ if(!all(c("data","results","manuscript") %in% dir())){
 Install missing R packages from CRAN and GitHub. Note that `ecpc` is and `transreg` will also be available on CRAN. For package versions, see session information at the end of this document and in the text files associated with each R data file.
 
 ```{r pkgs,eval=FALSE,echo=TRUE}
-pkgs <- c("devtools","palasso","glmtrans","xtable")
+pkgs <- c("devtools","palasso","glmtrans","xtable","ecpc")
 utils::install.packages(setdiff(pkgs,rownames(installed.packages())))
-pkgs <- c("kjytay/fwelnet","Mirrelijn/ecpc/Rpackage","rauschenberger/transreg")
-remotes::install_github(pkgs)
-#remotes::install_gitlab("bds/transreg",host="gitlab.lcsb.uni.lu")
+remotes::install_github("kjytay/fwelnet") # ref="5515fd2"
+remotes::install_github("LCSB-BDS/transreg") # ref="75bc5f5"
 rm(pkgs)
 ```
 
@@ -215,7 +214,7 @@ for(mode in c("ext","int")){
                           seed=frame$seed[iter])
       frame[iter,names(loss$deviance)] <- loss$deviance
     }
-    save(frame,file=paste0(dir,"/results/sim_",mode,".RData")))
+    save(frame,file=paste0(dir,"/results/sim_",mode,".RData"))
 }
 writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
       sessioninfo::session_info()),con=paste0(dir,"/results/info_sim.txt"))
