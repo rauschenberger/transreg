@@ -339,7 +339,7 @@ loss <- list()
 for(i in 1:10){
   cat("---",i,"---\n")
   loss[[i]] <- transreg:::compare(target=target,prior=prior,z=as.matrix(z,ncol=1),
-                                    family="binomial",alpha=0,scale=c("exp","iso"),sign=FALSE,switch=FALSE,select=FALSE,monotone=NULL,partitions=NULL,type.measure=c("deviance","class","auc"),seed=i)
+                                    family="binomial",alpha=0,scale=c("exp","iso"),sign=FALSE,switch=FALSE,select=FALSE,type.measure=c("deviance","class","auc"),seed=i)
 }
 save(loss,file=paste0(dir,"/results/app_grridge.RData"))
 writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
