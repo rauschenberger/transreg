@@ -18,7 +18,6 @@ header-includes:
  - \usepackage{ulem}
  - \usepackage{enumitem}
  - \usepackage{rotating}
- - \newcommand{\cran}[1]{\href{https://CRAN.R-project.org/package=#1}{\texttt{#1}}}
 vignette: >
   %\VignetteIndexEntry{vignette}
   %\VignetteEncoding{UTF-8}
@@ -319,7 +318,7 @@ for(mode in c("ext","int")){
 
 The following chunk performs the first external application (`GRridge`).
 
-- input: none (*loading data from `GRridge` package*)
+- input: none (*loading data from `GRridge` package, also available [here](https://github.com/markvdwiel/GRridge/blob/master/data/dataVerlaat.rda)*)
 
 - execution time: **several minutes**
 
@@ -356,7 +355,7 @@ round(100*colMeans(table[,-1]),digits=2)
 
 The following chunk performs the second external application (`fwelnet`).
 
-- input: data/pone.0181468.s001.csv
+- input: data/pone.0181468.s001.csv (*available from [Erez et al. 2017](https://doi.org/10.1371/journal.pone.0181468) in the supporting file [journal.pone.0181468.s001.csv](https://doi.org/10.1371/journal.pone.0181468.s001)*)
 
 - execution time: **several minutes**
 
@@ -479,7 +478,7 @@ grDevices::dev.off()
 
 The following chunk performs the internal application.
 
-- input: data/vcf_with_pvalue.tab, data/LuxPark_pheno.txt
+- input: data/vcf_with_pvalue.tab, data/LuxPark_pheno.txt (*available upon request to [request.ncer-pd@uni.lu](mailto:request.ncer-pd@uni.lu?cc=armin.rauschenberger@uni.lu,enrico.glaab@uni.lu&subject=data request Rauschenberger et al. ("transreg"))*)
 
 - execution time: **two days** (unless parallel computing)
 
