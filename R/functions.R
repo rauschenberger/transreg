@@ -712,41 +712,33 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
   }
 
   if(!is.null(source)){
-    standardise <- "old"
-    
-    if(standardise=="old"){
-      target$x <- scale(target$x) # original
-      target$x[is.na(target$x)] <- 0 # original
-    }
-    
+    target$x <- scale(target$x)
+    target$x[is.na(target$x)] <- 0
     for(i in seq_along(source)){
       if(is.data.frame(source[[i]]$x)){
         source[[i]]$x <- as.matrix(source[[i]]$x)
       }
-      if(standardise=="old"){
-        source[[i]]$x <- scale(source[[i]]$x) # original
-        source[[i]]$x[is.na(source[[i]]$x)] <- 0 # original
-      }
+      source[[i]]$x <- scale(source[[i]]$x)
+      source[[i]]$x[is.na(source[[i]]$x)] <- 0
     }
     
-    if(standardise=="new"){
-      temp <- rbind(target$x,do.call(what="rbind",args=lapply(source,function(x) x$x)))
-      mu_temp <- colMeans(temp)
-      sd_temp <- apply(temp,2,sd)
-      n <- c(length(target$y),sapply(source,function(x) length(x$y)))
-      mus <- rbind(colMeans(target$x),t(sapply(source,function(x) colMeans(x$x))))
-      mu <- colSums(mus*n)/sum(n)
-      sd <- sqrt(rowSums(cbind(rowSums((t(target$x)-mu)^2),sapply(source,function(x) rowSums((t(x$x)-mu)^2))))/(sum(n)-1))
-      if(any(abs(mu-mu_temp)>1e-06)){stop("Invalid.")}
-      if(any(abs(sd-sd_temp)>1e-06)){stop("Invalid.")}
-      
-      target$x <- t((t(target$x)-mu)/sd)
-      target$x[,sd==0] <- 0
-      for(i in seq_along(source)){
-        source[[i]]$x <- t((t(source[[i]]$x)-mu)/sd)
-        source[[i]]$x[,sd==0] <- 0
-      }
-    }
+      # # alternative standardisation
+      # temp <- rbind(target$x,do.call(what="rbind",args=lapply(source,function(x) x$x)))
+      # mu_temp <- colMeans(temp)
+      # sd_temp <- apply(temp,2,sd)
+      # n <- c(length(target$y),sapply(source,function(x) length(x$y)))
+      # mus <- rbind(colMeans(target$x),t(sapply(source,function(x) colMeans(x$x))))
+      # mu <- colSums(mus*n)/sum(n)
+      # sd <- sqrt(rowSums(cbind(rowSums((t(target$x)-mu)^2),sapply(source,function(x) rowSums((t(x$x)-mu)^2))))/(sum(n)-1))
+      # if(any(abs(mu-mu_temp)>1e-06)){stop("Invalid.")}
+      # if(any(abs(sd-sd_temp)>1e-06)){stop("Invalid.")}
+      # 
+      # target$x <- t((t(target$x)-mu)/sd)
+      # target$x[,sd==0] <- 0
+      # for(i in seq_along(source)){
+      #   source[[i]]$x <- t((t(source[[i]]$x)-mu)/sd)
+      #   source[[i]]$x[,sd==0] <- 0
+      # }
     
     if(is.null(alpha.prior)){alpha.prior <- ifelse(alpha==1,0.95,alpha)}
     
