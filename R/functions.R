@@ -624,20 +624,21 @@ NULL
     for(i in seq_along(exp)){
       temp <- sign(prior[,j])*abs(prior[,j])^exp[i]
       eta <- X %*% temp
-      if(switch){ # add this!
+      if(switch){
         # Use simple linear/logistic/Poisson regression of y on eta, and extract fitted values. This should solve the scaling issue. => But be aware of negative coefficients!
         glm <- stats::glm(y~eta,family=family)
         temp <- stats::coef(glm)
         coefs[i,1] <- temp["(Intercept)"]
         coefs[i,2] <- ifelse(is.na(temp["eta"]),0,temp["eta"])
         pred[,i] <- stats::fitted(glm)
-      } else { # add this!
-        glmnet <- glmnet::glmnet(x=cbind(0,eta),y=y,family=family,lambda=0,lower.limits=0,intercept=TRUE)
+      } else {
+        if(sd(eta)==0){eta <- stats::rnorm(n); lambda <- Inf}{lambda <- 0}
+        glmnet <- glmnet::glmnet(x=cbind(0,eta),y=y,family=family,lambda=lambda,lower.limits=0,intercept=TRUE)
         #temp <- stats::coef(glmnet)
         temp <- glmnet::coef.glmnet(glmnet)
         coefs[i,1] <- temp["(Intercept)","s0"]
         coefs[i,2] <- ifelse(is.na(temp["V2","s0"]),0,temp["V2","s0"])
-        pred[,i] <- stats::predict(glmnet,newx=cbind(0,eta))
+        pred[,i] <- stats::predict(glmnet,newx=cbind(0,eta),s=lambda)
       }
     }
     #cvm <- palasso:::.loss(y=y,fit=pred,family=family,type.measure="deviance")[[1]]
