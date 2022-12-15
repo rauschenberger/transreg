@@ -228,12 +228,8 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
   }
   
   if(diffpen){
-    stop("currently not implemented")
-    test <- multiridge(X=list(y_hat[,1:k,drop=FALSE],X),Y=y,family=family)
-    # (y=y,x=cbind(y_hat[,1:k],X),alpha=alpha,family=family,
-    # lower.limits=rep(c(0,-Inf),times=c(k,p)),
-    # penalty.factor=rep(c(0,1),times=c(k,p)),foldid=foldid)
-    trial <- NULL
+    stop("diffpen=TRUE is not implemented")
+    #multiridge(X=list(y_hat[,1:k,drop=FALSE],X),Y=y,family=family)
   }
   
   object <- list(base=base,meta.sta=meta.sta,meta.sim=meta.sim,prior.calib=prior.ext$beta,data=list(y=y,X=X,prior=prior),info=data.frame(n=n,p=p,k=k,family=family,alpha=alpha,scale=scale,stack=paste0(stack,collapse="+")))
