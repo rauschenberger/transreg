@@ -30,7 +30,7 @@ vignette: >
 
 Choose the directory containing the sub-directories "data", "results" and "manuscript".
 
-- The directory "data" should contain the file "pone.0181468.s001.csv" for the second external application and the files "vcf_with_pvalue.tab" and "LuxPark_pheno.txt" for the internal application. It will also contain the file "app_int_data.RData" for the internal application.
+- The directory "data" may be empty for the first external application (*script loads data - which are also available [here](https://github.com/markvdwiel/GRridge/blob/master/data/dataVerlaat.rda)* - from the R package [`GRridge`](https://doi.org/10.18129/B9.bioc.GRridge)) but must contain the file "pone.0181468.s001.csv" for the second external application (*available from [Erez et al. 2017](https://doi.org/10.1371/journal.pone.0181468) in the supporting file [journal.pone.0181468.s001.csv](https://doi.org/10.1371/journal.pone.0181468.s001)*) and the files "vcf_with_pvalue.tab" and "LuxPark_pheno.txt" for the internal application (*available upon request to [request.ncer-pd@uni.lu](mailto:request.ncer-pd@uni.lu?cc=armin.rauschenberger@uni.lu,enrico.glaab@uni.lu&subject=data request Rauschenberger et al. ("transreg"))*). For the internal application, this directory will also contain the intermediate file "app_int_data.RData".
 
 - The directory "results" will contain the files "sim_int.RData" and "sim_ext.RData" for the external and internal simulation, the file "app_grridge.RData" for the first external application, the file "app_fwelnet.RData" for the second external application, and the file "app_int.RData" for the internal application.
 
@@ -318,7 +318,7 @@ for(mode in c("ext","int")){
 
 The following chunk performs the first external application (`GRridge`).
 
-- input: none (*loading data from `GRridge` package, also available [here](https://github.com/markvdwiel/GRridge/blob/master/data/dataVerlaat.rda)*)
+- input: none (*script loads data - which are also available [here](https://github.com/markvdwiel/GRridge/blob/master/data/dataVerlaat.rda) - from the R package [`GRridge`](https://doi.org/10.18129/B9.bioc.GRridge)*)
 
 - execution time: **several minutes**
 
