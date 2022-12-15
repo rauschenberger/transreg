@@ -81,11 +81,16 @@ in the related manuscript (numbers, tables, figures).</strong></p>
 <p>Choose the directory containing the sub-directories “data”, “results”
 and “manuscript”.</p>
 <ul>
-<li><p>The directory “data” should contain the file
-“pone.0181468.s001.csv” for the second external application and the
-files “vcf_with_pvalue.tab” and “LuxPark_pheno.txt” for the internal
-application. It will also contain the file “app_int_data.RData” for the
-internal application.</p></li>
+<li><p>The directory “data” may be empty for the first external
+application (<em>script loads data - which are also available <a href="https://github.com/markvdwiel/GRridge/blob/master/data/dataVerlaat.rda" class="external-link">here</a></em>
+- from the R package <a href="https://doi.org/10.18129/B9.bioc.GRridge" class="external-link"><code>GRridge</code></a>)
+but must contain the file “pone.0181468.s001.csv” for the second
+external application (<em>available from <a href="https://doi.org/10.1371/journal.pone.0181468" class="external-link">Erez et al. 2017</a>
+in the supporting file <a href="https://doi.org/10.1371/journal.pone.0181468.s001" class="external-link">journal.pone.0181468.s001.csv</a></em>)
+and the files “vcf_with_pvalue.tab” and “LuxPark_pheno.txt” for the
+internal application (<em>available upon request to <a href="mailto:request.ncer-pd@uni.lu?cc=armin.rauschenberger@uni.lu,enrico.glaab@uni.lu&amp;subject=data%20request%20Rauschenberger%20et%20al.%20(%22transreg%22)">request.ncer-pd@uni.lu</a></em>).
+For the internal application, this directory will also contain the
+intermediate file “app_int_data.RData”.</p></li>
 <li><p>The directory “results” will contain the files “sim_int.RData”
 and “sim_ext.RData” for the external and internal simulation, the file
 “app_grridge.RData” for the first external application, the file
@@ -373,8 +378,8 @@ manuscript/table_int.tex</p></li>
 <p>The following chunk performs the first external application
 (<code>GRridge</code>).</p>
 <ul>
-<li><p>input: none (<em>loading data from <code>GRridge</code> package,
-also available <a href="https://github.com/markvdwiel/GRridge/blob/master/data/dataVerlaat.rda" class="external-link">here</a></em>)</p></li>
+<li><p>input: none (<em>script loads data - which are also available <a href="https://github.com/markvdwiel/GRridge/blob/master/data/dataVerlaat.rda" class="external-link">here</a>
+- from the R package <a href="https://doi.org/10.18129/B9.bioc.GRridge" class="external-link"><code>GRridge</code></a></em>)</p></li>
 <li><p>execution time: <strong>several minutes</strong></p></li>
 <li><p>output: results/app_grridge.RData,
 results/info_app_grridge.txt</p></li>
