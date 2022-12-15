@@ -520,7 +520,6 @@ NULL
   
   if(select){
     remove <- pvalue > 0.05
-    alpha0[remove] <- 0 # Why remove intercept?
     beta0[,remove] <- 0
     if(track){message(ifelse(remove,".",ifelse(cond,"+","-")))}
   }
