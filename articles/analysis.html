@@ -74,7 +74,10 @@ Rauschenberger</h4>
     
     
 <p><strong>This file contains the code for reproducing the results shown
-in the related manuscript (numbers, tables, figures).</strong></p>
+in the related manuscript (numbers, tables, figures). We obtained our
+results on 2022-12-15 using R version 4.2.2 (2022-10-31) running under
+macOS Monterey 12.6 on the platform aarch64-apple-darwin20
+(64-bit).</strong></p>
 <div class="section level2">
 <h2 id="initialisation">Initialisation<a class="anchor" aria-label="anchor" href="#initialisation"></a>
 </h2>
@@ -82,8 +85,8 @@ in the related manuscript (numbers, tables, figures).</strong></p>
 and “manuscript”.</p>
 <ul>
 <li><p>The directory “data” may be empty for the first external
-application (<em>script loads data - which are also available <a href="https://github.com/markvdwiel/GRridge/blob/master/data/dataVerlaat.rda" class="external-link">here</a></em>
-- from the R package <a href="https://doi.org/10.18129/B9.bioc.GRridge" class="external-link"><code>GRridge</code></a>)
+application (<em>script loads data - which are also available <a href="https://github.com/markvdwiel/GRridge/blob/master/data/dataVerlaat.rda" class="external-link">here</a>
+- from the R package <a href="https://doi.org/10.18129/B9.bioc.GRridge" class="external-link"><code>GRridge</code></a></em>)
 but must contain the file “pone.0181468.s001.csv” for the second
 external application (<em>available from <a href="https://doi.org/10.1371/journal.pone.0181468" class="external-link">Erez et al. 2017</a>
 in the supporting file <a href="https://doi.org/10.1371/journal.pone.0181468.s001" class="external-link">journal.pone.0181468.s001.csv</a></em>)
@@ -118,7 +121,7 @@ document and in the text files associated with each R data file.</p>
 <code class="sourceCode R"><span><span class="va">pkgs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"devtools"</span>,<span class="st">"palasso"</span>,<span class="st">"glmtrans"</span>,<span class="st">"xtable"</span>,<span class="st">"ecpc"</span><span class="op">)</span></span>
 <span><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="va">pkgs</span>,<span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/installed.packages.html" class="external-link">installed.packages</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"kjytay/fwelnet"</span><span class="op">)</span> <span class="co"># ref="5515fd2"</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"LCSB-BDS/transreg"</span><span class="op">)</span> <span class="co"># ref="75bc5f5"</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"LCSB-BDS/transreg"</span><span class="op">)</span> <span class="co"># ref="db55c13"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">pkgs</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -421,7 +424,9 @@ in the supporting file <a href="https://doi.org/10.1371/journal.pone.0181468.s00
 results/info_app_fwelnet.txt</p></li>
 </ul>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">table</span> <span class="op">&lt;-</span> <span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">"data/pone.0181468.s001.csv"</span>,header<span class="op">=</span><span class="cn">TRUE</span>,skip<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co">#&lt;&lt;init&gt;&gt;</span></span>
+<span></span>
+<span><span class="va">table</span> <span class="op">&lt;-</span> <span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">"data/pone.0181468.s001.csv"</span>,header<span class="op">=</span><span class="cn">TRUE</span>,skip<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">extract</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">cond</span>,<span class="va">y</span>,<span class="va">X</span>,<span class="va">id</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">cond</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">!=</span><span class="fl">1</span><span class="op">)</span><span class="op">{</span><span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"Invalid input."</span><span class="op">)</span><span class="op">}</span></span>
