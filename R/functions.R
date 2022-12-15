@@ -639,8 +639,6 @@ NULL
 #' list with slot x (feature matrix with n rows and p columns) and slot y (target vector of length n)
 #' @param source
 #' list of k lists, each with slot x (feature matrix with m_i rows and p columns) and slot y (target vector of length m_i)
-#' @param partitions
-#' monotone: for GRridge
 #' @param alpha.prior
 #' number between 0 (lasso) and 1 (ridge), character "p-value", or NULL (alpha.prior=alpha, but if alpha=1 then alpha.prior=0.95)
 #' @param z
@@ -657,8 +655,6 @@ NULL
 #' character
 #' @param alpha.prior
 #' alpha for source regression
-#' @param monotone
-#' logical
 #' @param naive
 #' compare with naive transfer learning: logical
 #' @param seed
@@ -681,7 +677,7 @@ NULL
 #' \dontrun{
 #' object <- transreg:::compare(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0)}
 #' 
-compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso",sign=FALSE,switch=FALSE,select=TRUE,foldid.ext=NULL,nfolds.ext=10,foldid.int=NULL,nfolds.int=10,type.measure="deviance",alpha.prior=NULL,partitions=NULL,monotone=NULL,naive=TRUE,diffpen=FALSE,seed=NULL,cores=1){
+compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso",sign=FALSE,switch=FALSE,select=TRUE,foldid.ext=NULL,nfolds.ext=10,foldid.int=NULL,nfolds.int=10,type.measure="deviance",alpha.prior=NULL,naive=TRUE,diffpen=FALSE,seed=NULL,cores=1){
   
   if(cores>1){
     doMC::registerDoMC(cores=cores)
@@ -776,16 +772,13 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
     k <- ncol(prior)
   }
   
-  if(!is.null(partitions)){trial <- TRUE}else{trial <- FALSE}
-  if(!is.null(z)){trial2 <- TRUE}else{trial2 <- FALSE}
-
   if(!is.null(seed)){set.seed(seed)}
   folds <- .folds(y=target$y,nfolds.ext=nfolds.ext,nfolds.int=nfolds.int,foldid.ext=foldid.ext,foldid.int=foldid.int)
   foldid.ext <- folds$foldid.ext
   foldid.int <- folds$foldid.int
   
   temp <- paste0(rep(c("transreg.","transreg."),each=length(scale)),scale,rep(c(".sta",".sim"),each=length(scale)))
-  names <- c("mean","glmnet","glmtrans"[!is.null(source)],temp,"GRridge"[trial],"NoGroups"[trial],"fwelnet"[trial2],"xtune"[trial2],"CoRF"[trial2],"ecpc"[trial2],"naive"[naive]) # "transreg.test"
+  names <- c("mean","glmnet","glmtrans"[!is.null(source)],temp,"fwelnet"[!is.null(z)],"ecpc"[!is.null(z)],"naive"[naive])
   pred <- matrix(data=NA,nrow=length(target$y),ncol=length(names),dimnames=list(NULL,names))
   coef <- sapply(names,function(x) matrix(data=NA,nrow=ncol(target$x),ncol=nfolds.ext),simplify=FALSE)
   time <- rep(0,time=length(names)); names(time) <- names
@@ -850,26 +843,8 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
       time["naive"] <- time["naive"] + difftime(time1=end,time2=start,units="secs")
     }
     
-    # GRridge
-    if(trial){
-      if(!is.null(seed)){set.seed(seed)}
-      start <- Sys.time()
-      object <- tryCatch(GRridge::grridge(highdimdata=t(X0),response=y0,
-                                          partitions=partitions,monotone=monotone,
-                                          innfold=nfolds.int,fixedfoldsinn=TRUE),
-                         error=function(x) NULL)
-      if(!is.null(object)){
-        temp <- GRridge::predict.grridge(object=object,datanew=as.data.frame(t(X1)))
-        pred[foldid.ext==i,"NoGroups"] <- temp[,"NoGroups"]
-        pred[foldid.ext==i,"GRridge"] <- temp[,"GroupRegul"]
-      }
-      
-      end <- Sys.time()
-      time["GRridge"] <- time["GRridge"]+difftime(time1=end,time2=start,units="secs")
-    }
-    
     # co-data methods
-    if(trial2){
+    if(!is.null(z)){
       
       # fwelnet
       if(!is.null(seed)){set.seed(seed)}
@@ -909,7 +884,23 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
       }
       time["ecpc"] <- time["ecpc"]+difftime(time1=end,time2=start,units="secs")
       
-      # # xtune
+      # #--- GRridge ---
+      # if(is.null(partitions)|is.null(monotone)){stop()}
+      # if(!is.null(seed)){set.seed(seed)}
+      # start <- Sys.time()
+      # object <- tryCatch(GRridge::grridge(highdimdata=t(X0),response=y0,
+      #                                       partitions=partitions,monotone=monotone,
+      #                                       innfold=nfolds.int,fixedfoldsinn=TRUE),
+      #                      error=function(x) NULL)
+      # if(!is.null(object)){
+      #   temp <- GRridge::predict.grridge(object=object,datanew=as.data.frame(t(X1)))
+      #   pred[foldid.ext==i,"NoGroups"] <- temp[,"NoGroups"]
+      #   pred[foldid.ext==i,"GRridge"] <- temp[,"GroupRegul"]
+      # }
+      # end <- Sys.time()
+      # time["GRridge"] <- time["GRridge"]+difftime(time1=end,time2=start,units="secs")
+      
+      # #--- xtune ---
       # if(!is.null(seed)){set.seed(seed)}
       # start <- Sys.time()
       # model <- switch(family,"gaussian"="linear","binomial"="binary")
@@ -925,7 +916,7 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
       # end <- Sys.time()
       # time["xtune"] <- time["xtune"]+difftime(time1=end,time2=start,units="secs")
 
-      # # CoRF
+      # #--- CoRF ---
       # if(!is.null(seed)){set.seed(seed)}
       # CoData <- as.data.frame(z)
       # CoDataRelation <- rep("increasing",times=ncol(CoData))
