@@ -456,7 +456,7 @@ NULL
         temp <- glmnet::coef.glmnet(glmnet)
         coefs[i,1] <- temp["(Intercept)","s0"]
         coefs[i,2] <- ifelse(is.na(temp["V2","s0"]),0,temp["V2","s0"])
-        pred[,i] <- stats::predict(glmnet,newx=cbind(0,eta),s=lambda)
+        pred[,i] <- stats::predict(glmnet,newx=cbind(0,eta),s=lambda,type="response")
       }
     }
     cvm <- apply(pred,2,function(x) starnet:::.loss(y=y,x=x,family=family,type.measure="deviance"))
@@ -780,7 +780,7 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
     X1 <- target$x[foldid.ext==i,]
     
     foldid <- foldid.int[foldid.ext!=i]
-
+    
     # mean
     if(!is.null(seed)){set.seed(seed)}
     start <- Sys.time()
@@ -1352,8 +1352,9 @@ plot.transreg <- function(x,stack=NULL,...){
   if(family=="gaussian"){
     res <- apply(y_hat,2,function(x) (x-y)^2)
   } else if(family=="binomial"){
-    if(any(y_hat<0)){stop("Below range.")}
-    if(any(y_hat>1)){stop("Above range.")}
+    if(any(!y %in% c(0,1))){stop("y outside range")}
+    if(any(y_hat<0)){stop("y_hat below range")}
+    if(any(y_hat>1)){stop("y_hat above range")}
     limit <- 1e-5
     y_hat[y_hat < limit] <- limit
     y_hat[y_hat > 1 - limit] <- 1 - limit
