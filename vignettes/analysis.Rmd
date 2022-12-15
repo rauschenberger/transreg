@@ -24,13 +24,13 @@ vignette: >
   %\VignetteEngine{knitr::knitr}
 ---
 
-**This file contains the code for reproducing the results shown in the related manuscript (numbers, tables, figures).**
+**This file contains the code for reproducing the results shown in the related manuscript (numbers, tables, figures). We obtained our results on 2022-12-15 using R version 4.2.2 (2022-10-31) running under macOS Monterey 12.6 on the platform aarch64-apple-darwin20 (64-bit).**
 
 # Initialisation
 
 Choose the directory containing the sub-directories "data", "results" and "manuscript".
 
-- The directory "data" may be empty for the first external application (*script loads data - which are also available [here](https://github.com/markvdwiel/GRridge/blob/master/data/dataVerlaat.rda)* - from the R package [`GRridge`](https://doi.org/10.18129/B9.bioc.GRridge)) but must contain the file "pone.0181468.s001.csv" for the second external application (*available from [Erez et al. 2017](https://doi.org/10.1371/journal.pone.0181468) in the supporting file [journal.pone.0181468.s001.csv](https://doi.org/10.1371/journal.pone.0181468.s001)*) and the files "vcf_with_pvalue.tab" and "LuxPark_pheno.txt" for the internal application (*available upon request to [request.ncer-pd@uni.lu](mailto:request.ncer-pd@uni.lu?cc=armin.rauschenberger@uni.lu,enrico.glaab@uni.lu&subject=data request Rauschenberger et al. ("transreg"))*). For the internal application, this directory will also contain the intermediate file "app_int_data.RData".
+- The directory "data" may be empty for the first external application (*script loads data - which are also available [here](https://github.com/markvdwiel/GRridge/blob/master/data/dataVerlaat.rda) - from the R package [`GRridge`](https://doi.org/10.18129/B9.bioc.GRridge)*) but must contain the file "pone.0181468.s001.csv" for the second external application (*available from [Erez et al. 2017](https://doi.org/10.1371/journal.pone.0181468) in the supporting file [journal.pone.0181468.s001.csv](https://doi.org/10.1371/journal.pone.0181468.s001)*) and the files "vcf_with_pvalue.tab" and "LuxPark_pheno.txt" for the internal application (*available upon request to [request.ncer-pd@uni.lu](mailto:request.ncer-pd@uni.lu?cc=armin.rauschenberger@uni.lu,enrico.glaab@uni.lu&subject=data request Rauschenberger et al. ("transreg"))*). For the internal application, this directory will also contain the intermediate file "app_int_data.RData".
 
 - The directory "results" will contain the files "sim_int.RData" and "sim_ext.RData" for the external and internal simulation, the file "app_grridge.RData" for the first external application, the file "app_fwelnet.RData" for the second external application, and the file "app_int.RData" for the internal application.
 
@@ -56,7 +56,7 @@ Install missing R packages from CRAN and GitHub. Note that `ecpc` is and `transr
 pkgs <- c("devtools","palasso","glmtrans","xtable","ecpc")
 utils::install.packages(setdiff(pkgs,rownames(installed.packages())))
 remotes::install_github("kjytay/fwelnet") # ref="5515fd2"
-remotes::install_github("LCSB-BDS/transreg") # ref="75bc5f5"
+remotes::install_github("LCSB-BDS/transreg") # ref="db55c13"
 rm(pkgs)
 ```
 
@@ -362,6 +362,8 @@ The following chunk performs the second external application (`fwelnet`).
 - output: results/app_fwelnet.RData, results/info_app_fwelnet.txt
 
 ```{r fwelnet_script,eval=FALSE,echo=TRUE}
+#<<init>>
+
 table <- utils::read.csv("data/pone.0181468.s001.csv",header=TRUE,skip=3)
 
 extract <- function(cond,y,X,id){
