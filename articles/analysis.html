@@ -65,7 +65,7 @@
                         <h4 data-toc-skip class="author">Armin
 Rauschenberger</h4>
             
-            <h4 data-toc-skip class="date">15 December 2022</h4>
+            <h4 data-toc-skip class="date">16 December 2022</h4>
       
       
       <div class="d-none name"><code>analysis.Rmd</code></div>
@@ -120,8 +120,9 @@ document and in the text files associated with each R data file.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pkgs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"devtools"</span>,<span class="st">"palasso"</span>,<span class="st">"glmtrans"</span>,<span class="st">"xtable"</span>,<span class="st">"ecpc"</span><span class="op">)</span></span>
 <span><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">setdiff</a></span><span class="op">(</span><span class="va">pkgs</span>,<span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/installed.packages.html" class="external-link">installed.packages</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"kjytay/fwelnet"</span><span class="op">)</span> <span class="co"># ref="5515fd2"</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"LCSB-BDS/transreg"</span><span class="op">)</span> <span class="co"># ref="db55c13"</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"markvdwiel/GRridge"</span>,dependencies<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span> <span class="co"># ref="ef706af", version 1.7.5</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"kjytay/fwelnet"</span><span class="op">)</span> <span class="co"># ref="5515fd2", version 0.1</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"LCSB-BDS/transreg"</span><span class="op">)</span> <span class="co"># ref="ca70d0c", version 0.99.2</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">pkgs</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -185,7 +186,7 @@ document and in the text files associated with each R data file.</p>
 the internal simulation.</p>
 <ul>
 <li><p>input: none (<em>simulating data</em>)</p></li>
-<li><p>execution time: <strong>several minutes</strong></p></li>
+<li><p>execution time: <strong>25 minutes</strong></p></li>
 <li><p>output: results/sim_ext.RData, results/sim_int.RData,
 results/info_sim.RData</p></li>
 </ul>
@@ -383,7 +384,7 @@ manuscript/table_int.tex</p></li>
 <ul>
 <li><p>input: none (<em>script loads data - which are also available <a href="https://github.com/markvdwiel/GRridge/blob/master/data/dataVerlaat.rda" class="external-link">here</a>
 - from the R package <a href="https://doi.org/10.18129/B9.bioc.GRridge" class="external-link"><code>GRridge</code></a></em>)</p></li>
-<li><p>execution time: <strong>several minutes</strong></p></li>
+<li><p>execution time: <strong>1.5 hours</strong></p></li>
 <li><p>output: results/app_grridge.RData,
 results/info_app_grridge.txt</p></li>
 </ul>
@@ -419,7 +420,7 @@ results/info_app_grridge.txt</p></li>
 <ul>
 <li><p>input: data/pone.0181468.s001.csv (<em>available from <a href="https://doi.org/10.1371/journal.pone.0181468" class="external-link">Erez et al. 2017</a>
 in the supporting file <a href="https://doi.org/10.1371/journal.pone.0181468.s001" class="external-link">journal.pone.0181468.s001.csv</a></em>)</p></li>
-<li><p>execution time: <strong>several minutes</strong></p></li>
+<li><p>execution time: <strong>20 minutes</strong></p></li>
 <li><p>output: results/app_fwelnet.RData,
 results/info_app_fwelnet.txt</p></li>
 </ul>
@@ -543,8 +544,8 @@ results/app_fwelnet.RData</p></li>
 <ul>
 <li><p>input: data/vcf_with_pvalue.tab, data/LuxPark_pheno.txt
 (<em>available upon request to <a href="mailto:request.ncer-pd@uni.lu?cc=armin.rauschenberger@uni.lu,enrico.glaab@uni.lu&amp;subject=data%20request%20Rauschenberger%20et%20al.%20(%22transreg%22)">request.ncer-pd@uni.lu</a></em>)</p></li>
-<li><p>execution time: <strong>two days</strong> (unless parallel
-computing)</p></li>
+<li><p>execution time: <strong>5.5 hours</strong> (parallel computing
+with 8 cores)</p></li>
 <li><p>output: data/app_int_data.RData, results/app_int.RData,
 results/info_app_int.txt</p></li>
 </ul>
