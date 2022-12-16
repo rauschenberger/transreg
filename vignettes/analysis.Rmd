@@ -218,19 +218,6 @@ for(mode in c("ext","int")){
 }
 writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
       sessioninfo::session_info()),con=paste0(dir,"/results/info_sim.txt"))
-
-#colMeans(frame[,paste0("transreg.",c("exp","iso"),".sta")],na.rm=TRUE)
-#colMeans(frame[,paste0("transreg.",c("exp","iso"),".sim")],na.rm=TRUE)
-
-#stats::wilcox.test(x=frame$glmtrans,y=frame$transreg,alternative="greater")
-
-#load("results/sim_int.RData")
-#load("results/sim_ext.RData")
-
-#data <- frame[c("mean","glmnet","glmtrans","stage","transreg")]/frame$mean
-#cbind(frame$family,frame$alpha,frame$K,round(100*data,digits=0))
-#colMeans(data)
-#apply(data,2,median)
 ```
 
 The following chunk generates the tables for the external (`glmtrans`) and the internal simulation. **Requires execution of previous chunk.**
