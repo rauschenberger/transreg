@@ -281,20 +281,7 @@ results/info_sim.RData</p></li>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/save.html" class="external-link">save</a></span><span class="op">(</span><span class="va">frame</span>,file<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">dir</span>,<span class="st">"/results/sim_"</span>,<span class="va">mode</span>,<span class="st">".RData"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/writeLines.html" class="external-link">writeLines</a></span><span class="op">(</span>text<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/utils/capture.output.html" class="external-link">capture.output</a></span><span class="op">(</span><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"\n"</span><span class="op">)</span>,</span>
-<span>      <span class="fu">sessioninfo</span><span class="fu">::</span><span class="fu"><a href="https://r-lib.github.io/sessioninfo/reference/session_info.html" class="external-link">session_info</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,con<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">dir</span>,<span class="st">"/results/info_sim.txt"</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">#colMeans(frame[,paste0("transreg.",c("exp","iso"),".sta")],na.rm=TRUE)</span></span>
-<span><span class="co">#colMeans(frame[,paste0("transreg.",c("exp","iso"),".sim")],na.rm=TRUE)</span></span>
-<span></span>
-<span><span class="co">#stats::wilcox.test(x=frame$glmtrans,y=frame$transreg,alternative="greater")</span></span>
-<span></span>
-<span><span class="co">#load("results/sim_int.RData")</span></span>
-<span><span class="co">#load("results/sim_ext.RData")</span></span>
-<span></span>
-<span><span class="co">#data &lt;- frame[c("mean","glmnet","glmtrans","stage","transreg")]/frame$mean</span></span>
-<span><span class="co">#cbind(frame$family,frame$alpha,frame$K,round(100*data,digits=0))</span></span>
-<span><span class="co">#colMeans(data)</span></span>
-<span><span class="co">#apply(data,2,median)</span></span></code></pre></div>
+<span>      <span class="fu">sessioninfo</span><span class="fu">::</span><span class="fu"><a href="https://r-lib.github.io/sessioninfo/reference/session_info.html" class="external-link">session_info</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,con<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">dir</span>,<span class="st">"/results/info_sim.txt"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>The following chunk generates the tables for the external
 (<code>glmtrans</code>) and the internal simulation. <strong>Requires
 execution of previous chunk.</strong></p>
