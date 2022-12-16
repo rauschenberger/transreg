@@ -55,8 +55,9 @@ Install missing R packages from CRAN and GitHub. Note that `ecpc` is and `transr
 ```{r pkgs,eval=FALSE,echo=TRUE}
 pkgs <- c("devtools","palasso","glmtrans","xtable","ecpc")
 utils::install.packages(setdiff(pkgs,rownames(installed.packages())))
-remotes::install_github("kjytay/fwelnet") # ref="5515fd2"
-remotes::install_github("LCSB-BDS/transreg") # ref="db55c13"
+remotes::install_github("markvdwiel/GRridge",dependencies=FALSE) # ref="ef706af", version 1.7.5
+remotes::install_github("kjytay/fwelnet") # ref="5515fd2", version 0.1
+remotes::install_github("LCSB-BDS/transreg") # ref="ca70d0c", version 0.99.2
 rm(pkgs)
 ```
 
@@ -122,7 +123,7 @@ The following chunk performs the external (`glmtrans`) and the internal simulati
 
 - input: none (*simulating data*)
 
-- execution time: **several minutes**
+- execution time: **25 minutes**
 
 - output: results/sim_ext.RData, results/sim_int.RData, results/info_sim.RData
 
@@ -320,7 +321,7 @@ The following chunk performs the first external application (`GRridge`).
 
 - input: none (*script loads data - which are also available [here](https://github.com/markvdwiel/GRridge/blob/master/data/dataVerlaat.rda) - from the R package [`GRridge`](https://doi.org/10.18129/B9.bioc.GRridge)*)
 
-- execution time: **several minutes**
+- execution time: **1.5 hours**
 
 - output: results/app_grridge.RData, results/info_app_grridge.txt
 
@@ -357,7 +358,7 @@ The following chunk performs the second external application (`fwelnet`).
 
 - input: data/pone.0181468.s001.csv (*available from [Erez et al. 2017](https://doi.org/10.1371/journal.pone.0181468) in the supporting file [journal.pone.0181468.s001.csv](https://doi.org/10.1371/journal.pone.0181468.s001)*)
 
-- execution time: **several minutes**
+- execution time: **20 minutes**
 
 - output: results/app_fwelnet.RData, results/info_app_fwelnet.txt
 
@@ -482,7 +483,7 @@ The following chunk performs the internal application.
 
 - input: data/vcf_with_pvalue.tab, data/LuxPark_pheno.txt (*available upon request to [request.ncer-pd@uni.lu](mailto:request.ncer-pd@uni.lu?cc=armin.rauschenberger@uni.lu,enrico.glaab@uni.lu&subject=data request Rauschenberger et al. ("transreg"))*)
 
-- execution time: **two days** (unless parallel computing)
+- execution time: **5.5 hours** (parallel computing with 8 cores)
 
 - output: data/app_int_data.RData, results/app_int.RData, results/info_app_int.txt
 
