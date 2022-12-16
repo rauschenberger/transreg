@@ -5,7 +5,7 @@ Authors@R: person("Armin","Rauschenberger",,"armin.rauschenberger@uni.lu",role=c
 Description: Improves the predictive performance of ridge and lasso regression exploiting one or more sources of prior information on the importance and direction of effects.
 Imports: glmnet, starnet, joinet
 Suggests: knitr, testthat, rmarkdown, mvtnorm
-Enhances: glmtrans, GRridge, fwelnet, CVXR, ecpc, multiridge, scam, doMC, palasso, xtable, devtools
+Enhances: glmtrans, ecpc, fwelnet, GRridge, doMC, palasso, xtable, devtools, multiridge, CVXR
 VignetteBuilder: knitr
 License: GPL-3
 Encoding: UTF-8
