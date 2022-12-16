@@ -1,5 +1,5 @@
 Package: transreg
-Title: Penalised regression with multiple sets of prior effects
+Title: Penalised regression with multiple sets of prior effects. For running the vignette, install fwelnet from GitHub <https://github.com/kjytay/fwelnet>.
 Version: 0.99.2
 Authors@R: person("Armin","Rauschenberger",,"armin.rauschenberger@uni.lu",role=c("aut","cre"),comment=c(ORCID="0000-0001-6498-4801"))
 Description: Improves the predictive performance of ridge and lasso regression exploiting one or more sources of prior information on the importance and direction of effects.
