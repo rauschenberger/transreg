@@ -31,6 +31,10 @@ remotes::install_github("rauschenberger/transreg") # fork
 remotes::install_gitlab("bds/transreg",host="gitlab.lcsb.uni.lu") # mirror
 ```
 
+## Reproducibility
+
+The code for reproducing the simulations and applications shown in the manuscript is available in a vignette (<https://lcsb-bds.github.io/transreg/articles/analysis.html>).
+
 ## Reference
 
 Armin Rauschenberger 
