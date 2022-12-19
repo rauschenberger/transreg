@@ -21,8 +21,6 @@ compare(
   nfolds.int = 10,
   type.measure = "deviance",
   alpha.prior = NULL,
-  partitions = NULL,
-  monotone = NULL,
   naive = TRUE,
   diffpen = FALSE,
   seed = NULL,
@@ -68,10 +66,6 @@ number between 0 and 1}
 \item{type.measure}{character}
 
 \item{alpha.prior}{alpha for source regression}
-
-\item{partitions}{monotone: for GRridge}
-
-\item{monotone}{logical}
 
 \item{naive}{compare with naive transfer learning: logical}
 
