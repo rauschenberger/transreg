@@ -40,7 +40,9 @@ Zied Landoulsi
 Mark A van de Wiel 
 [![MvdW](https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png)](https://orcid.org/0000-0003-4780-8472),
 and Enrico Glaab
-[![EG](https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png)](https://orcid.org/0000-0003-3977-7469) (2022). 'Penalised regression with multiple sets of prior effects'. *Manuscript in preparation.*
+[![EG](https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png)](https://orcid.org/0000-0003-3977-7469) (2022). 'Penalised regression with multiple sets of prior effects'.
+*Manuscript in preparation.*
+([arXiv: 2212.08581](https://doi.org/10.48550/arXiv.2212.08581))
 
 <!--
 [![CRAN
