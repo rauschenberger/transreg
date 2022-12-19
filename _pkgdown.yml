@@ -11,6 +11,8 @@ navbar:
   left:
     - text: "functions"
       href: reference/index.html
+    - text: "abstract"
+      href: articles/abstract.html
     - text: "analysis"
       href: articles/analysis.html
     - text: "news"
