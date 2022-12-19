@@ -61,7 +61,7 @@ and Enrico Glaab
 \href{https://orcid.org/0000-0003-3977-7469}{\figure{orcid_16x16.png}{(iD)}}
 (2022).
 "Penalised regression with multiple sets of prior effects".
-\href{https://doi.org/10.48550/arXiv.2212.08581}{arXiv:2212.08581}
+(\href{https://doi.org/10.48550/arXiv.2212.08581}{arXiv: 2212.08581})
 \emph{Manuscript in preparation.}
 \email{armin.rauschenberger@uni.lu}
 }
