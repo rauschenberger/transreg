@@ -1,10 +1,7 @@
 ---
-title: 'Penalised regression with multiple sources of prior effects'
-author: "Armin Rauschenberger[![AR](https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png)](https://orcid.org/0000-0001-6498-4801)"
-date: "`r format(Sys.time(),'%d %B %Y')`"
+title: 'Analysis'
 output:
   html_document: default
-  pdf_document: default
 editor_options:
   chunk_output_type: console
 header-includes:
@@ -19,7 +16,7 @@ header-includes:
  - \usepackage{enumitem}
  - \usepackage{rotating}
 vignette: >
-  %\VignetteIndexEntry{vignette}
+  %\VignetteIndexEntry{analysis}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::knitr}
 ---
