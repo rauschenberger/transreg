@@ -1,8 +1,8 @@
 ---
-title: "Manuscript"
+title: "Abstract"
 output: html_document
 vignette: >
-  %\VignetteIndexEntry{manuscript}
+  %\VignetteIndexEntry{abstract}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::knitr}
 header-includes:
