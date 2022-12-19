@@ -450,7 +450,7 @@ NULL
         coefs[i,2] <- ifelse(is.na(temp["eta"]),0,temp["eta"])
         pred[,i] <- stats::fitted(glm)
       } else {
-        if(sd(eta)==0){eta <- eta + stats::rnorm(n,sd=1e-06); lambda <- 99e99}else{lambda <- 0}
+        if(stats::sd(eta)==0){eta <- eta + stats::rnorm(n,sd=1e-06); lambda <- 99e99}else{lambda <- 0}
         glmnet <- glmnet::glmnet(x=cbind(0,eta),y=y,family=family,lambda=lambda,lower.limits=0,intercept=TRUE)
         #temp <- stats::coef(glmnet)
         temp <- glmnet::coef.glmnet(glmnet)
