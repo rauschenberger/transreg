@@ -30,7 +30,7 @@
 #' [![EG](orcid_16x16.png "(iD)")](https://orcid.org/0000-0003-3977-7469)
 #' (2022).
 #' "Penalised regression with multiple sets of prior effects".
-#' ([arXiv: 2212.08581](https://doi.org/10.48550/arXiv.2212.08581))
+#' ([arXIv 2212.08581](https://doi.org/10.48550/arXiv.2212.08581))
 #' *Manuscript in preparation.*
 #' \email{armin.rauschenberger@uni.lu}
 #' 
