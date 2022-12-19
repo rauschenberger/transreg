@@ -7,9 +7,32 @@ vignette: >
   %\VignetteIndexEntry{vignette}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::knitr}
+header-includes:
+  - \usepackage{amsmath}
 ---
 
+# Title
+
+Penalised regression with multiple sources of prior effects
+
+# Authors
+
+Armin Rauschenberger$~^{1,a}$ [![AR](https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png)](https://orcid.org/0000-0001-6498-4801),
+Zied Landoulsi$~^{1}$ [![ZL](https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png)](https://orcid.org/0000-0002-2327-3904),
+Mark A. van de Wiel$~^{2,3,b}$ [![MvdW](https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png)](https://orcid.org/0000-0003-4780-8472),
+and Enrico Glaab$~^{1,b}$ [![EG](https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png)](https://orcid.org/0000-0003-3977-7469)
+
+$^1$Luxembourg Centre for Systems Biomedicine (LCSB), University of Luxembourg, Esch-sur-Alzette, Luxembourg.
+$^2$Department of Epidemiology and Data Science (EDS), Amsterdam University Medical Centers (Amsterdam UMC), Amsterdam, The Netherlands.
+$^3$Medical Research Council Biostatistics Unit (MRC BSU), University of Cambridge, Cambridge, United Kingdom.
+$^{a}$To whom correspondence should be addressed.
+$^{b}$Mark A. van de Wiel and Enrico Glaab share senior authorship.
+
+# Abstract
+
 In many high-dimensional prediction or classification tasks, complementary data on the features are available, e.g. prior biological knowledge on (epi)genetic markers. Here we consider tasks with numerical prior information that provide an insight into the importance (weight) and the direction (sign) of the feature effects, e.g. regression coefficients from previous studies. We propose an approach for integrating multiple sources of such prior information into penalised regression. If suitable co-data are available, this improves the predictive performance, as shown by simulation and application. The proposed method is implemented in the R package `transreg' (<https://github.com/lcsb-bds/transreg>).
+
+# Manuscript
 
 Armin Rauschenberger 
 [![AR](https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png)](https://orcid.org/0000-0001-6498-4801),
@@ -20,6 +43,6 @@ Mark A van de Wiel
 and Enrico Glaab
 [![EG](https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png)](https://orcid.org/0000-0003-3977-7469) (2022). 'Penalised regression with multiple sets of prior effects'.
 *Manuscript in preparation.*
-([arXiv: 2212.08581](https://doi.org/10.48550/arXiv.2212.08581))
+([arXiv: 2212.08581](https://doi.org/10.48550/arXiv.2212.08581), [ORBi: 10993/53227](https://orbilu.uni.lu/handle/10993/53227))
 
 
