@@ -6,12 +6,11 @@ citEntry(entry="Article",
 			as.person("Zied Landoulsi"),
 			as.person("Mark A. van de Wiel"),
 			as.person("Enrico Glaab")),
-    journal = "In preparation",
-    volume= "XXX(XXX):XXX-XXX",
+    journal = "arXix (pre-print)",
     year = 2022,
-    url = "https://doi.org/XXX",
+    url = "https://doi.org/10.48550/arXiv.2212.08581",
     textVersion = paste("Armin Rauschenberger, Zied Landoulsi, Mark A. van de Wiel, and Enrico Glaab (2022).",
 		"\"Penalised regression with  multiple sources of prior effects\",",
-		"In preparation, XXX(XXX):XXX-XXX.",
-		"https://doi.org/XXX")
+		"arXiv (pre-print)",
+		"https://doi.org/10.48550/arXiv.2212.08581")
 )
