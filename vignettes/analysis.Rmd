@@ -50,9 +50,10 @@ if(!all(c("data","results","manuscript") %in% dir())){
 Install missing R packages from CRAN and GitHub. Note that `ecpc` is and `transreg` will also be available on CRAN. For package versions, see session information at the end of this document and in the text files associated with each R data file.
 
 ```{r pkgs,eval=FALSE,echo=TRUE}
+# TO DO: UPDATE REFS AND VERSIONS!
 pkgs <- c("devtools","palasso","glmtrans","xtable","ecpc")
 utils::install.packages(setdiff(pkgs,rownames(installed.packages())))
-remotes::install_github("markvdwiel/GRridge",dependencies=FALSE) # ref="ef706af", version 1.7.5
+#remotes::install_github("markvdwiel/GRridge",dependencies=FALSE) # ref="ef706af", version 1.7.5
 remotes::install_github("kjytay/fwelnet") # ref="5515fd2", version 0.1
 remotes::install_github("LCSB-BDS/transreg") # ref="ca70d0c", version 0.99.2
 rm(pkgs)
@@ -120,7 +121,7 @@ The following chunk performs the external (`glmtrans`) and the internal simulati
 
 - input: none (*simulating data*)
 
-- execution time: **25 minutes**
+- execution time: **25 minutes** (MUCH LONGER IF 10 SEEDS AND P=2000!)
 
 - output: results/sim_ext.RData, results/sim_int.RData, results/info_sim.RData
 
@@ -171,6 +172,7 @@ for(mode in c("ext","int")){
     foldid.ext <- rep(c(0,1),times=c(n0,n1))
     
     for(iter in seq_len(nrow(frame))){
+      cat(paste0(mode,": ",iter,"/",nrow(frame),"\n"))
       
       if(!is.na(frame$seed[iter])){set.seed(frame$seed[iter])}
       #alpha <- frame$alpha[iter] 
@@ -216,7 +218,7 @@ for(mode in c("ext","int")){
                           seed=frame$seed[iter])
       frame[iter,names(loss$deviance)] <- loss$deviance
     }
-    save(frame,file=paste0(dir,"/results/sim_",mode,".RData"))
+    save(frame,file=paste0(dir,"/results/sim_",mode,"_trial.RData")) # remove "_trial"!
 }
 writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
       sessioninfo::session_info()),con=paste0(dir,"/results/info_sim.txt"))
