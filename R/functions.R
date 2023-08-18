@@ -1001,7 +1001,7 @@ simulate <- function(p=1000,n.target=100,n.source=150,k=2,family="gaussian",prop
   diag(Sigma) <- 1
   beta <- mvtnorm::rmvnorm(n=p,mean=mu,sigma=Sigma)
   
-  message("This part is temporary!")
+  #message("This part is temporary!")
   for(i in seq_len(k)){
     beta[,i] <- sign(beta[,i])*abs(beta[,i])^exp[i]
   }
