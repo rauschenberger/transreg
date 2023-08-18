@@ -773,6 +773,8 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
   pred <- matrix(data=NA,nrow=length(target$y),ncol=length(names),dimnames=list(NULL,names))
   coef <- sapply(names,function(x) matrix(data=NA,nrow=ncol(target$x),ncol=nfolds.ext),simplify=FALSE)
   time <- rep(0,time=length(names)); names(time) <- names
+  time <- time[!grepl(pattern="transreg",x=names(time))]
+  time["transreg"] <- 0
   
   for(i in seq_len(nfolds.ext)){
     y0 <- target$y[foldid.ext!=i]
