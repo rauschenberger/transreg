@@ -218,7 +218,7 @@ for(mode in c("ext","int")){
                           seed=frame$seed[iter])
       frame[iter,names(loss$deviance)] <- loss$deviance
     }
-    save(frame,file=paste0(dir,"/results/sim_",mode,"_trial.RData")) # remove "_trial"!
+    save(frame,file=paste0(dir,"/results/sim_",mode,"_trial.RData")) # TO DO: remove "_trial"!
 }
 writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
       sessioninfo::session_info()),con=paste0(dir,"/results/info_sim.txt"))
