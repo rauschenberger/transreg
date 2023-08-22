@@ -286,7 +286,7 @@ The following chunk generates the tables for the external (`glmtrans`) and the i
 }
 
 for(mode in c("ext","int")){
-    file <- paste0(dir,"/results/sim_",mode,".RData")
+    file <- paste0(dir,"/results/sim_",mode,".RData") # original
     if(!file.exists(file)){warning("Missing file ",file,".");next}
     load(file)
     cond <- colnames(frame) %in% c("Ka","h","rho.x","rho.beta","cor.x","cor.beta","cor.t","alpha","family")
@@ -305,6 +305,142 @@ for(mode in c("ext","int")){
     .table(info=info,loss=loss,caption=caption,file=paste0(dir,"/manuscript/table_",mode,".tex"))
 }
 ```
+
+
+```{r sim_table_trial,echo=TRUE}
+<<init>>
+for(mode in c("ext","int")){
+    file <- paste0(dir,"/results/sim_",mode,"_trial.RData")
+    if(!file.exists(file)){warning("Missing file ",file,".");next}
+    load(file)
+    colnames(frame) <- gsub(pattern="transreg.",replacement="",x=colnames(frame))
+    
+    info.var <- c("Ka","h","rho.x","rho.beta","alpha","family")
+    info <- frame[,colnames(frame) %in% info.var]
+    info.name <- gsub(pattern=" ",replacement="",x=apply(info,1,function(x) paste0(x,collapse=".")))
+    number <- as.numeric(factor(info.name,levels=unique(info.name)))
+    info <- unique(info)
+    info$cor.beta <- info$cor.x <- NA
+    
+    loss.var <- c("glmnet","glmtrans","exp.sta","exp.sim","iso.sta","iso.sim")
+    loss <- frame[,c(loss.var,"mean")]
+    # as percentage of empty model
+    loss <- 100*loss/loss$mean
+  
+    # average over 10 different seeds
+    all <- mean <- sd <- pvalue <- matrix(NA,nrow=max(number),ncol=length(loss.var),dimnames=list(1:max(number),loss.var))
+    for(i in 1:max(number)){
+      for(j in seq_along(loss.var)){
+        cond <- number==i
+        x <- loss$glmnet[cond]
+        y <- loss[[loss.var[j]]][cond]
+        pvalue[i,j] <- stats::wilcox.test(x=x,y=y,paired=TRUE,alternative="greater",exact=FALSE)$p.value
+        mean[i,j] <- mean(y)
+        sd[i,j] <- sd(y)
+        info$cor.x[i] <- mean(frame$cor.x[cond])
+        info$cor.beta[i] <- mean(frame$cor.beta[cond])
+      }
+    }
+    
+    all[] <- paste0(format(round(mean,digits=1))," $\\pm$",format(round(sd,digits=1)))
+    grey <- mean>=mean[,"glmnet"]
+    all[grey] <- paste0("\\textcolor{gray}{",all[grey],"}")
+    min <- cbind(seq_len(max(number)),apply(mean,1,which.min))
+    all[min] <- paste0("\\underline{",all[min],"}")
+    all <- gsub(pattern=" ",replacement="\\\\phantom{1}",x=all) # trial
+    star <- pvalue<=0.05
+    all[star] <- paste0(all[star],"*")
+    all[!star] <- paste0(all[!star],"\\phantom{*}")
+    
+   #  loss <- all
+   #  quote <- matrix(NA,nrow=nrow(loss),ncol=ncol(loss))
+   #  quote[1,] <- FALSE
+   #  quote[2,] <- loss[1,]==loss[2,] & loss[1,]==loss[3,] & loss[1,]==loss[4,]
+   # quote[3,] <- loss[2,]==loss[3,] & loss[3,]==loss[4,] & loss[4,]==loss[5,]
+   #   for(i in 4:(nrow(loss)-2)){
+   #     quote[i,] <- (loss[i,]==loss[i-1,] & loss[i,]==loss[i-2,] & loss[i,]==loss[i-3,]) | 
+   #     (loss[i,]==loss[i-1,] & loss[i,]==loss[i+1,] & loss[i,]==loss[i+2,])
+   # }
+   # quote[nrow(quote),] <- loss[nrow(quote),]==loss[nrow(quote)-1,] &
+   #         loss[nrow(quote),]==loss[nrow(quote)-2,] &
+   #         loss[nrow(quote),]==loss[nrow(quote)-3,]
+   
+   
+    
+        external <- "number of transferable source data sets ($K_a$), differences between source and target coefficients ($h$), dense setting with ridge regularisation ($s=50$, $\\alpha=0$) or sparse setting with lasso regularisation ($s=15$, $\\alpha=1$), family of distribution (`gaussian' or `binomial')."
+    internal <- "correlation parameter for features ($\\rho_x$), correlation parameter for coefficients ($\\rho_{\\beta}$), dense setting with ridge regularisation ($\\pi=20\\%$, $\\alpha=0$) or sparse setting with lasso regularisation ($\\pi=5\\%$, $\\alpha=1$), family of distribution (`gaussian' or `binomial')."
+    caption <- paste0("Testing loss in ",mode,"ernal simulation, as a percentage of the one from prediction by the mean. Settings: ",ifelse(mode=="ext",external,ifelse(mode=="int",internal,NULL))," These parameters determine (i) the average Pearson correlations among the features in the target data set ($\\bar{\\rho}_x$) and (ii) the maximum Pearson correlation between the coefficients in the target data set and the coefficients in the source data sets ($\\max(\\hat{\\rho}_{\\beta})$). Methods: regularised regression (\\texttt{glmnet}), competing transfer learning method (\\texttt{glmtrans}), proposed transfer learning method (\\texttt{transreg}) with exponential/isotonic calibration and standard/simultaneous stacking. In each setting, the colour black highlights methods that are more predictive than regularised regression without transfer learning (\\texttt{glmnet}), and an underline highlights the most predictive method. \\label{sim_",mode,"}")
+    
+    colnames(info) <- sapply(colnames(info),function(x) switch(x,"Ka"="$K_a$","K"="$K$","h"="$h$","alpha"="$\\alpha$","rho.x"="$\\rho_x$","rho.beta"="$\\rho_\\beta$","cor.x"="$\\bar{\\rho}_{x}$","cor.beta"="$\\max(\\hat{\\rho}_{\\beta})$","cor.t"="$\\bar{\\rho}_{a}$",x))
+    colnames(all) <- paste0("\\texttt{",colnames(all),"}")
+    
+    align <- paste0("|r|",paste0(rep("r",times=ncol(info)),collapse=""),"|",paste0(rep("r",times=ncol(all)),collapse=""),"|")
+    xtable <- xtable::xtable(x=cbind(info,all),align=align,caption=caption)
+    xtable::print.xtable(x=xtable,
+                include.rownames=FALSE,
+                floating=TRUE,
+                sanitize.text.function=identity,
+                comment=FALSE,
+                caption.placement="top",
+                size="\\small",
+                file=paste0(dir,"/manuscript/table_",mode,".tex"))
+    
+  }
+  
+# .table <- function(loss,info=NULL,hline=NULL,pvalue=NULL,caption="",file=""){
+#   loss[is.na(loss)] <- Inf
+#   
+#   if(nrow(loss)>5){
+#   quote <- NA*loss
+#   quote[1,] <- FALSE
+#   quote[2,] <- loss[1,]==loss[2,] & loss[1,]==loss[3,] & loss[1,]==loss[4,]
+#   quote[3,] <- loss[2,]==loss[3,] & loss[3,]==loss[4,] & loss[4,]==loss[5,]
+#   for(i in 4:(nrow(loss)-1)){
+#     quote[i,] <- (loss[i,]==loss[i-1,] & loss[i,]==loss[i-2,] & loss[i,]==loss[i-3,]) | 
+#       (loss[i,]==loss[i-1,] & loss[i,]==loss[i+1,] & loss[i,]==loss[i+2,])
+#   }
+#   quote[nrow(quote),] <- loss[nrow(quote),]==loss[nrow(quote)-1,] &
+#           loss[nrow(quote),]==loss[nrow(quote)-2,] &
+#           loss[nrow(quote),]==loss[nrow(quote)-3,]
+#   }
+#   
+#   loss <- round(loss,digits=3)
+#    
+#   min <- cbind(seq_len(nrow(loss)),apply(loss,1,which.min))
+#   pos <- loss >= 0
+#   leq <- loss >= loss[,"glmnet"]
+#   loss <- format(round(loss,digits=3),digits=3)
+#   if(nrow(loss)>5){loss[quote==1] <- "\""}
+#   loss[leq] <- paste0("\\textcolor{gray}{",loss[leq],"}")
+#   loss[min] <- paste0("\\underline{",loss[min],"}")
+#   loss[pos] <- paste0("~",loss[pos])
+#   colnames(loss) <- paste0("\\texttt{",colnames(loss),"}")
+#   rownames(loss) <- paste0("\\textsc{",tolower(rownames(loss)),"}")
+#   
+#   if(is.null(info)){
+#     table <- loss
+#     align <- paste0("|r|",paste0(rep("r",times=ncol(loss)),collapse=""),"|")
+#     include.rownames <- TRUE
+#   } else {
+#     info[is.na(info)] <- "-"
+#     table <- cbind(info,loss)
+#     align <- paste0("|r|",paste0(rep("r",times=ncol(info)),collapse=""),"|",
+#                     paste0(rep("r",times=ncol(loss)),collapse=""),"|")
+#     include.rownames <- FALSE
+#   }
+#   xtable <- xtable::xtable(x=table,caption=caption,align=align)
+#   xtable::print.xtable(x=xtable,
+#                        sanitize.text.function=identity,
+#                        include.rownames=include.rownames,
+#                        floating=TRUE,
+#                        comment=FALSE,
+#                        hline.after=c(-1,0,hline,nrow(table)),
+#                        caption.placement="top",
+#                        file=file)
+# }
+
+```
+
 
 # External applications
 
