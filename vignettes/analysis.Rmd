@@ -382,6 +382,7 @@ for(mode in c("ext","int")){
                 sanitize.text.function=identity,
                 comment=FALSE,
                 caption.placement="top",
+                floating.environment="table*",
                 size="\\small \\setlength{\\tabcolsep}{3pt}",
                 file=paste0(dir,"/manuscript/table_",mode,".tex"))
 }
