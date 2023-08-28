@@ -383,7 +383,7 @@ for(mode in c("ext","int")){
                 comment=FALSE,
                 caption.placement="top",
                 floating.environment="table*",
-                size="\\small \\setlength{\\tabcolsep}{3pt}",
+                #size="\\small \\setlength{\\tabcolsep}{3pt}",
                 file=paste0(dir,"/manuscript/table_",mode,".tex"))
 }
 ```
