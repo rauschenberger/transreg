@@ -21,7 +21,7 @@ vignette: >
   %\VignetteEngine{knitr::knitr}
 ---
 
-**This file contains the code for reproducing the results shown in the related manuscript (numbers, tables, figures). We obtained our results on 2022-12-15 using R version 4.2.2 (2022-10-31) running natively on a MacBook Pro (2020) with an Apple M1 chip, 16 GB memory, and the operating system macOS Monterey (version 12.6). The total computation time was around 7.5 hours.**
+**This file contains the code for reproducing the results shown in the related manuscript (numbers, tables, figures). We obtained our results on 2023-08-31 using R version 4.3.0 (2023-04-21) running natively on a MacBook Pro (2020) with an Apple M1 chip, 16 GB memory, and the operating system macOS Ventura (version 13.5.1). The total computation time was around 7.5 hours.**
 
 # Initialisation
 
@@ -53,9 +53,9 @@ Install missing R packages from CRAN and GitHub. Note that `ecpc` is and `transr
 # TO DO: UPDATE REFS AND VERSIONS!
 pkgs <- c("devtools","palasso","glmtrans","xtable","ecpc")
 utils::install.packages(setdiff(pkgs,rownames(installed.packages())))
-#remotes::install_github("markvdwiel/GRridge",dependencies=FALSE) # ref="ef706af", version 1.7.5
-remotes::install_github("kjytay/fwelnet") # ref="5515fd2", version 0.1
-remotes::install_github("LCSB-BDS/transreg") # ref="ca70d0c", version 0.99.2
+remotes::install_github("markvdwiel/GRridge") # ref="ef706afe", version 1.7.5
+remotes::install_github("kjytay/fwelnet") # ref="5515fd2e", version 0.1
+remotes::install_github("LCSB-BDS/transreg") # ref="4632df11", version 0.99.2
 rm(pkgs)
 ```
 
@@ -121,7 +121,7 @@ The following chunk performs the external (`glmtrans`) and the internal simulati
 
 - input: none (*simulating data*)
 
-- execution time: **25 minutes** (MUCH LONGER IF 10 SEEDS AND P=2000!)
+- execution time: **3 hours**
 
 - output: results/sim_ext.RData, results/sim_int.RData, results/info_sim.RData
 
@@ -154,19 +154,16 @@ for(mode in c("ext","int")){
                            alpha=as.integer(c(0,1)),
                            family=c("gaussian","binomial")
                            )
-      #frame$seed <- rep(1:4,each=6) # original
     } else if(mode=="int"){
-      frame <- expand.grid(seed=1:10, # trial (added line)
+      frame <- expand.grid(seed=1:10,
                            rho.x=c(0.95,0.99),
                            rho.beta=c(0.70,0.85,0.99),
                            alpha=as.integer(c(0,1)),
                            family=c("gaussian","binomial")
                            )
-      #frame$seed <- 1:24 # original
     }
     frame$family <- as.character(frame$family)
     frame[,c("cor.x","cor.beta","mean","glmnet","glmtrans","transreg")] <- NA
-    #p <- 1000; # original
     n0 <- 100; n1 <- 10000
     n.target <- n0+n1
     foldid.ext <- rep(c(0,1),times=c(n0,n1))
@@ -175,10 +172,7 @@ for(mode in c("ext","int")){
       cat(paste0(mode,": ",iter,"/",nrow(frame),"\n"))
       
       if(!is.na(frame$seed[iter])){set.seed(frame$seed[iter])}
-      #alpha <- frame$alpha[iter] 
-      #family <- as.character(frame$family[iter])
-      #rho.beta <- frame$rho.beta[iter]
-      
+
       # data simulation
       if(mode=="ext"){ 
         message("Using external simulation study!")
@@ -195,7 +189,7 @@ for(mode in c("ext","int")){
         data <- transreg:::simulate(p=2000,n.target=n.target,family=frame$family[iter],
                                 prop=prop,rho.beta=frame$rho.beta[iter],w=0.5,
                                 rho.x=frame$rho.x[iter],k=3,exp=c(1,2,0.5),
-                                trans=c(FALSE,TRUE,TRUE)) # original: p=p
+                                trans=c(FALSE,TRUE,TRUE))
         target <- data$target
         source <- data$source
         beta <- data$beta
@@ -215,10 +209,10 @@ for(mode in c("ext","int")){
                           foldid.ext=foldid.ext,nfolds.ext=1,
                           scale=c("exp","iso"),
                           sign=FALSE,switch=FALSE,select=TRUE,alpha.prior=NULL,
-                          seed=frame$seed[iter])
+                          seed=frame$seed[iter],xrnet=TRUE)
       frame[iter,names(loss$deviance)] <- loss$deviance
     }
-    save(frame,file=paste0(dir,"/results/sim_",mode,"_trial.RData")) # TO DO: remove "_trial"!
+    save(frame,file=paste0(dir,"/results/sim_",mode,".RData"))
 }
 writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
       sessioninfo::session_info()),con=paste0(dir,"/results/info_sim.txt"))
@@ -235,7 +229,7 @@ The following chunk generates the tables for the external (`glmtrans`) and the i
 ```{r sim_table,echo=TRUE}
 <<init>>
 for(mode in c("ext","int")){
-    file <- paste0(dir,"/results/sim_",mode,"_trial.RData")
+    file <- paste0(dir,"/results/sim_",mode,".RData")
     if(!file.exists(file)){warning("Missing file ",file,".");next}
     load(file)
     colnames(frame) <- gsub(pattern="transreg.",replacement="",x=colnames(frame))
@@ -400,7 +394,7 @@ loss <- list()
 for(i in 1:10){
   cat("---",i,"---\n")
   loss[[i]] <- transreg:::compare(target=target,prior=prior,z=as.matrix(z,ncol=1),
-                                    family="binomial",alpha=0,scale=c("exp","iso"),sign=FALSE,switch=FALSE,select=FALSE,type.measure=c("deviance","class","auc"),seed=i)
+                                    family="binomial",alpha=0,scale=c("exp","iso"),sign=FALSE,switch=FALSE,select=FALSE,type.measure=c("deviance","class","auc"),seed=i,xrnet=TRUE)
 }
 save(loss,file=paste0(dir,"/results/app_grridge.RData"))
 writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
@@ -409,7 +403,7 @@ writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
 load(paste0(dir,"/results/app_grridge.RData"),verbose=TRUE)
 table <- as.data.frame(t(sapply(loss,function(x) x$deviance)))
 table <- (table-table$glmnet)/table$glmnet
-table <- table[,c("glmnet","transreg.exp.sta","transreg.exp.sim","transreg.iso.sta","transreg.iso.sim","fwelnet","ecpc")]
+table <- table[,c("glmnet","transreg.exp.sta","transreg.exp.sim","transreg.iso.sta","transreg.iso.sim","fwelnet","ecpc","xrnet")]
 sapply(table[,-1],function(x) sum(x<table$glmnet))
 round(100*colMeans(table[,-1]),digits=2)
 ```
@@ -484,7 +478,7 @@ for(i in 1:10){
   target$y <- sapply(target.id,function(i) unique(y[table$ID==i]))
   target$x <- t(sapply(target.id,function(i) X[table$ID==i & table$GA==min(table$GA[table$ID==i]),]))
   
-  loss[[i]] <- transreg:::compare(target=target,prior=prior,family="binomial",alpha=0,scale=c("exp","iso"),sign=FALSE,switch=FALSE,select=FALSE,z=z,type.measure=c("deviance","class","auc"),seed=i)
+  loss[[i]] <- transreg:::compare(target=target,prior=prior,family="binomial",alpha=0,scale=c("exp","iso"),sign=FALSE,switch=FALSE,select=FALSE,z=z,type.measure=c("deviance","class","auc"),seed=i,xrnet=TRUE)
 }
 save(loss,file=paste0(dir,"/results/app_fwelnet.RData"))
 writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
