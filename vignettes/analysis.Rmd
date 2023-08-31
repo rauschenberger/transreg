@@ -397,7 +397,9 @@ for(mode in c("ext","int")){
 
 # Computation time
 
-```{r}
+```{r,eval=FALSE}
+#--- computation time ---
+
 set.seed(1)
 n <- 100
 p <- 1000
@@ -412,10 +414,10 @@ source <- data[1:m]
 names(source) <- paste0("s",1:m)
 target <- data[[m+1]]
 prior <- matrix(stats::rnorm(p*m),nrow=p,ncol=m)
-time <- transreg:::compare(target=target,source=source,z=abs(prior),family="binomial",alpha=1)$time
+time <- transreg:::compare(target=target,source=source,z=abs(prior),family="binomial",alpha=1,xrnet=TRUE)$time
 paste0(paste0(names(time),": ",round(time/time["glmnet"],digits=2)),collapse=", ")
 
-# trial xrnet
+#--- trial xrnet ---
 
 n <- 10100; p <- 1000
 X <- matrix(stats::rnorm(n*p),nrow=n,ncol=p)
