@@ -375,6 +375,11 @@ for(mode in c("ext","int")){
     colnames(both) <- paste0("\\texttt{",colnames(both),"}")
     
     align <- paste0("|r|",paste0(rep("c",times=ncol(info)),collapse=""),"|",paste0(rep("c",times=ncol(both)),collapse=""),"|")
+    
+    add.to.row <- list()
+    add.to.row$pos <- list(-1)
+    add.to.row$command <- "\\multicolumn{8}{c}{~} & \\multicolumn{4}{|c|}{\\texttt{transreg}}\\\\"
+    
     xtable <- xtable::xtable(x=cbind(info,both),align=align,caption=caption)
     xtable::print.xtable(x=xtable,
                 include.rownames=FALSE,
@@ -384,7 +389,9 @@ for(mode in c("ext","int")){
                 caption.placement="top",
                 floating.environment="table*",
                 #size="\\small \\setlength{\\tabcolsep}{3pt}",
-                file=paste0(dir,"/manuscript/table_",mode,".tex"))
+                file=paste0(dir,"/manuscript/table_",mode,".tex"),
+                add.to.row=add.to.row,
+                hline.after=c(-1,0,nrow(xtable)))
 }
 ```
 
