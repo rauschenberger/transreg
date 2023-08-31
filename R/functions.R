@@ -661,6 +661,8 @@ NULL
 #' @param cores
 #' number of cores for parallel computing
 #' (requires R package `doMC`)
+#' @param xrnet
+#' compare with xrnet: logical
 #' 
 #' @seealso 
 #' [transreg()]
@@ -676,7 +678,7 @@ NULL
 #' \dontrun{
 #' object <- transreg:::compare(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0)}
 #' 
-compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso",sign=FALSE,switch=FALSE,select=TRUE,foldid.ext=NULL,nfolds.ext=10,foldid.int=NULL,nfolds.int=10,type.measure="deviance",alpha.prior=NULL,naive=TRUE,diffpen=FALSE,seed=NULL,cores=1){
+compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso",sign=FALSE,switch=FALSE,select=TRUE,foldid.ext=NULL,nfolds.ext=10,foldid.int=NULL,nfolds.int=10,type.measure="deviance",alpha.prior=NULL,naive=TRUE,diffpen=FALSE,seed=NULL,cores=1,xrnet=FALSE){
   
   if(cores>1){
     doMC::registerDoMC(cores=cores)
@@ -769,7 +771,7 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
   foldid.int <- folds$foldid.int
   
   temp <- paste0(rep(c("transreg.","transreg."),each=length(scale)),scale,rep(c(".sta",".sim"),each=length(scale)))
-  names <- c("mean","glmnet","glmtrans"[!is.null(source)],temp,"fwelnet"[!is.null(z)],"ecpc"[!is.null(z)],"naive"[naive])
+  names <- c("mean","glmnet","glmtrans"[!is.null(source)],temp,"fwelnet"[!is.null(z)],"ecpc"[!is.null(z)],"naive"[naive],"xrnet"[xrnet])
   pred <- matrix(data=NA,nrow=length(target$y),ncol=length(names),dimnames=list(NULL,names))
   coef <- sapply(names,function(x) matrix(data=NA,nrow=ncol(target$x),ncol=nfolds.ext),simplify=FALSE)
   time <- rep(0,time=length(names)); names(time) <- names
@@ -834,6 +836,15 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
       end <- Sys.time()
       pred[foldid.ext==i,"naive"] <- stats::predict(glm,newdata=data.frame(x=X1 %*% prior),type="response")
       time["naive"] <- time["naive"] + difftime(time1=end,time2=start,units="secs")
+    }
+    
+    if(xrnet){
+      if(!is.null(seed)){set.seed(seed)}
+      start <- Sys.time()
+      tune_xrnet <- xrnet::tune_xrnet(x=X0,y=y0,external=prior,penalty_main=xrnet::define_penalty(penalty_type=alpha),family=family)
+      end <- Sys.time()
+      pred[foldid.ext==i,"xrnet"] <- xrnet:::predict.tune_xrnet(tune_xrnet,newdata=X1)
+      time["xrnet"] <- time["xrnet"] + difftime(time1=end,time2=start,units="secs")
     }
     
     # co-data methods
