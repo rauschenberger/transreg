@@ -210,6 +210,10 @@ for(mode in c("ext","int")){
                           scale=c("exp","iso"),
                           sign=FALSE,switch=FALSE,select=TRUE,alpha.prior=NULL,
                           seed=frame$seed[iter],xrnet=TRUE)
+      if(FALSE){
+        # debug xrnet
+        test <- xrnet::tune_xrnet(x=target$x[foldid.ext==0,],y=target$y[foldid.ext==0],external=source,family=frame$family[iter],penalty_main=xrnet::define_penalty(penalty_type=frame$alpha[iter]))
+      }
       frame[iter,names(loss$deviance)] <- loss$deviance
     }
     save(frame,file=paste0(dir,"/results/sim_",mode,".RData"))
