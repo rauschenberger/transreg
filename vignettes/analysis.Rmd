@@ -50,12 +50,11 @@ if(!all(c("data","results","manuscript") %in% dir())){
 Install missing R packages from CRAN and GitHub. Note that `ecpc` is and `transreg` will also be available on CRAN. For package versions, see session information at the end of this document and in the text files associated with each R data file.
 
 ```{r pkgs,eval=FALSE,echo=TRUE}
-# TO DO: UPDATE REFS AND VERSIONS!
 pkgs <- c("devtools","palasso","glmtrans","xtable","ecpc")
 utils::install.packages(setdiff(pkgs,rownames(installed.packages())))
 remotes::install_github("markvdwiel/GRridge") # ref="ef706afe", version 1.7.5
 remotes::install_github("kjytay/fwelnet") # ref="5515fd2e", version 0.1
-remotes::install_github("LCSB-BDS/transreg") # ref="7057abc0", version 0.99.2
+remotes::install_github("LCSB-BDS/transreg") # ref="9ef767ed", version 1.0.0
 rm(pkgs)
 ```
 
@@ -216,7 +215,7 @@ for(mode in c("ext","int")){
       }
       frame[iter,names(loss$deviance)] <- loss$deviance
     }
-    save(frame,file=paste0(dir,"/results/sim_",mode,"_fast.RData"))
+    save(frame,file=paste0(dir,"/results/sim_",mode,".RData"))
 }
 writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
       sessioninfo::session_info()),con=paste0(dir,"/results/info_sim.txt"))
@@ -233,7 +232,7 @@ The following chunk generates the tables for the external (`glmtrans`) and the i
 ```{r sim_table,echo=TRUE}
 <<init>>
 for(mode in c("ext","int")){
-    file <- paste0(dir,"/results/sim_",mode,"_fast.RData")
+    file <- paste0(dir,"/results/sim_",mode,".RData")
     if(!file.exists(file)){warning("Missing file ",file,".");next}
     load(file)
     colnames(frame) <- gsub(pattern="transreg.",replacement="",x=colnames(frame))
@@ -317,61 +316,6 @@ for(mode in c("ext","int")){
                 hline.after=c(-1,0,nrow(xtable)))
 }
 ```
-
-# Computation time
-
-```{r,eval=FALSE}
-#--- computation time ---
-
-set.seed(1)
-n <- 100
-p <- 1000
-m <- 3
-data <- list()
-for(i in 1:(m+1)){
-  data[[i]] <- list()
-  data[[i]]$x <- matrix(stats::rnorm(n*p),nrow=n,ncol=p)
-  data[[i]]$y <- stats::rbinom(n=n,size=1,prob=0.5)
-}
-source <- data[1:m]
-names(source) <- paste0("s",1:m)
-target <- data[[m+1]]
-prior <- matrix(stats::rnorm(p*m),nrow=p,ncol=m)
-time <- transreg:::compare(target=target,source=source,z=abs(prior),family="binomial",alpha=1,xrnet=TRUE)$time
-paste0(paste0(names(time),": ",round(time/time["glmnet"],digits=2)),collapse=", ")
-
-#--- trial xrnet ---
-
-n <- 10100; p <- 1000
-X <- matrix(stats::rnorm(n*p),nrow=n,ncol=p)
-beta <- stats::rnorm(p)*stats::rbinom(n=p,size=1,prob=0.2)
-q <- 3
-prior <- cbind(sample(beta),beta^3,beta) + matrix(stats::rbinom(n=q*p,size=1,prob=0.5)*stats::rnorm(q*p),nrow=p,ncol=q)
-foldid <- rep(c(0,1),times=c(100,10000))
-y <- X %*% beta + stats::rnorm(n)
-y_hat <- list()
-
-test <- compare(target=list(y=y,x=X),foldid.ext=foldid,nfolds.ext=1,prior=prior,family="gaussian",alpha=1,xrnet=TRUE)
-test$deviance
-
-#set.seed(1)
-
-alpha <- 1
-
-glmnet <- glmnet::cv.glmnet(x=X[foldid==0,],y=y[foldid==0],alpha=alpha)
-y_hat$glmnet <- predict(glmnet,newx=X[foldid==1,],s="lambda.min")
-
-transreg <- transreg::transreg(y=y[foldid==0],X=X[foldid==0,],prior=prior,alpha=alpha)
-y_hat$transreg <- predict(transreg,newx=X[foldid==1,])
-
-xrnet <- xrnet::tune_xrnet(x=X[foldid==0,],y=y[foldid==0],external=as.matrix(prior,ncol=1),penalty_main=xrnet::define_penalty(penalty_type=alpha))
-y_hat$xrnet <- xrnet:::predict.tune_xrnet(xrnet,newdata=X[foldid==1,])
-
-sapply(y_hat,function(x) mean((x-y[foldid==1])^2))
-
-
-```
-
 
 # External applications
 
@@ -681,6 +625,26 @@ table <- lapply(auc,function(x) tapply(X=x,INDEX=list(frame$cutoff,frame$alpha),
 grDevices::pdf(file=paste0(dir,"/manuscript/figure_int.pdf"),width=8,height=6,pointsize=15)
 plotter(table,cutoff,number,horizontal=TRUE)
 grDevices::dev.off()
+```
+
+```{r computation_time,eval=FALSE,echo=FALSE}
+# Synthetic example with measurement of computation time (for revision).
+set.seed(1)
+n <- 100
+p <- 1000
+m <- 3
+data <- list()
+for(i in 1:(m+1)){
+  data[[i]] <- list()
+  data[[i]]$x <- matrix(stats::rnorm(n*p),nrow=n,ncol=p)
+  data[[i]]$y <- stats::rbinom(n=n,size=1,prob=0.5)
+}
+source <- data[1:m]
+names(source) <- paste0("s",1:m)
+target <- data[[m+1]]
+prior <- matrix(stats::rnorm(p*m),nrow=p,ncol=m)
+#time <- transreg:::compare(target=target,source=source,z=abs(prior),family="binomial",alpha=1,xrnet=TRUE)$time
+#paste0(paste0(names(time),": ",round(time/time["glmnet"],digits=2)),collapse=", ")
 ```
 
 ```{r development,eval=FALSE,echo=FALSE}
