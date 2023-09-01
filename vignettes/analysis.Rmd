@@ -55,7 +55,7 @@ pkgs <- c("devtools","palasso","glmtrans","xtable","ecpc")
 utils::install.packages(setdiff(pkgs,rownames(installed.packages())))
 remotes::install_github("markvdwiel/GRridge") # ref="ef706afe", version 1.7.5
 remotes::install_github("kjytay/fwelnet") # ref="5515fd2e", version 0.1
-remotes::install_github("LCSB-BDS/transreg") # ref="4632df11", version 0.99.2
+remotes::install_github("LCSB-BDS/transreg") # ref="7057abc0", version 0.99.2
 rm(pkgs)
 ```
 
@@ -189,7 +189,7 @@ for(mode in c("ext","int")){
         data <- transreg:::simulate(p=2000,n.target=n.target,family=frame$family[iter],
                                 prop=prop,rho.beta=frame$rho.beta[iter],w=0.5,
                                 rho.x=frame$rho.x[iter],k=3,exp=c(1,2,0.5),
-                                trans=c(FALSE,TRUE,TRUE))
+                                trans=c(FALSE,TRUE,TRUE)) # Decide between p=2000 (nicer) and p=500 (faster). 
         target <- data$target
         source <- data$source
         beta <- data$beta
@@ -216,7 +216,7 @@ for(mode in c("ext","int")){
       }
       frame[iter,names(loss$deviance)] <- loss$deviance
     }
-    save(frame,file=paste0(dir,"/results/sim_",mode,".RData"))
+    save(frame,file=paste0(dir,"/results/sim_",mode,"_fast.RData"))
 }
 writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
       sessioninfo::session_info()),con=paste0(dir,"/results/info_sim.txt"))
@@ -233,7 +233,7 @@ The following chunk generates the tables for the external (`glmtrans`) and the i
 ```{r sim_table,echo=TRUE}
 <<init>>
 for(mode in c("ext","int")){
-    file <- paste0(dir,"/results/sim_",mode,".RData")
+    file <- paste0(dir,"/results/sim_",mode,"_fast.RData")
     if(!file.exists(file)){warning("Missing file ",file,".");next}
     load(file)
     colnames(frame) <- gsub(pattern="transreg.",replacement="",x=colnames(frame))
@@ -245,7 +245,7 @@ for(mode in c("ext","int")){
     info <- unique(info)
     info$cor.beta <- info$cor.x <- NA
     
-    loss.var <- c("glmnet","glmtrans","exp.sta","exp.sim","iso.sta","iso.sim")
+    loss.var <- c("glmnet","glmtrans","xrnet","exp.sta","exp.sim","iso.sta","iso.sim")
     loss <- frame[,c(loss.var,"mean")]
     # as percentage of empty model
     loss <- 100*loss/loss$mean
@@ -292,7 +292,7 @@ for(mode in c("ext","int")){
     
     external <- "number of transferable source data sets ($K_a$), differences between source and target coefficients ($h$), dense setting with ridge regularisation ($s=50$, $\\alpha=0$) or sparse setting with lasso regularisation ($s=15$, $\\alpha=1$), family of distribution (`gaussian' or `binomial')."
     internal <- "correlation parameter for features ($\\rho_x$), correlation parameter for coefficients ($\\rho_{\\beta}$), dense setting with ridge regularisation ($\\pi=20\\%$, $\\alpha=0$) or sparse setting with lasso regularisation ($\\pi=5\\%$, $\\alpha=1$), family of distribution (`gaussian' or `binomial')."
-    caption <- paste0("\\textcolor{blue}{\\sout{Testing loss in ",mode,"ernal simulation, as a percentage of the one from prediction by the mean.} Predictive performance in ",mode,"ernal simulation. In each setting (row), we simulate $10$ data sets, calculate the performance metric (mean-squared error for numerical prediction, logistic deviance for binary classification) for the test sets, express these metrics as percentages of those from prediction by the mean, and show the mean and standard deviation of these percentages.} Settings: ",ifelse(mode=="ext",external,ifelse(mode=="int",internal,NULL))," These parameters determine (i) the \\textcolor{blue}{\\sout{average} mean} Pearson correlation\\textcolor{blue}{\\sout{s}} among the features in the target data set ($\\bar{\\rho}_x$) and (ii) the maximum Pearson correlation between the coefficients in the target data set and the coefficients in the source data sets ($\\max(\\hat{\\rho}_{\\beta})$). Methods: regularised regression (\\texttt{glmnet}), competing transfer learning method (\\texttt{glmtrans}), proposed transfer learning method (\\texttt{transreg}) with exponential/isotonic calibration and standard/simultaneous stacking. In each setting, the colour black \\textcolor{blue}{(grey)} highlights methods that are more \\textcolor{blue}{(less)} predictive than regularised regression without transfer learning (\\texttt{glmnet}), \\textcolor{blue}{asterisks (daggers) indicate methods that are \\textit{significantly} more (less) predictive at the 5\\% level (one-sided Wilcoxon signed-rank test),} and an underline highlights the most predictive method. \\label{sim_",mode,"}")
+    caption <- paste0("\\textcolor{blue}{\\sout{Testing loss in ",mode,"ernal simulation, as a percentage of the one from prediction by the mean.} Predictive performance in ",mode,"ernal simulation. In each setting (row), we simulate $10$ data sets, calculate the performance metric (mean-squared error for numerical prediction, logistic deviance for binary classification) for the test sets, express these metrics as percentages of those from prediction by the mean, and show the mean and standard deviation of these percentages.} Settings: ",ifelse(mode=="ext",external,ifelse(mode=="int",internal,NULL))," These parameters determine (i) the \\textcolor{blue}{\\sout{average} mean} Pearson correlation\\textcolor{blue}{\\sout{s}} among the features in the target data set ($\\bar{\\rho}_x$) and (ii) the maximum Pearson correlation between the coefficients in the target data set and the coefficients in the source data sets ($\\max(\\hat{\\rho}_{\\beta})$). Methods: regularised regression (\\texttt{glmnet}), competing transfer learning method\\textcolor{red}{s} (\\texttt{glmtrans} , \\textcolor{red}{\\texttt{xrnet}}), proposed transfer learning method (\\texttt{transreg}) with exponential/isotonic calibration and standard/simultaneous stacking. In each setting, the colour black \\textcolor{blue}{(grey)} highlights methods that are more \\textcolor{blue}{(less)} predictive than regularised regression without transfer learning (\\texttt{glmnet}), \\textcolor{blue}{asterisks (daggers) indicate methods that are \\textit{significantly} more (less) predictive at the 5\\% level (one-sided Wilcoxon signed-rank test),} and an underline highlights the most predictive method. \\label{sim_",mode,"}")
     
     colnames(info) <- sapply(colnames(info),function(x) switch(x,"Ka"="$K_a$","K"="$K$","h"="$h$","alpha"="$\\alpha$","rho.x"="$\\rho_x$","rho.beta"="$\\rho_\\beta$","cor.x"="$\\bar{\\rho}_{x}$","cor.beta"="$\\max(\\hat{\\rho}_{\\beta})$","cor.t"="$\\bar{\\rho}_{a}$",x))
     colnames(both) <- paste0("\\texttt{",colnames(both),"}")
@@ -301,7 +301,7 @@ for(mode in c("ext","int")){
     
     add.to.row <- list()
     add.to.row$pos <- list(-1)
-    add.to.row$command <- "\\multicolumn{8}{c}{~} & \\multicolumn{4}{|c|}{\\texttt{transreg}}\\\\"
+    add.to.row$command <- "\\multicolumn{9}{c}{~} & \\multicolumn{4}{|c|}{\\texttt{transreg}}\\\\"
     
     xtable <- xtable::xtable(x=cbind(info,both),align=align,caption=caption)
     xtable::print.xtable(x=xtable,
@@ -491,7 +491,7 @@ writeLines(text=capture.output(utils::sessionInfo(),cat("\n"),
 load(paste0(dir,"/results/app_fwelnet.RData"))
 table <- as.data.frame(t(sapply(loss,function(x) x$deviance)))
 table <- (table-table$glmnet)/table$glmnet
-table <- table[,c("glmnet","transreg.exp.sta","transreg.exp.sim","transreg.iso.sta","transreg.iso.sim","fwelnet","ecpc")]
+table <- table[,c("glmnet","transreg.exp.sta","transreg.exp.sim","transreg.iso.sta","transreg.iso.sim","fwelnet","ecpc","xrnet")]
 sapply(table[,-1],function(x) sum(x<table$glmnet))
 round(100*colMeans(table[,-1]),digits=2)
 ```
@@ -516,7 +516,7 @@ for(k in c("grridge","fwelnet")){
   loss <- 100*(loss-loss$glmnet)/loss$glmnet
 
   temp <- c("exp.sta","exp.sim","iso.sta","iso.sim")
-  name <- c("fwelnet","ecpc",temp)
+  name <- c("fwelnet","ecpc","xrnet",temp)
   graphics::plot.new()
   graphics::plot.window(xlim=c(0.5,length(name)+0.5),ylim=range(loss,na.rm=TRUE))
   graphics::abline(h=0,lty=2,col="grey")
