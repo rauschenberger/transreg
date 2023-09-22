@@ -749,12 +749,21 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
     for(i in seq_len(k)){
       foldid.source <- .folds(y=source[[i]]$y,nfolds=10)$foldid
       if(is.character(alpha.prior) & alpha.prior=="p-value"){
-        if(family=="binomial"){
-          p.value <- apply(source[[i]]$x,2,function(x) suppressWarnings(stats::wilcox.test(x~source[[i]]$y)$p.value))
-          sign <- apply(source[[i]]$x,2,function(x) mean(x[source[[i]]$y==1])-mean(x[source[[i]]$y==0]))
-          prior[,i] <- sign*(-log10(p.value))
-        } else {
-          stop("Implement correlation test!",call.=FALSE)
+        #if(family=="binomial"){
+        #  p.value <- apply(source[[i]]$x,2,function(x) suppressWarnings(stats::wilcox.test(x~source[[i]]$y)$p.value))
+        #  sign <- apply(source[[i]]$x,2,function(x) mean(x[source[[i]]$y==1])-mean(x[source[[i]]$y==0]))
+        #  prior[,i] <- sign*(-log10(p.value))
+        #} else {
+        #  stop("Implement correlation test!",call.=FALSE)
+        #}
+        for(j in seq_len(p)){
+          yy <- source[[i]]$y
+          xx <- source[[i]]$x[,j]
+          lm <- summary(stats::lm(yy~xx,family=family))$coefficients
+          if(nrow(lm)==1 | any(is.na(lm))){prior[j,i] <- 0; next}
+          sign <- sign(lm["xx","Estimate"])
+          p.value <- lm["xx",ifelse(family=="gaussian","Pr(>|t|)","Pr(>|z|)")]
+          prior[j,i] <- sign*(-log10(p.value))
         }
       } else {
         object <- glmnet::cv.glmnet(y=source[[i]]$y,x=source[[i]]$x,family=family,alpha=alpha.prior,foldid=foldid.source,parallel=cores>1)
