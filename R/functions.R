@@ -759,7 +759,7 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
         for(j in seq_len(p)){
           yy <- source[[i]]$y
           xx <- source[[i]]$x[,j]
-          lm <- summary(stats::lm(yy~xx,family=family))$coefficients
+          lm <- summary(stats::glm(yy~xx,family=family))$coefficients
           if(nrow(lm)==1 | any(is.na(lm))){prior[j,i] <- 0; next}
           sign <- sign(lm["xx","Estimate"])
           p.value <- lm["xx",ifelse(family=="gaussian","Pr(>|t|)","Pr(>|z|)")]
