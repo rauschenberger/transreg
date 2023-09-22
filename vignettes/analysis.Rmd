@@ -21,7 +21,7 @@ vignette: >
   %\VignetteEngine{knitr::knitr}
 ---
 
-**This file contains the code for reproducing the results shown in the related manuscript (numbers, tables, figures). We obtained our results on 2023-08-31 using R version 4.3.0 (2023-04-21) running natively on a MacBook Pro (2020) with an Apple M1 chip, 16 GB memory, and the operating system macOS Ventura (version 13.5.1). The total computation time was around 7.5 hours.**
+**This file contains the code for reproducing the results shown in the related manuscript (numbers, tables, figures). We obtained our results on 2023-08-31 using R version 4.3.0 (2023-04-21) running natively on a MacBook Pro (2020) with an Apple M1 chip, 16 GB memory, and the operating system macOS Ventura (version 13.5.2). The total computation time was around XXX hours.**
 
 # Initialisation
 
@@ -33,7 +33,7 @@ Choose the directory containing the sub-directories "data", "results" and "manus
 
 - The directory "manuscript" will contain the files "table_int.tex" and "table_ext.tex" for the internal and external simulations, the file "figure_example.pdf" for the methods section, the file "figure_ext.pdf" for the external applications, and the file "figure_int.pdf" for the internal application.
 
-```{r,echo=FALSE}
+```{r knitr,echo=FALSE}
 knitr::opts_chunk$set(eval=FALSE,echo=TRUE)
 ```
 
@@ -54,7 +54,7 @@ pkgs <- c("devtools","palasso","glmtrans","xtable","ecpc")
 utils::install.packages(setdiff(pkgs,rownames(installed.packages())))
 remotes::install_github("markvdwiel/GRridge") # ref="ef706afe", version 1.7.5
 remotes::install_github("kjytay/fwelnet") # ref="5515fd2e", version 0.1
-remotes::install_github("LCSB-BDS/transreg") # ref="9ef767ed", version 1.0.0
+remotes::install_github("LCSB-BDS/transreg") # ref="XXXXX", version 1.0.0
 rm(pkgs)
 ```
 
@@ -146,7 +146,7 @@ for(mode in c("ext","int")){
   
     # simulation setting
     if(mode=="ext"){
-      frame <- expand.grid(seed=1:10, # trial (added line)
+      frame <- expand.grid(seed=1:10,
                            Ka=as.integer(c(1,3,5)),
                            K=as.integer(5),
                            h=as.integer(c(5,250)),
@@ -156,7 +156,7 @@ for(mode in c("ext","int")){
     } else if(mode=="int"){
       frame <- expand.grid(seed=1:10,
                            rho.x=c(0.95,0.99),
-                           rho.beta=c(0.70,0.85,0.99),
+                           rho.beta=c(0.6,0.8,0.99),
                            alpha=as.integer(c(0,1)),
                            family=c("gaussian","binomial")
                            )
@@ -178,17 +178,17 @@ for(mode in c("ext","int")){
         s <- ifelse(frame$alpha[iter]==0,50,15)
         data <- glmtrans.models(family=frame$family[iter],type="all",
                                 p=1000,n.target=n.target,s=s,
-                                Ka=frame$Ka[iter],K=frame$K[iter],h=frame$h[iter]) # original: p=p
+                                Ka=frame$Ka[iter],K=frame$K[iter],h=frame$h[iter])
         target <- data$target
         source <- data$source
         beta <- cbind(sapply(data$source,function(x) x$beta),data$target$beta)
       } else if(mode=="int"){
         message("Using internal simulation study!")
-        prop <- ifelse(frame$alpha[iter]==0,0.2,0.05)
-        data <- transreg:::simulate(p=2000,n.target=n.target,family=frame$family[iter],
-                                prop=prop,rho.beta=frame$rho.beta[iter],w=0.5,
+        prop <- ifelse(frame$alpha[iter]==0,0.3,0.05)
+        data <- transreg:::simulate(p=500,n.target=n.target,family=frame$family[iter],
+                                prop=prop,rho.beta=frame$rho.beta[iter],w=0.8,
                                 rho.x=frame$rho.x[iter],k=3,exp=c(1,2,0.5),
-                                trans=c(FALSE,TRUE,TRUE)) # Decide between p=2000 (nicer) and p=500 (faster). 
+                                trans=c(FALSE,TRUE,TRUE))
         target <- data$target
         source <- data$source
         beta <- data$beta
@@ -209,10 +209,6 @@ for(mode in c("ext","int")){
                           scale=c("exp","iso"),
                           sign=FALSE,switch=FALSE,select=TRUE,alpha.prior=NULL,
                           seed=frame$seed[iter],xrnet=TRUE)
-      if(FALSE){
-        # debug xrnet
-        test <- xrnet::tune_xrnet(x=target$x[foldid.ext==0,],y=target$y[foldid.ext==0],external=source,family=frame$family[iter],penalty_main=xrnet::define_penalty(penalty_type=frame$alpha[iter]))
-      }
       frame[iter,names(loss$deviance)] <- loss$deviance
     }
     save(frame,file=paste0(dir,"/results/sim_",mode,".RData"))
@@ -233,6 +229,7 @@ The following chunk generates the tables for the external (`glmtrans`) and the i
 <<init>>
 for(mode in c("ext","int")){
     file <- paste0(dir,"/results/sim_",mode,".RData")
+    #if(mode=="int"){file <- "~/Desktop/transreg/results/sim_int_fast.RData"}
     if(!file.exists(file)){warning("Missing file ",file,".");next}
     load(file)
     colnames(frame) <- gsub(pattern="transreg.",replacement="",x=colnames(frame))
@@ -290,7 +287,7 @@ for(mode in c("ext","int")){
     both[back.nchar==3] <- paste0(both[back.nchar==3],"$~$")
     
     external <- "number of transferable source data sets ($K_a$), differences between source and target coefficients ($h$), dense setting with ridge regularisation ($s=50$, $\\alpha=0$) or sparse setting with lasso regularisation ($s=15$, $\\alpha=1$), family of distribution (`gaussian' or `binomial')."
-    internal <- "correlation parameter for features ($\\rho_x$), correlation parameter for coefficients ($\\rho_{\\beta}$), dense setting with ridge regularisation ($\\pi=20\\%$, $\\alpha=0$) or sparse setting with lasso regularisation ($\\pi=5\\%$, $\\alpha=1$), family of distribution (`gaussian' or `binomial')."
+    internal <- "correlation parameter for features ($\\rho_x$), correlation parameter for coefficients ($\\rho_{\\beta}$), dense setting with ridge regularisation ($\\pi=\\textcolor{red}{3}0\\%$, $\\alpha=0$) or sparse setting with lasso regularisation ($\\pi=5\\%$, $\\alpha=1$), family of distribution (`gaussian' or `binomial')."
     caption <- paste0("\\textcolor{blue}{\\sout{Testing loss in ",mode,"ernal simulation, as a percentage of the one from prediction by the mean.} Predictive performance in ",mode,"ernal simulation. In each setting (row), we simulate $10$ data sets, calculate the performance metric (mean-squared error for numerical prediction, logistic deviance for binary classification) for the test sets, express these metrics as percentages of those from prediction by the mean, and show the mean and standard deviation of these percentages.} Settings: ",ifelse(mode=="ext",external,ifelse(mode=="int",internal,NULL))," These parameters determine (i) the \\textcolor{blue}{\\sout{average} mean} Pearson correlation\\textcolor{blue}{\\sout{s}} among the features in the target data set ($\\bar{\\rho}_x$) and (ii) the maximum Pearson correlation between the coefficients in the target data set and the coefficients in the source data sets ($\\max(\\hat{\\rho}_{\\beta})$). Methods: regularised regression (\\texttt{glmnet}), competing transfer learning method\\textcolor{red}{s} (\\texttt{glmtrans} , \\textcolor{red}{\\texttt{xrnet}}), proposed transfer learning method (\\texttt{transreg}) with exponential/isotonic calibration and standard/simultaneous stacking. In each setting, the colour black \\textcolor{blue}{(grey)} highlights methods that are more \\textcolor{blue}{(less)} predictive than regularised regression without transfer learning (\\texttt{glmnet}), \\textcolor{blue}{asterisks (daggers) indicate methods that are \\textit{significantly} more (less) predictive at the 5\\% level (one-sided Wilcoxon signed-rank test),} and an underline highlights the most predictive method. \\label{sim_",mode,"}")
     
     colnames(info) <- sapply(colnames(info),function(x) switch(x,"Ka"="$K_a$","K"="$K$","h"="$h$","alpha"="$\\alpha$","rho.x"="$\\rho_x$","rho.beta"="$\\rho_\\beta$","cor.x"="$\\bar{\\rho}_{x}$","cor.beta"="$\\max(\\hat{\\rho}_{\\beta})$","cor.t"="$\\bar{\\rho}_{a}$",x))
@@ -469,7 +466,7 @@ for(k in c("grridge","fwelnet")){
   if(grepl(pattern="fwelnet",x=k)){at <- seq(from=-20,to=20,by=10)}
   labels <- ifelse(at==0,"0%",ifelse(at<0,paste0(at,"%"),paste0("+",at,"%")))
   graphics::axis(side=2,cex.axis=0.7,at=at,labels=labels)
-  graphics::title(ylab="change in loss",line=2.5,cex.lab=0.7)
+  graphics::title(ylab="change in metric",line=2.5,cex.lab=0.7)
   graphics::box()
   for(i in seq_along(name)){
     palasso:::.boxplot(loss[,name[i]],at=i,invert=FALSE)
@@ -627,10 +624,15 @@ plotter(table,cutoff,number,horizontal=TRUE)
 grDevices::dev.off()
 ```
 
-```{r computation_time,eval=FALSE,echo=FALSE}
-# Synthetic example with measurement of computation time (for revision).
+```{r extra_time,eval=FALSE,echo=FALSE}
+#--- This code chunk is not included in the manuscript! ---
+
+# Synthetic example with measurement of computation time.
+
 set.seed(1)
-n <- 100
+n0 <- 100
+n1 <- 5
+n <- n0+n1
 p <- 1000
 m <- 3
 data <- list()
@@ -643,11 +645,44 @@ source <- data[1:m]
 names(source) <- paste0("s",1:m)
 target <- data[[m+1]]
 prior <- matrix(stats::rnorm(p*m),nrow=p,ncol=m)
-#time <- transreg:::compare(target=target,source=source,z=abs(prior),family="binomial",alpha=1,xrnet=TRUE)$time
-#paste0(paste0(names(time),": ",round(time/time["glmnet"],digits=2)),collapse=", ")
+alpha <- 1
+foldid.ext <- rep(c(0,1),times=c(n0,n1)) 
+nfolds.ext <- 1
+alpha <- 1
+
+time <- transreg:::compare(target=target,source=source,z=abs(prior),family="binomial",alpha=alpha,xrnet=TRUE,foldid.ext=foldid.ext,nfolds.ext=nfolds.ext,alpha.prior=alpha)$time
+
+# As transreg::compare performs exponential and isotonic calibration, we also train transreg with the default parameters.
+start <- Sys.time()
+test <- transreg::transreg(y=target$y[seq_len(n0)],X=target$x[seq_len(n0),],prior=prior,family="binomial",alpha=alpha)
+end <- Sys.time()
+time["transreg.single"] <- difftime(time1=end,time2=start,units="secs")
+
+paste0(paste0(names(time),": ",round(time/time["glmnet"],digits=2)),collapse=", ")
 ```
 
-```{r development,eval=FALSE,echo=FALSE}
+```{r extra_xrnet,eval=FALSE,echo=FALSE}
+#--- This code chunk is not included in the manuscript! ---
+
+# Example: xrnet works best if prior effects are linearly related to true effects. transreg works better than xrnet if prior effects are non-linearly related to true effects.
+
+n0 <- 100
+n1 <- 10000
+n <- n0 + n1
+p <- 2000
+X <- matrix(stats::rnorm(n*p),nrow=n,ncol=p)
+beta <- stats::rnorm(n=p)*stats::rbinom(n=p,size=1,prob=0.05)
+y <- as.numeric(X %*% beta) + stats::rnorm(n=n,sd=sd(X %*% beta))
+foldid <- rep(c(0,1),times=c(n0,n1))
+
+prior <- sign(beta)*abs(beta)^10 + stats::rnorm(p)
+
+metric <- transreg:::compare(target=list(y=y,x=X),prior=prior,foldid.ext=foldid,nfolds.ext=1,family="gaussian",alpha=1,xrnet=TRUE,scale=c("exp","iso"))$deviance
+metric
+```
+
+
+```{r extra_devel,eval=FALSE,echo=FALSE}
 #--- This code chunk is under development! ---
 
 # - - - multi-split test - - -
