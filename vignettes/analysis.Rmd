@@ -54,7 +54,7 @@ pkgs <- c("devtools","palasso","glmtrans","xtable","ecpc")
 utils::install.packages(setdiff(pkgs,rownames(installed.packages())))
 remotes::install_github("markvdwiel/GRridge") # ref="ef706afe", version 1.7.5
 remotes::install_github("kjytay/fwelnet") # ref="5515fd2e", version 0.1
-remotes::install_github("LCSB-BDS/transreg") # ref="d9461fcd", version 1.0.0
+remotes::install_github("LCSB-BDS/transreg") # ref="0125fb33", version 1.0.0
 rm(pkgs)
 ```
 
