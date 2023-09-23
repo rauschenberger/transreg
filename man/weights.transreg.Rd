@@ -47,7 +47,7 @@ and Enrico Glaab
 (2022).
 "Penalised regression with multiple sets of prior effects".
 \emph{Manuscript in preparation.}
-(\href{https://doi.org/10.48550/arXiv.2212.08581}{arXiv: 2212.08581})
+\doi{10.48550/arXiv.2212.08581}
 \email{armin.rauschenberger@uni.lu}
 }
 \seealso{
