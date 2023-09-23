@@ -42,9 +42,6 @@
 #' choose between positive and negative weights for each source: logical
 #' @param select
 #' select from sources: logical
-#' @param diffpen
-#' differential penalisation for features and meta-features: logical
-#' (experimental argument)
 #' @param track
 #' show intermediate output (messages and plots): logical
 #' @param parallel
@@ -148,7 +145,7 @@
 #' plot(x=coef(sta$base)[-1],y=coef(sta)$beta)
 #' plot(x=coef(sim$base)[-1],y=coef(sim)$beta)
 #' 
-transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,scale="iso",stack="sim",sign=FALSE,switch=FALSE,select=TRUE,diffpen=FALSE,track=FALSE,parallel=FALSE){
+transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,scale="iso",stack="sim",sign=FALSE,switch=FALSE,select=TRUE,track=FALSE,parallel=FALSE){
   
   if(is.vector(prior)){
     prior <- matrix(prior,ncol=1)
@@ -225,11 +222,6 @@ transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,s
                                parallel=parallel)
   } else {
      meta.sim <- NULL
-  }
-  
-  if(diffpen){
-    stop("diffpen=TRUE is not implemented")
-    #multiridge(X=list(y_hat[,1:k,drop=FALSE],X),Y=y,family=family)
   }
   
   object <- list(base=base,meta.sta=meta.sta,meta.sim=meta.sim,prior.calib=prior.ext$beta,data=list(y=y,X=X,prior=prior),info=data.frame(n=n,p=p,k=k,family=family,alpha=alpha,scale=scale,stack=paste0(stack,collapse="+")))
@@ -678,7 +670,7 @@ NULL
 #' \dontrun{
 #' object <- transreg:::compare(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0)}
 #' 
-compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso",sign=FALSE,switch=FALSE,select=TRUE,foldid.ext=NULL,nfolds.ext=10,foldid.int=NULL,nfolds.int=10,type.measure="deviance",alpha.prior=NULL,naive=TRUE,diffpen=FALSE,seed=NULL,cores=1,xrnet=FALSE){
+compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso",sign=FALSE,switch=FALSE,select=TRUE,foldid.ext=NULL,nfolds.ext=10,foldid.int=NULL,nfolds.int=10,type.measure="deviance",alpha.prior=NULL,naive=TRUE,seed=NULL,cores=1,xrnet=FALSE){
   
   if(cores>1){
     doMC::registerDoMC(cores=cores)
@@ -828,7 +820,7 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
     for(j in seq_along(scale)){
       if(!is.null(seed)){set.seed(seed)}
       start <- Sys.time()
-      object <- transreg(y=y0,X=X0,prior=prior,family=family,foldid=foldid,alpha=alpha,scale=scale[j],stack=c("sta","sim"),sign=sign,switch=switch,select=select,diffpen=diffpen,parallel=cores>1)
+      object <- transreg(y=y0,X=X0,prior=prior,family=family,foldid=foldid,alpha=alpha,scale=scale[j],stack=c("sta","sim"),sign=sign,switch=switch,select=select,parallel=cores>1)
       end <- Sys.time()
       pred[foldid.ext==i,paste0("transreg.",scale[j],".sta")] <- .predict.sta(object,newx=X1)
       pred[foldid.ext==i,paste0("transreg.",scale[j],".sim")] <- .predict.sim(object,newx=X1)
