@@ -17,7 +17,6 @@ transreg(
   sign = FALSE,
   switch = FALSE,
   select = TRUE,
-  diffpen = FALSE,
   track = FALSE,
   parallel = FALSE
 )
@@ -55,9 +54,6 @@ with entries from 1 to \code{nfolds}}
 \item{switch}{choose between positive and negative weights for each source: logical}
 
 \item{select}{select from sources: logical}
-
-\item{diffpen}{differential penalisation for features and meta-features: logical
-(experimental argument)}
 
 \item{track}{show intermediate output (messages and plots): logical}
 
@@ -161,7 +157,7 @@ Armin Rauschenberger
 \href{https://orcid.org/0000-0001-6498-4801}{\figure{orcid_16x16.png}{(iD)}},
 Zied Landoulsi
 \href{https://orcid.org/0000-0002-2327-3904}{\figure{orcid_16x16.png}{(iD)}},
-Mark A van de Wiel
+Mark A. van de Wiel
 \href{https://orcid.org/0000-0003-4780-8472}{\figure{orcid_16x16.png}{(iD)}},
 and Enrico Glaab
 \href{https://orcid.org/0000-0003-3977-7469}{\figure{orcid_16x16.png}{(iD)}}

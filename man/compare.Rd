@@ -22,9 +22,9 @@ compare(
   type.measure = "deviance",
   alpha.prior = NULL,
   naive = TRUE,
-  diffpen = FALSE,
   seed = NULL,
-  cores = 1
+  cores = 1,
+  xrnet = FALSE
 )
 }
 \arguments{
@@ -69,13 +69,12 @@ number between 0 and 1}
 
 \item{naive}{compare with naive transfer learning: logical}
 
-\item{diffpen}{differential penalisation for features and meta-features: logical
-(experimental argument)}
-
 \item{seed}{random seed}
 
 \item{cores}{number of cores for parallel computing
 (requires R package \code{doMC})}
+
+\item{xrnet}{compare with xrnet: logical}
 }
 \description{
 Function for reproducing hold-out method (simulation)
