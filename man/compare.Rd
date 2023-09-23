@@ -88,7 +88,8 @@ X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
 beta <- rnorm(p)*rbinom(n=p,size=1,prob=0.2)
 y <- X \%*\% beta
 \dontshow{
-object <- suppressMessages(transreg:::compare(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0))}
+subset <- 1:10 # speed up for CRAN
+object <- suppressMessages(transreg:::compare(target=list(y=y,x=X[,subset]),prior=beta[subset],family="gaussian",alpha=0))}
 \dontrun{
 object <- transreg:::compare(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0)}
 

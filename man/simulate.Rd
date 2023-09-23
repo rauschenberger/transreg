@@ -55,7 +55,8 @@ for(i in seq_along(data$source)){
   glmnet <- glmnet::cv.glmnet(y=data$source[[i]]$y,x=data$source[[i]]$x)
   prior <- cbind(prior,coef(glmnet,s="lambda.min")[-1])
 }
-object <- transreg(y=data$target$y,X=data$target$x,prior=prior)
+\dontrun{
+object <- transreg(y=data$target$y,X=data$target$x,prior=prior)}
 
 }
 \seealso{

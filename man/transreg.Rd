@@ -122,6 +122,7 @@ two <- transreg(y=y_lin,X=X,prior=cbind(prior1,prior2))
 weights(one)
 weights(two)
 
+\dontrun{
 #--- linear vs logistic regression ---
 lin <- transreg(y=y_lin,X=X,prior=prior1,family="gaussian")
 log <- transreg(y=y_log,X=X,prior=prior1,family="binomial")
@@ -149,7 +150,7 @@ prior <- c(prior1[1:250],rep(0,250))
 sta <- transreg(y=y_lin,X=X,prior=prior,stack="sta")
 sim <- transreg(y=y_lin,X=X,prior=prior,stack="sim")
 plot(x=coef(sta$base)[-1],y=coef(sta)$beta)
-plot(x=coef(sim$base)[-1],y=coef(sim)$beta)
+plot(x=coef(sim$base)[-1],y=coef(sim)$beta)}
 
 }
 \references{
