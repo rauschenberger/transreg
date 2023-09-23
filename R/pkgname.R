@@ -31,7 +31,7 @@
 #' (2022).
 #' "Penalised regression with multiple sets of prior effects".
 #' *Manuscript in preparation.*
-#' ([arXiv: 2212.08581](https://doi.org/10.48550/arXiv.2212.08581))
+#' \doi{10.48550/arXiv.2212.08581}
 #' \email{armin.rauschenberger@uni.lu}
 #' 
 #' @examples
