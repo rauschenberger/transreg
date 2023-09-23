@@ -842,7 +842,7 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
     if(xrnet){
       if(!is.null(seed)){set.seed(seed)}
       start <- Sys.time()
-      cond <- apply(prior,2,stats::sd)>0 # circumventing bug in xrnet?
+      cond <- apply(prior,2,stats::sd)>0
       tune_xrnet <- xrnet::tune_xrnet(x=X0,y=y0,
                                       external=prior[,cond,drop=FALSE],
                                       penalty_main=xrnet::define_penalty(penalty_type=alpha),
