@@ -75,9 +75,9 @@ See vignette.</p>
 <span>  type.measure <span class="op">=</span> <span class="st">"deviance"</span>,</span>
 <span>  alpha.prior <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  naive <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  diffpen <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  seed <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  cores <span class="op">=</span> <span class="fl">1</span></span>
+<span>  cores <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  xrnet <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -158,11 +158,6 @@ number between 0 and 1</p></dd>
 <dd><p>compare with naive transfer learning: logical</p></dd>
 
 
-<dt>diffpen</dt>
-<dd><p>differential penalisation for features and meta-features: logical
-(experimental argument)</p></dd>
-
-
 <dt>seed</dt>
 <dd><p>random seed</p></dd>
 
@@ -170,6 +165,10 @@ number between 0 and 1</p></dd>
 <dt>cores</dt>
 <dd><p>number of cores for parallel computing
 (requires R package <code>doMC</code>)</p></dd>
+
+
+<dt>xrnet</dt>
+<dd><p>compare with xrnet: logical</p></dd>
 
 </dl></div>
     <div class="section level2">
