@@ -32,7 +32,6 @@ reference:
 
 - title: "Other functions"
   contents:
-  - multiridge
   - simulate
   - compare
   - .residuals
