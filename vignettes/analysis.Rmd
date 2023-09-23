@@ -50,11 +50,11 @@ if(!all(c("data","results","manuscript") %in% dir())){
 Install missing R packages from CRAN and GitHub. Note that `ecpc` is and `transreg` will also be available on CRAN. For package versions, see session information at the end of this document and in the text files associated with each R data file.
 
 ```{r pkgs,eval=FALSE,echo=TRUE}
-pkgs <- c("devtools","palasso","glmtrans","xtable","ecpc")
+pkgs <- c("devtools","palasso","glmtrans","xtable","ecpc","xrnet")
 utils::install.packages(setdiff(pkgs,rownames(installed.packages())))
 remotes::install_github("markvdwiel/GRridge") # ref="ef706afe", version 1.7.5
 remotes::install_github("kjytay/fwelnet") # ref="5515fd2e", version 0.1
-remotes::install_github("LCSB-BDS/transreg") # ref="0125fb33", version 1.0.0
+remotes::install_github("LCSB-BDS/transreg") # ref="82757441", version 1.0.0
 rm(pkgs)
 ```
 
@@ -680,7 +680,6 @@ prior <- sign(beta)*abs(beta)^10 + stats::rnorm(p)
 metric <- transreg:::compare(target=list(y=y,x=X),prior=prior,foldid.ext=foldid,nfolds.ext=1,family="gaussian",alpha=1,xrnet=TRUE,scale=c("exp","iso"))$deviance
 metric
 ```
-
 
 ```{r extra_devel,eval=FALSE,echo=FALSE}
 #--- This code chunk is under development! ---
