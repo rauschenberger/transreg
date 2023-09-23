@@ -850,7 +850,7 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
     if(xrnet){
       if(!is.null(seed)){set.seed(seed)}
       start <- Sys.time()
-      cond <- apply(prior,2,sd)>0 # circumventing bug in xrnet?
+      cond <- apply(prior,2,stats::sd)>0 # circumventing bug in xrnet?
       tune_xrnet <- xrnet::tune_xrnet(x=X0,y=y0,
                                       external=prior[,cond,drop=FALSE],
                                       penalty_main=xrnet::define_penalty(penalty_type=alpha),
@@ -859,7 +859,7 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
                                       nfolds=nfolds.int,
                                       loss="deviance")
       end <- Sys.time()
-      pred[foldid.ext==i,"xrnet"] <- xrnet:::predict.tune_xrnet(tune_xrnet,newdata=X1)
+      pred[foldid.ext==i,"xrnet"] <- stats::predict(tune_xrnet,newdata=X1) # was xrnet:::predict.tune_xrnet
       time["xrnet"] <- time["xrnet"] + difftime(time1=end,time2=start,units="secs")
     }
     
