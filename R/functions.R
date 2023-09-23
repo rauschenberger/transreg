@@ -116,6 +116,7 @@
 #' weights(one)
 #' weights(two)
 #' 
+#' \dontrun{
 #' #--- linear vs logistic regression ---
 #' lin <- transreg(y=y_lin,X=X,prior=prior1,family="gaussian")
 #' log <- transreg(y=y_log,X=X,prior=prior1,family="binomial")
@@ -143,7 +144,7 @@
 #' sta <- transreg(y=y_lin,X=X,prior=prior,stack="sta")
 #' sim <- transreg(y=y_lin,X=X,prior=prior,stack="sim")
 #' plot(x=coef(sta$base)[-1],y=coef(sta)$beta)
-#' plot(x=coef(sim$base)[-1],y=coef(sim)$beta)
+#' plot(x=coef(sim$base)[-1],y=coef(sim)$beta)}
 #' 
 transreg <- function(y,X,prior,family="gaussian",alpha=1,foldid=NULL,nfolds=10,scale="iso",stack="sim",sign=FALSE,switch=FALSE,select=TRUE,track=FALSE,parallel=FALSE){
   
@@ -666,7 +667,8 @@ NULL
 #' beta <- rnorm(p)*rbinom(n=p,size=1,prob=0.2)
 #' y <- X %*% beta
 #' \dontshow{
-#' object <- suppressMessages(transreg:::compare(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0))}
+#' subset <- 1:10 # speed up for CRAN
+#' object <- suppressMessages(transreg:::compare(target=list(y=y,x=X[,subset]),prior=beta[subset],family="gaussian",alpha=0))}
 #' \dontrun{
 #' object <- transreg:::compare(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0)}
 #' 
@@ -1007,7 +1009,8 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
 #'   glmnet <- glmnet::cv.glmnet(y=data$source[[i]]$y,x=data$source[[i]]$x)
 #'   prior <- cbind(prior,coef(glmnet,s="lambda.min")[-1])
 #' }
-#' object <- transreg(y=data$target$y,X=data$target$x,prior=prior)
+#' \dontrun{
+#' object <- transreg(y=data$target$y,X=data$target$x,prior=prior)}
 #' 
 simulate <- function(p=1000,n.target=100,n.source=150,k=2,family="gaussian",prop=0.01,rho.beta=0.95,rho.x=0.95,w=0.5,trans=rep(TRUE,times=k),exp=rep(1,times=k)){
   
