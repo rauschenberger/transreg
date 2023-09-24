@@ -1003,7 +1003,7 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
 #' 
 #' @examples
 #' set.seed(1)
-#' data <- transreg:::simulate()
+#' data <- transreg:::simulate(p=200)
 #' prior <- numeric()
 #' for(i in seq_along(data$source)){
 #'   glmnet <- glmnet::cv.glmnet(y=data$source[[i]]$y,x=data$source[[i]]$x)
