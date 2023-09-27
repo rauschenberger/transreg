@@ -1407,15 +1407,6 @@ plot.transreg <- function(x,stack=NULL,...){
 #' 
 #' @inheritParams transreg
 #' 
-#' @examples
-#' n <- 100; p <- 500
-#' X <- matrix(stats::rnorm(n*p),nrow=n,ncol=p)
-#' beta <- stats::rnorm(p)*stats::rbinom(n=p,size=1,prob=0.2)
-#' y <- X %*% beta
-#' prior <- matrix(abs(beta),ncol=1)
-#' #temp <- .signdisc(y,X,prior,family="gaussian")
-#' #table(sign(beta),sign(temp))
-#' 
 .signdisc <- function(y,X,prior,family,foldid=NULL,nfolds=10,track=FALSE){
   cond <- apply(prior,2,function(x) any(x>0) & all(x>=0))
   if(any(cond)){
@@ -1435,6 +1426,15 @@ plot.transreg <- function(x,stack=NULL,...){
   }
   return(prior)
 }
+
+# @example (if function 'signdisc' gets exported)
+# n <- 100; p <- 500
+# X <- matrix(stats::rnorm(n*p),nrow=n,ncol=p)
+# beta <- stats::rnorm(p)*stats::rbinom(n=p,size=1,prob=0.2)
+# y <- X %*% beta
+# prior <- matrix(abs(beta),ncol=1)
+# #temp <- .signdisc(y,X,prior,family="gaussian")
+# #table(sign(beta),sign(temp))
 
 #' @describeIn extract called by `coef.transreg`, `predict.transreg` and `weights.transreg`
 .which.stack <- function(object,stack){
