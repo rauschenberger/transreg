@@ -11,6 +11,15 @@
 
 \item{...}{(not applicable)}
 }
+\value{
+Returns family of distributions,
+elastic net mixing parameter (\eqn{alpha}),
+number of samples (\eqn{n}),
+number of features (\eqn{p}),
+number of sources of co-data (\eqn{k}),
+chosen calibration method (exponential or isotonic),
+and chosen stacking method (standard or simultaneous).
+}
 \description{
 Show summary of transreg-object
 }

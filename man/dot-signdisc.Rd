@@ -29,13 +29,3 @@ with entries from 1 to \code{nfolds}}
 \description{
 Assigns signs to prior weights to obtain prior coefficients
 }
-\examples{
-n <- 100; p <- 500
-X <- matrix(stats::rnorm(n*p),nrow=n,ncol=p)
-beta <- stats::rnorm(p)*stats::rbinom(n=p,size=1,prob=0.2)
-y <- X \%*\% beta
-prior <- matrix(abs(beta),ncol=1)
-#temp <- .signdisc(y,X,prior,family="gaussian")
-#table(sign(beta),sign(temp))
-
-}

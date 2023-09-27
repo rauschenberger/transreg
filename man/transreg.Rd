@@ -122,7 +122,7 @@ two <- transreg(y=y_lin,X=X,prior=cbind(prior1,prior2))
 weights(one)
 weights(two)
 
-\dontrun{
+\donttest{
 #--- linear vs logistic regression ---
 lin <- transreg(y=y_lin,X=X,prior=prior1,family="gaussian")
 log <- transreg(y=y_log,X=X,prior=prior1,family="binomial")
