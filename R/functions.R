@@ -116,7 +116,7 @@
 #' weights(one)
 #' weights(two)
 #' 
-#' \dontrun{
+#' \donttest{
 #' #--- linear vs logistic regression ---
 #' lin <- transreg(y=y_lin,X=X,prior=prior1,family="gaussian")
 #' log <- transreg(y=y_log,X=X,prior=prior1,family="binomial")
@@ -962,7 +962,7 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
 # \dontshow{
 # subset <- 1:10 # speed up for CRAN
 # object <- suppressMessages(transreg:::compare(target=list(y=y,x=X[,subset]),prior=beta[subset],family="gaussian",alpha=0))}
-# \dontrun{
+# \donttest{
 # object <- transreg:::compare(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0)}
 
 #' @title
@@ -1008,7 +1008,7 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
 #'   glmnet <- glmnet::cv.glmnet(y=data$source[[i]]$y,x=data$source[[i]]$x)
 #'   prior <- cbind(prior,coef(glmnet,s="lambda.min")[-1])
 #' }
-#' \dontrun{
+#' \donttest{
 #' object <- transreg(y=data$target$y,X=data$target$x,prior=prior)}
 #' 
 simulate <- function(p=1000,n.target=100,n.source=150,k=2,family="gaussian",prop=0.01,rho.beta=0.95,rho.x=0.95,w=0.5,trans=rep(TRUE,times=k),exp=rep(1,times=k)){
