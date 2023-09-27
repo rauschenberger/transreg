@@ -659,19 +659,6 @@ NULL
 #' 
 #' @seealso 
 #' [transreg()]
-#' 
-#' @examples
-#' set.seed(1)
-#' n <- 100; p <- 500
-#' X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
-#' beta <- rnorm(p)*rbinom(n=p,size=1,prob=0.2)
-#' y <- X %*% beta
-#' \dontshow{
-#' subset <- 1:10 # speed up for CRAN
-#' object <- suppressMessages(transreg:::compare(target=list(y=y,x=X[,subset]),prior=beta[subset],family="gaussian",alpha=0))}
-#' \dontrun{
-#' object <- transreg:::compare(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0)}
-#' 
 compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso",sign=FALSE,switch=FALSE,select=TRUE,foldid.ext=NULL,nfolds.ext=10,foldid.int=NULL,nfolds.int=10,type.measure="deviance",alpha.prior=NULL,naive=TRUE,seed=NULL,cores=1,xrnet=FALSE){
   
   if(cores>1){
@@ -965,6 +952,18 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
   
   return(list)
 }
+
+# @example (if function 'compare' gets exported)
+# set.seed(1)
+# n <- 100; p <- 500
+# X <- matrix(rnorm(n=n*p),nrow=n,ncol=p)
+# beta <- rnorm(p)*rbinom(n=p,size=1,prob=0.2)
+# y <- X %*% beta
+# \dontshow{
+# subset <- 1:10 # speed up for CRAN
+# object <- suppressMessages(transreg:::compare(target=list(y=y,x=X[,subset]),prior=beta[subset],family="gaussian",alpha=0))}
+# \dontrun{
+# object <- transreg:::compare(target=list(y=y,x=X),prior=beta,family="gaussian",alpha=0)}
 
 #' @title
 #' Simulation (reproducibility)
