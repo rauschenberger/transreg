@@ -1271,6 +1271,8 @@ plot.transreg <- function(x,stack=NULL,...){
   object <- x
   stack <- .which.stack(object,stack=stack)
   scale <- switch(object$info$scale,"exp"="exponential","iso"="isotonic","?")
+  oldpar <- par(no.readonly=TRUE)
+  on.exit(par(oldpar))
   graphics::par(mfrow=c(2,2),mar=c(3,3,1,1))
 
   #--- calibrated vs initial prior effects ---
