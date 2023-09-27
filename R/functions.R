@@ -1121,6 +1121,15 @@ weights.transreg <- function(object,stack=NULL,...){
 #' @param x object of class transreg
 #' @inheritParams predict.transreg
 #' 
+#' @return
+#' Returns family of distributions,
+#' elastic net mixing parameter (\eqn{alpha}),
+#' number of samples (\eqn{n}),
+#' number of features (\eqn{p}),
+#' number of sources of co-data (\eqn{k}),
+#' chosen calibration method (exponential or isotonic),
+#' and chosen stacking method (standard or simultaneous).
+#' 
 #' @examples
 #' #--- simulation ---
 #' set.seed(1)
