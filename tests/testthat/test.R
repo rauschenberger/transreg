@@ -21,7 +21,7 @@ testthat::test_that("expected signs (fast)",{
   testthat::expect_true(cond1&cond2&cond3)
 })
 
-if("CVXR" %in% rownames(installed.packages())){
+if(require("CVXR")){
   
   slow <- .iso.slow.single(y=y,X=X,prior=matrix(prior1,ncol=1),family="gaussian")$beta
 
