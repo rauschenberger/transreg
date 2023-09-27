@@ -219,9 +219,9 @@ and <code><a href="predict.transreg.html">predict</a></code>.</p></div>
 <span class="r-in"><span><span class="va">one</span> <span class="op">&lt;-</span> <span class="fu">transreg</span><span class="op">(</span>y<span class="op">=</span><span class="va">y_lin</span>,X<span class="op">=</span><span class="va">X</span>,prior<span class="op">=</span><span class="va">prior1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">two</span> <span class="op">&lt;-</span> <span class="fu">transreg</span><span class="op">(</span>y<span class="op">=</span><span class="va">y_lin</span>,X<span class="op">=</span><span class="va">X</span>,prior<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">prior1</span>,<span class="va">prior2</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/weights.html" class="external-link">weights</a></span><span class="op">(</span><span class="va">one</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.8985571</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.7226123</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/weights.html" class="external-link">weights</a></span><span class="op">(</span><span class="va">two</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.7243017 0.4018315</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.6088172 0.3495229</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span><span class="co">#--- linear vs logistic regression ---</span></span></span>
