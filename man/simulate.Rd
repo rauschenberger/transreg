@@ -47,18 +47,6 @@ for transforming beta to sign(beta)*abs(beta)^exp}
 Function for reproducing 'internal' simulation study.
 See vignette.
 }
-\examples{
-set.seed(1)
-data <- transreg:::simulate(p=200)
-prior <- numeric()
-for(i in seq_along(data$source)){
-  glmnet <- glmnet::cv.glmnet(y=data$source[[i]]$y,x=data$source[[i]]$x)
-  prior <- cbind(prior,coef(glmnet,s="lambda.min")[-1])
-}
-\donttest{
-object <- transreg(y=data$target$y,X=data$target$x,prior=prior)}
-
-}
 \seealso{
 Use \code{\link[glmtrans:models]{glmtrans::models()}} for reproducing 'external' simulation study.
 }
