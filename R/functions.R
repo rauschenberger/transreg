@@ -1043,7 +1043,7 @@ simulate <- function(p=1000,n.target=100,n.source=150,k=2,family="gaussian",prop
   return(list(source=source,target=target,beta=beta))
 }
 
-#'# example (if function 'simulate' gets exported)
+## example (if function 'simulate' gets exported)
 # set.seed(1)
 # data <- transreg:::simulate(p=200)
 # prior <- numeric()
