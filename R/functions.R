@@ -1000,17 +1000,6 @@ compare <- function(target,source=NULL,prior=NULL,z=NULL,family,alpha,scale="iso
 #' @seealso
 #' Use [glmtrans::models()] for reproducing 'external' simulation study.
 #' 
-#' @examples
-#' set.seed(1)
-#' data <- transreg:::simulate(p=200)
-#' prior <- numeric()
-#' for(i in seq_along(data$source)){
-#'   glmnet <- glmnet::cv.glmnet(y=data$source[[i]]$y,x=data$source[[i]]$x)
-#'   prior <- cbind(prior,coef(glmnet,s="lambda.min")[-1])
-#' }
-#' \donttest{
-#' object <- transreg(y=data$target$y,X=data$target$x,prior=prior)}
-#' 
 simulate <- function(p=1000,n.target=100,n.source=150,k=2,family="gaussian",prop=0.01,rho.beta=0.95,rho.x=0.95,w=0.5,trans=rep(TRUE,times=k),exp=rep(1,times=k)){
   
   target <- source <- list()
@@ -1053,6 +1042,18 @@ simulate <- function(p=1000,n.target=100,n.source=150,k=2,family="gaussian",prop
   
   return(list(source=source,target=target,beta=beta))
 }
+
+#'# example (if function 'simulate' gets exported)
+# set.seed(1)
+# data <- transreg:::simulate(p=200)
+# prior <- numeric()
+# for(i in seq_along(data$source)){
+#   glmnet <- glmnet::cv.glmnet(y=data$source[[i]]$y,x=data$source[[i]]$x)
+#   prior <- cbind(prior,coef(glmnet,s="lambda.min")[-1])
+#}
+# \donttest{
+# object <- transreg(y=data$target$y,X=data$target$x,prior=prior)}
+# 
 
 ##### weights #####
 
