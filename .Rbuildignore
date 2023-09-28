@@ -9,3 +9,4 @@ appveyor.yml
 ^\.github
 ^\.github$
 ^CRAN-SUBMISSION$
+^cran-comments\.md$
