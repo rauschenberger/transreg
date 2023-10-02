@@ -19,15 +19,13 @@ header-includes:
 
 **Zied Landoulsi**$~^{1}$ [![ZL](https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png)](https://orcid.org/0000-0002-2327-3904)
 
-**Mark A. van de Wiel**$~^{2,3,b}$ [![MvdW](https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png)](https://orcid.org/0000-0003-4780-8472)
+**Mark A. van de Wiel**$~^{2,b}$ [![MvdW](https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png)](https://orcid.org/0000-0003-4780-8472)
 
 **Enrico Glaab**$~^{1,b}$ [![EG](https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png)](https://orcid.org/0000-0003-3977-7469)
 
 $^1$Luxembourg Centre for Systems Biomedicine (LCSB), University of Luxembourg, Esch-sur-Alzette, Luxembourg.
 
 $^2$Department of Epidemiology and Data Science (EDS), Amsterdam University Medical Centers (Amsterdam UMC), Amsterdam, The Netherlands.
-
-$^3$Medical Research Council Biostatistics Unit (MRC BSU), University of Cambridge, Cambridge, United Kingdom.
 
 $^{a}$To whom correspondence should be addressed.
 
