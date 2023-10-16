@@ -681,7 +681,7 @@ beta <- stats::rnorm(n=p)*stats::rbinom(n=p,size=1,prob=0.05)
 y <- as.numeric(X %*% beta) + stats::rnorm(n=n,sd=sd(X %*% beta))
 foldid <- rep(c(0,1),times=c(n0,n1))
 
-prior <- sign(beta)*abs(beta)^10 + stats::rnorm(p)
+prior <- sign(beta)*abs(beta)^3 + stats::rnorm(p,sd=0.1)
 
 metric <- transreg:::compare(target=list(y=y,x=X),prior=prior,foldid.ext=foldid,nfolds.ext=1,family="gaussian",alpha=1,xrnet=TRUE,scale=c("exp","iso"))$deviance
 metric
