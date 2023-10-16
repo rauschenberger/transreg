@@ -447,7 +447,7 @@ The following chunk generates the figure for both external applications (`GRridg
 
 ```{r app_boxplots,echo=TRUE}
 grDevices::pdf(file=paste0(dir,"/manuscript/figure_ext.pdf"),width=8,height=6,pointsize=15)
-graphics::par(mfrow=c(2,1),mar=c(2.5,3.5,0.5,0.5))
+graphics::par(mfrow=c(2,1),mar=c(2.5,2.0,0.5,0.5))
 for(k in c("grridge","fwelnet")){
   file <- paste0(dir,"/results/app_",k,".RData")
   if(!file.exists(file)){plot.new();next}
@@ -472,7 +472,7 @@ for(k in c("grridge","fwelnet")){
   if(grepl(pattern="fwelnet",x=k)){at <- seq(from=-20,to=20,by=10)}
   labels <- ifelse(at==0,"0%",ifelse(at<0,paste0(at,"%"),paste0("+",at,"%")))
   graphics::axis(side=2,cex.axis=0.7,at=at,labels=labels)
-  graphics::title(ylab="change in metric",line=2.5,cex.lab=0.7)
+  #graphics::title(ylab="change in metric",line=2.5,cex.lab=0.7)
   graphics::box()
   for(i in seq_along(name)){
     palasso:::.boxplot(loss[,name[i]],at=i,invert=FALSE)
