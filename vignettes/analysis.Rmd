@@ -314,6 +314,65 @@ for(mode in c("ext","int")){
 }
 ```
 
+The following chunk performs the additional simulation study with non-linearly prior effects.
+
+- input: -
+
+- execution time: one minute
+
+- output: -
+
+```{r sim_extra,echo=TRUE,eval=FALSE}
+set.seed(1)
+
+temp <- matrix(data=NA,nrow=10,ncol=2,dimnames=list(NULL,c("transreg","xrnet")))
+mse <- list(linear=temp,nonlinear=temp)
+
+for(i in c("linear","nonlinear")){
+  for(j in 1:10){
+    
+    # simulate data
+    n0 <- 100; n1 <- 10000; n <- n0 + n1; p <- 2000
+    X <- matrix(stats::rnorm(n*p),nrow=n,ncol=p)
+    beta <- stats::rnorm(n=p)*stats::rbinom(n=p,size=1,prob=0.05)
+    y <- stats::rnorm(n=n,mean=X %*% beta,sd=1) #sd(X %*% beta)
+    
+    # relation between prior effects and true effects
+    temp <- beta + stats::rnorm(n=p)*stats::rbinom(n=p,size=1,prob=0.01)
+    if(i=="linear"){
+      prior <- temp
+    } else if(i=="nonlinear"){
+      prior <- sign(temp)*abs(temp)^2
+    }
+    
+    # hold-out
+    y_hat <- list()
+    foldid <- rep(c(0,1),times=c(n0,n1))
+    
+    # transfer learning with transreg
+    model <- transreg::transreg(y=y[foldid==0],X=X[foldid==0,],prior=prior)
+    y_hat$transreg <- predict(model,newx=X[foldid==1,])
+    
+    # transfer learning with xrnet
+    model <- xrnet::tune_xrnet(x=X[foldid==0,],y=y[foldid==0],external=as.matrix(prior,ncol=1))
+    y_hat$xrnet <- stats::predict(model,newdata=X[foldid==1,])
+    
+    # mean squared error (MSE)
+    mse[[i]][j,] <- sapply(y_hat,function(x) mean((x-y[foldid==1])^2))
+    
+  }
+}
+
+# linear scenario
+sum(mse$linear[,"xrnet"] < mse$linear[,"transreg"])
+stats::wilcox.test(x=mse$linear[,"xrnet"],y=mse$linear[,"transreg"],paired=TRUE)$p.value
+
+# non-linear scenario
+sum(mse$nonlinear[,"transreg"] < mse$nonlinear[,"xrnet"])
+stats::wilcox.test(x=mse$nonlinear[,"transreg"],y=mse$nonlinear[,"xrnet"],paired=TRUE)$p.value
+```
+
+
 # External applications
 
 The following chunk performs the first external application (`GRridge`).
