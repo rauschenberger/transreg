@@ -630,6 +630,66 @@ plotter(table,cutoff,number,horizontal=TRUE)
 grDevices::dev.off()
 ```
 
+This chunk empirically and analytically obtains the upper $95\%$ confidence interval of a random classifier with $n_1$ controls and $n_2$ cases. The result ($0.524$ for $766 + 790$ samples) is reported in the figure of the internal application.
+
+input: -
+
+execution time: some seconds
+
+output: not saved
+
+```{r ncerpd_auc,eval=FALSE,echo=TRUE,fig.cap="Box plots of $10\\,000$ \\textsc{auc}s ($y$-axis) at different sample sizes ($x$-axis), namely either $50+50$ ('small') or $766+790$ ('large'). Each \\textsc{auc} is calculated from a binary outcome and random predicted probabilities (standard uniform distribution). The red lines separate the top 5\\% of the \\textsc{auc}s from the bottom 95\\% of the \\textsc{auc}s."}
+
+#--- empirical computation of confidence interval ---
+
+set.seed(1)
+auc <- list()
+n <- c("small","large")
+for(i in seq_along(n)){
+  auc[[i]] <- numeric()
+  for(j in 1:10000){
+    if(n[i]=="small"){
+      y <- rep(c(0,1),times=c(50,50))
+    }
+    if(n[i]=="large"){
+      y <- rep(c(0,1),times=c(766,790))
+    }
+    x <- stats::runif(n=length(y),min=0,max=1)
+    
+    auc[[i]][j] <- pROC::auc(response=y,predictor=x,direction="<",levels=c(0,1))
+  }
+}
+q <- sapply(auc,function(x) quantile(x,probs=0.95))
+graphics::par(mar=c(3.5,3.5,1,1))
+graphics::plot.new()
+graphics::plot.window(xlim=c(0.5,length(n)+0.5),ylim=range(auc))
+graphics::box()
+graphics::axis(side=1,at=seq_along(n),labels=n)
+graphics::axis(side=2)
+for(i in seq_along(n)){
+  graphics::boxplot(x=auc[[i]],at=i,add=TRUE)
+}
+graphics::abline(h=0.5)
+graphics::title(xlab="sample size",ylab="AUC",line=2.5)
+graphics::segments(x0=seq_along(n)-0.2,x1=seq_along(n)+0.2,y0=q,col="red",lwd=2)
+graphics::text(x=seq_along(n)-0.2,y=q,labels=round(q,digits=3),pos=2,cex=0.5,col="red")
+q
+
+#--- analytical calculation of confidence interval ---
+
+# This code is based on the website "Real Statistics using Excel" from Charles Zaiontz, https://real-statistics.com/descriptive-statistics/roc-curve-classification-table/auc-confidence-interval/).
+
+var_AUC <- function(x,n1,n2) {
+  q1 = x/(2-x)
+  q2 = 2*x^2/(1+x)
+  var = (x*(1-x) +(n1-1)*(q1-x^2) +(n2-1)*(q2-x^2))/(n1*n2)
+}
+round(0.5 + stats::qnorm(p=0.95)*sqrt(var_AUC(0.5,n1=50,n2=50)),digits=3)
+round(0.5 + stats::qnorm(p=0.95)*sqrt(var_AUC(0.5,n1=766,n2=790)),digits=3)
+```
+
+# Further research
+
 ```{r extra_time,eval=FALSE,echo=FALSE}
 #--- This code chunk is not included in the manuscript! ---
 
@@ -666,7 +726,6 @@ time["transreg.single"] <- difftime(time1=end,time2=start,units="secs")
 
 paste0(paste0(names(time),": ",round(time/time["glmnet"],digits=2)),collapse=", ")
 ```
-
 
 ```{r extra_xrnet,echo=TRUE,eval=FALSE}
 #--- This code chunk is not included in the manuscript! ---
