@@ -630,13 +630,13 @@ plotter(table,cutoff,number,horizontal=TRUE)
 grDevices::dev.off()
 ```
 
-This chunk empirically and analytically obtains the upper $95\%$ confidence interval of a random classifier with $n_1$ controls and $n_2$ cases. The result ($0.524$ for $766 + 790$ samples) is reported in the figure of the internal application.
+This chunk empirically and analytically obtains the upper $95\%$ confidence interval of a random classifier with $n_1$ controls and $n_2$ cases. The result for $766 + 790$ samples is $0.524$.
 
-input: -
+- input: -
 
-execution time: some seconds
+- execution time: some seconds
 
-output: not saved
+- output: not saved
 
 ```{r ncerpd_auc,eval=FALSE,echo=TRUE,fig.cap="Box plots of $10\\,000$ \\textsc{auc}s ($y$-axis) at different sample sizes ($x$-axis), namely either $50+50$ ('small') or $766+790$ ('large'). Each \\textsc{auc} is calculated from a binary outcome and random predicted probabilities (standard uniform distribution). The red lines separate the top 5\\% of the \\textsc{auc}s from the bottom 95\\% of the \\textsc{auc}s."}
 
@@ -689,6 +689,8 @@ round(0.5 + stats::qnorm(p=0.95)*sqrt(var_AUC(0.5,n1=766,n2=790)),digits=3)
 ```
 
 # Further research
+
+Additional code for further research (not included in the manuscript): [see source].
 
 ```{r extra_time,eval=FALSE,echo=FALSE}
 #--- This code chunk is not included in the manuscript! ---
