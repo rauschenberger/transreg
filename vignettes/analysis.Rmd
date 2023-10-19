@@ -630,7 +630,7 @@ plotter(table,cutoff,number,horizontal=TRUE)
 grDevices::dev.off()
 ```
 
-This chunk empirically and analytically obtains the upper $95\%$ confidence interval of a random classifier with $n_1$ controls and $n_2$ cases. The result for $766 + 790$ samples is $0.524$.
+This chunk obtains the upper $95\%$ confidence interval of a random classifier with $766$ controls and $790$ cases (result: $0.524$).
 
 - input: -
 
