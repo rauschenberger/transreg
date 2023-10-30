@@ -52,16 +52,16 @@ mean((y1-y_hat)^2) # decrease in MSE?
 }
 \references{
 Armin Rauschenberger
-\href{https://orcid.org/0000-0001-6498-4801}{\figure{orcid.png}{(iD)}},
+\href{https://orcid.org/0000-0001-6498-4801}{\figure{R:AR}(orcid.png "(iD)" width="10" height="10")},
 Zied Landoulsi
-\href{https://orcid.org/0000-0002-2327-3904}{\figure{orcid.png}{(iD)}},
+\href{https://orcid.org/0000-0002-2327-3904}{\figure{R:ZL}(orcid.png "(iD)" width="10" height="10")},
 Mark A. van de Wiel
-\href{https://orcid.org/0000-0003-4780-8472}{\figure{orcid.png}{(iD)}},
+\href{https://orcid.org/0000-0003-4780-8472}{\figure{R:MvdW}(orcid.png "(iD)" width="10" height="10")},
 and Enrico Glaab
-\href{https://orcid.org/0000-0003-3977-7469}{\figure{orcid.png}{(iD)}}
+\href{https://orcid.org/0000-0003-3977-7469}{\figure{R:EG}(orcid.png "(iD)" width="10" height="10")}
 (2022).
 "Penalised regression with multiple sets of prior effects".
-\emph{Manuscript in preparation.}
+\emph{Bioinformatics (In press).}
 \doi{10.48550/arXiv.2212.08581}
 \email{armin.rauschenberger@uni.lu}
 }

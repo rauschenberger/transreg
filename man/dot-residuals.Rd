@@ -14,8 +14,8 @@ vector of length \eqn{n},
 or matrix with \eqn{n} rows (samples) and \eqn{k} columns (methods)}
 
 \item{family}{character
-"gaussian" (\eqn{y}: real numbers, \eqn{y_hat}: real numbers)
-or "binomial" (\eqn{y}: 0s and 1s, \eqn{y_hat}: unit interval)}
+"gaussian" (\eqn{y}: real numbers, \eqn{y\_hat}: real numbers)
+or "binomial" (\eqn{y}: 0s and 1s, \eqn{y\_hat}: unit interval)}
 }
 \description{
 Calculates residuals from observed outcome
