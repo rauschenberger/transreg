@@ -21,13 +21,13 @@
 #' 
 #' @references
 #' Armin Rauschenberger 
-#' [![AR](orcid.png "(iD)" width="10" height="10")](https://orcid.org/0000-0001-6498-4801),
+#' [![AR](orcid.png){height=10px}](https://orcid.org/0000-0001-6498-4801),
 #' Zied Landoulsi
-#' [![ZL](orcid.png "(iD)" width="10" height="10")](https://orcid.org/0000-0002-2327-3904),
+#' [![ZL](orcid.png){height=10px}](https://orcid.org/0000-0002-2327-3904),
 #' Mark A. van de Wiel 
-#' [![MvdW](orcid.png "(iD)" width="10" height="10")](https://orcid.org/0000-0003-4780-8472),
+#' [![MvdW](orcid.png){height=10px}](https://orcid.org/0000-0003-4780-8472),
 #' and Enrico Glaab
-#' [![EG](orcid.png "(iD)" width="10" height="10")](https://orcid.org/0000-0003-3977-7469)
+#' [![EG](orcid.png){height=10px}](https://orcid.org/0000-0003-3977-7469)
 #' (2022).
 #' "Penalised regression with multiple sets of prior effects".
 #' *Bioinformatics (In press).*
