@@ -20,15 +20,12 @@
 #' to open the vignette.
 #' 
 #' @references
-#' Armin Rauschenberger 
-#' [![AR](orcid.png){height=10px}](https://orcid.org/0000-0001-6498-4801),
-#' Zied Landoulsi
-#' [![ZL](orcid.png){height=10px}](https://orcid.org/0000-0002-2327-3904),
-#' Mark A. van de Wiel 
-#' [![MvdW](orcid.png){height=10px}](https://orcid.org/0000-0003-4780-8472),
-#' and Enrico Glaab
-#' [![EG](orcid.png){height=10px}](https://orcid.org/0000-0003-3977-7469)
-#' (2022).
+#' \href{https://orcid.org/0000-0001-6498-4801}{Armin Rauschenberger},
+#' \href{https://orcid.org/0000-0002-2327-3904}{Zied Landoulsi},
+#' \href{https://orcid.org/0000-0003-4780-8472}{Mark A. van de Wiel},
+#' and
+#' \href{https://orcid.org/0000-0003-3977-7469}{Enrico Glaab}
+#' (2023).
 #' "Penalised regression with multiple sets of prior effects".
 #' *Bioinformatics (In press).*
 #' \doi{10.48550/arXiv.2212.08581}
@@ -40,3 +37,14 @@
 #' ?coef.transreg
 #' 
 NULL
+
+# version with ORCID logos
+# Armin Rauschenberger 
+# [![AR](orcid.png){height=10px}](https://orcid.org/0000-0001-6498-4801),
+# Zied Landoulsi
+# [![ZL](orcid.png){height=10px}](https://orcid.org/0000-0002-2327-3904),
+# Mark A. van de Wiel 
+# [![MvdW](orcid.png){height=10px}](https://orcid.org/0000-0003-4780-8472),
+# and Enrico Glaab
+# [![EG](orcid.png){height=10px}](https://orcid.org/0000-0003-3977-7469)
+# (2022).
