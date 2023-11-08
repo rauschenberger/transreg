@@ -28,7 +28,7 @@
 #' (2023).
 #' "Penalised regression with multiple sets of prior effects".
 #' *Bioinformatics (In press).*
-#' \doi{10.48550/arXiv.2212.08581}
+#' \doi{10.1093/bioinformatics/btad680}
 #' \email{armin.rauschenberger@uni.lu}
 #' 
 #' @examples
