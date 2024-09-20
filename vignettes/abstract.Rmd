@@ -37,7 +37,7 @@ In many high-dimensional prediction or classification tasks, complementary data 
 
 # Full article (open access)
 
-Bioinformatics (In press): [doi: 10.1093/bioinformatics/btad680](https://doi.org/10.1093/bioinformatics/btad680)
+Rauschenberger et al. (2013). "Penalized regression with multiple sources of prior effects". *Bioinformatics* 39(12):btad680. [doi: 10.1093/bioinformatics/btad680](https://doi.org/10.1093/bioinformatics/btad680).
 
 [arXiv: 2212.08581](https://arxiv.org/abs/2212.08581) ([pdf](https://arxiv.org/pdf/2212.08581.pdf))
 
@@ -46,4 +46,3 @@ Bioinformatics (In press): [doi: 10.1093/bioinformatics/btad680](https://doi.org
 ```{r,eval=FALSE,echo=FALSE}
 knitr::include_url("https://arxiv.org/pdf/2212.08581.pdf")
 ```
-
