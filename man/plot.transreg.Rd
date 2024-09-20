@@ -69,7 +69,7 @@ and
 \href{https://orcid.org/0000-0003-3977-7469}{Enrico Glaab}
 (2023).
 "Penalised regression with multiple sets of prior effects".
-\emph{Bioinformatics (In press).}
+\emph{Bioinformatics} 39(12):btad680.
 \doi{10.1093/bioinformatics/btad680}
 \email{armin.rauschenberger@uni.lu}
 }

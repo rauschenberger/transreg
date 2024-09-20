@@ -1,13 +1,7 @@
 
-[![AppVeyor build
-status](https://ci.appveyor.com/api/projects/status/github/rauschenberger/transreg?svg=true)](https://ci.appveyor.com/project/rauschenberger/transreg)
-
-<!--
-[![Travis-CI Build
-Status](https://travis-ci.org/rauschenberger/transreg.svg)](https://travis-ci.com/rauschenberger/transreg)
-[![Coverage
-Status](https://codecov.io/github/rauschenberger/transreg/coverage.svg?branch=master)](https://codecov.io/github/rauschenberger/transreg)
--->
+[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/rauschenberger/transreg?svg=true)](https://ci.appveyor.com/project/rauschenberger/transreg)
+[![R-CMD-check](https://github.com/LCSB-BDS/transreg/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/LCSB-BDS/transreg/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/LCSB-BDS/transreg/graph/badge.svg)](https://app.codecov.io/gh/LCSB-BDS/transreg)
 
 ## Penalised regression with multiple sets of prior effects
 
@@ -48,12 +42,9 @@ and Enrico Glaab
 "Penalized regression with multiple sets of prior effects".
 *Bioinformatics* 39(12):btad680. [doi: 10.1093/bioinformatics/btad680](https://doi.org/10.1093/bioinformatics/btad680).
 
-[![CRAN
-version](https://www.r-pkg.org/badges/version/transreg)](https://CRAN.R-project.org/package=transreg)
-[![CRAN RStudio mirror
-downloads](https://cranlogs.r-pkg.org/badges/transreg)](https://CRAN.R-project.org/package=transreg)
-[![Total CRAN
-downloads](https://cranlogs.r-pkg.org/badges/grand-total/transreg)](https://CRAN.R-project.org/package=transreg)
+[![CRAN version](https://www.r-pkg.org/badges/version/transreg)](https://CRAN.R-project.org/package=transreg)
+[![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/transreg)](https://CRAN.R-project.org/package=transreg)
+[![Total CRAN downloads](https://cranlogs.r-pkg.org/badges/grand-total/transreg)](https://CRAN.R-project.org/package=transreg)
 
 ## Disclaimer
 

@@ -29,7 +29,6 @@
 #' "Penalised regression with multiple sets of prior effects".
 #' *Bioinformatics* 39(12):btad680.
 #' \doi{10.1093/bioinformatics/btad680}
-#' \email{armin.rauschenberger@uni.lu}
 #' 
 #' @examples
 #' ?transreg
