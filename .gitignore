@@ -4,3 +4,5 @@ docs/pkgdown.yml
 *.png
 !orcid.png
 docs
+CRAN-SUBMISSION
+cran-comments.md
