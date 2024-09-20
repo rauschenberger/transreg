@@ -19,7 +19,7 @@ Install the current release from
 [CRAN](https://CRAN.R-project.org/package=transreg):
 
 ``` r
-#install.packages("transreg") # not yet released!
+install.packages("transreg")
 ```
 
 or the latest development version from [GitHub](https://github.com/lcsb-bds/transreg) or [GitLab](https://gitlab.lcsb.uni.lu/bds/transreg):
@@ -48,14 +48,12 @@ and Enrico Glaab
 "Penalized regression with multiple sets of prior effects".
 *Bioinformatics* 39(12):btad680. [doi: 10.1093/bioinformatics/btad680](https://doi.org/10.1093/bioinformatics/btad680).
 
-<!--
 [![CRAN
 version](https://www.r-pkg.org/badges/version/transreg)](https://CRAN.R-project.org/package=transreg)
 [![CRAN RStudio mirror
 downloads](https://cranlogs.r-pkg.org/badges/transreg)](https://CRAN.R-project.org/package=transreg)
 [![Total CRAN
 downloads](https://cranlogs.r-pkg.org/badges/grand-total/transreg)](https://CRAN.R-project.org/package=transreg)
--->
 
 ## Disclaimer
 
