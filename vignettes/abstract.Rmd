@@ -35,9 +35,9 @@ $^{b}$Mark A. van de Wiel and Enrico Glaab share senior authorship.
 
 In many high-dimensional prediction or classification tasks, complementary data on the features are available, e.g. prior biological knowledge on (epi)genetic markers. Here we consider tasks with numerical prior information that provide an insight into the importance (weight) and the direction (sign) of the feature effects, e.g. regression coefficients from previous studies. We propose an approach for integrating multiple sources of such prior information into penalised regression. If suitable co-data are available, this improves the predictive performance, as shown by simulation and application. The proposed method is implemented in the R package `transreg' (<https://github.com/lcsb-bds/transreg>).
 
-# Full article (open access)
+# Full text (open access)
 
-Rauschenberger et al. (2023). "Penalized regression with multiple sources of prior effects". *Bioinformatics* 39(12):btad680. [doi: 10.1093/bioinformatics/btad680](https://doi.org/10.1093/bioinformatics/btad680). (Click [here](https://academic.oup.com/bioinformatics/pdf-lookup/doi/10.1093/bioinformatics/btad680) to download PDF.)
+Rauschenberger et al. (2023). "Penalized regression with multiple sources of prior effects". *Bioinformatics* 39(12):btad680. [doi: 10.1093/bioinformatics/btad680](https://doi.org/10.1093/bioinformatics/btad680). (Click [here](https://academic.oup.com/bioinformatics/pdf-lookup/doi/10.1093/bioinformatics/btad680) to access PDF.)
 
 <!--
 [arXiv: 2212.08581](https://arxiv.org/abs/2212.08581) ([pdf](https://arxiv.org/pdf/2212.08581.pdf))
