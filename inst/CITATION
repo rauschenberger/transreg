@@ -4,11 +4,13 @@ bibentry(
   bibtype  = "Article",
   title    = "Penalised regression with multiple sources of prior effects",
   author   = person("Rauschenberger, Armin [aut],Landoulsi, Zied [aut],van de Wiel, Mark A. [aut], Glaab, Enrico [aut]"),
-  journal  = "aRxiv",
+  journal  = "Bioinformatics",
   year     = "2023",
-  doi      = "10.48550/arXiv.2212.08581",
+  volume   = "39(12)",
+  pages    = "btad680",
+  doi      = "10.1093/bioinformatics/btad680",
   textVersion = paste("Armin Rauschenberger, Zied Landoulsi, Mark A. van de Wiel, and Enrico Glaab (2023).",
 		"\"Penalised regression with  multiple sources of prior effects\",",
-		"arXiv (pre-print)",
-		"https://doi.org/10.48550/arXiv.2212.08581")
+		"Bioinformatics 39(12):btad680",
+		"https://doi.org/10.1093/bioinformatics/btad680")
 )
