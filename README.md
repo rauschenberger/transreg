@@ -48,7 +48,7 @@ and Enrico Glaab
 
 ## Disclaimer
 
-The R package `transreg` implements penalised regression with multiple sources of prior effects (Rauschenberger et al., 2022).
+The R package `transreg` implements penalised regression with multiple sources of prior effects ([Rauschenberger et al., 2023](https://doi.org/10.1093/bioinformatics/btad680)).
 
 Copyright &copy; 2022 Armin Rauschenberger, University of Luxembourg, Luxembourg Centre for Systems Biomedicine (LCSB), Biomedical Data Science (BDS)
 
