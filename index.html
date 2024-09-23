@@ -48,12 +48,6 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9">
-<!--
-[![Travis-CI Build
-Status](https://travis-ci.org/rauschenberger/transreg.svg)](https://travis-ci.com/rauschenberger/transreg)
-[![Coverage
-Status](https://codecov.io/github/rauschenberger/transreg/coverage.svg?branch=master)](https://codecov.io/github/rauschenberger/transreg)
--->
 <div class="section level2">
 <h2 id="penalised-regression-with-multiple-sets-of-prior-effects">Penalised regression with multiple sets of prior effects<a class="anchor" aria-label="anchor" href="#penalised-regression-with-multiple-sets-of-prior-effects"></a>
 </h2>
@@ -68,9 +62,9 @@ Status](https://codecov.io/github/rauschenberger/transreg/coverage.svg?branch=ma
 <p>or the latest development version from <a href="https://github.com/lcsb-bds/transreg" class="external-link">GitHub</a> or <a href="https://gitlab.lcsb.uni.lu/bds/transreg" class="external-link">GitLab</a>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#install.packages("remotes")</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"lcsb-bds/transreg"</span><span class="op">)</span> <span class="co"># upstream</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"rauschenberger/transreg"</span><span class="op">)</span> <span class="co"># fork</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_gitlab</span><span class="op">(</span><span class="st">"bds/transreg"</span>,host<span class="op">=</span><span class="st">"gitlab.lcsb.uni.lu"</span><span class="op">)</span> <span class="co"># mirror</span></span></code></pre></div>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"lcsb-bds/transreg"</span><span class="op">)</span> <span class="co"># upstream</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"rauschenberger/transreg"</span><span class="op">)</span> <span class="co"># fork</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_gitlab.html" class="external-link">install_gitlab</a></span><span class="op">(</span><span class="st">"bds/transreg"</span>,host<span class="op">=</span><span class="st">"gitlab.lcsb.uni.lu"</span><span class="op">)</span> <span class="co"># mirror</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="reproducibility">Reproducibility<a class="anchor" aria-label="anchor" href="#reproducibility"></a>
@@ -86,7 +80,7 @@ Status](https://codecov.io/github/rauschenberger/transreg/coverage.svg?branch=ma
 <div class="section level2">
 <h2 id="disclaimer">Disclaimer<a class="anchor" aria-label="anchor" href="#disclaimer"></a>
 </h2>
-<p>The R package <code>transreg</code> implements penalised regression with multiple sources of prior effects (Rauschenberger et al., 2022).</p>
+<p>The R package <code>transreg</code> implements penalised regression with multiple sources of prior effects (<a href="https://doi.org/10.1093/bioinformatics/btad680" class="external-link">Rauschenberger et al., 2023</a>).</p>
 <p>Copyright © 2022 Armin Rauschenberger, University of Luxembourg, Luxembourg Centre for Systems Biomedicine (LCSB), Biomedical Data Science (BDS)</p>
 <p>This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</p>
 <p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</p>
@@ -125,6 +119,8 @@ Status](https://codecov.io/github/rauschenberger/transreg/coverage.svg?branch=ma
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://ci.appveyor.com/project/rauschenberger/transreg" class="external-link"><img src="https://ci.appveyor.com/api/projects/status/github/rauschenberger/transreg?svg=true" alt="AppVeyor build status"></a></li>
+<li><a href="https://github.com/LCSB-BDS/transreg/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/LCSB-BDS/transreg/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://app.codecov.io/gh/LCSB-BDS/transreg" class="external-link"><img src="https://codecov.io/gh/LCSB-BDS/transreg/graph/badge.svg" alt="Codecov test coverage"></a></li>
 </ul>
 </div>
 
