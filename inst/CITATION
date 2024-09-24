@@ -3,14 +3,18 @@ citHeader("To cite transreg in publications use:")
 bibentry(
   bibtype  = "Article",
   title    = "Penalised regression with multiple sources of prior effects",
-  author   = person("Rauschenberger, Armin [aut],Landoulsi, Zied [aut],van de Wiel, Mark A. [aut], Glaab, Enrico [aut]"),
+  author   = c(person("Armin","Rauschenberger"),
+  	       person("Zied","Landoulsi"),
+	       person("Mark A.","van de Wiel"),
+	       person("Enrico","Glaab")),
   journal  = "Bioinformatics",
-  year     = "2023",
-  volume   = "39(12)",
+  year     = 2023,
+  volume   = "39",
+  number   = "12",
   pages    = "btad680",
   doi      = "10.1093/bioinformatics/btad680",
   textVersion = paste("Armin Rauschenberger, Zied Landoulsi, Mark A. van de Wiel, and Enrico Glaab (2023).",
-		"\"Penalised regression with  multiple sources of prior effects\",",
-		"Bioinformatics 39(12):btad680",
+		"\"Penalised regression with  multiple sources of prior effects\".",
+		"Bioinformatics 39(12):btad680.",
 		"https://doi.org/10.1093/bioinformatics/btad680")
 )
