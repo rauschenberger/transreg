@@ -1,8 +1,11 @@
 .DS_Store
 .Rhistory
-docs/pkgdown.yml
+.RData
 *.png
-!orcid.png
+*.pdf
+*.html
+/*.tar.gz
 docs
-CRAN-SUBMISSION
 cran-comments.md
+CRAN-SUBMISSION
+CRAN-RELEASE
