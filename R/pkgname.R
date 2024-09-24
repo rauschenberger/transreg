@@ -3,6 +3,8 @@
 #' @keywords documentation
 #' @docType package
 #' 
+#' @aliases transreg-package
+#' 
 #' @title
 #' Penalised regression with multiple sets of prior effects
 #' 
@@ -38,4 +40,4 @@
 #' ?predict.transreg
 #' ?coef.transreg
 #' 
-NULL
+"_PACKAGE"

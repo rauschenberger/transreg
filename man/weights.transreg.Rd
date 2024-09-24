@@ -44,8 +44,10 @@ and
 (2023).
 "Penalised regression with multiple sets of prior effects".
 \emph{Bioinformatics} 39(12):btad680.
-\doi{10.1093/bioinformatics/btad680}
-\email{armin.rauschenberger@uni.lu}
+\doi{10.1093/bioinformatics/btad680}.
+(Click
+\href{https://academic.oup.com/bioinformatics/article-pdf/39/12/btad680/54035939/btad680.pdf}{here}
+to access PDF.)
 }
 \seealso{
 This function is about weights for sources of prior effects.
