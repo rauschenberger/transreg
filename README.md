@@ -27,7 +27,7 @@ remotes::install_gitlab("bds/transreg",host="gitlab.lcsb.uni.lu") # mirror
 
 ## Reproducibility
 
-The code for reproducing the simulations and applications shown in the manuscript is available in a vignette (<https://lcsb-bds.github.io/transreg/articles/analysis.html>). After installing the package with `remotes::intall_github("lcsb-bds/transreg",build_vignettes=TRUE)` and restarting R, the vignette can also be loaded with `vignette(topic="analysis",package="transreg")`.
+The code for reproducing the simulations and applications shown in the manuscript is available in a vignette (<https://lcsb-bds.github.io/transreg/articles/analysis.html>). After installing the package with `remotes::install_github("lcsb-bds/transreg",build_vignettes=TRUE)` and restarting R, the vignette can also be loaded with `vignette(topic="analysis",package="transreg")`.
 
 ## Reference
 
