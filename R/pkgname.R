@@ -28,7 +28,10 @@
 #' (2023).
 #' "Penalised regression with multiple sets of prior effects".
 #' *Bioinformatics* 39(12):btad680.
-#' \doi{10.1093/bioinformatics/btad680}
+#' \doi{10.1093/bioinformatics/btad680}.
+#' (Click
+#' \href{https://academic.oup.com/bioinformatics/article-pdf/39/12/btad680/54035939/btad680.pdf}{here}
+#' to access PDF.)
 #' 
 #' @examples
 #' ?transreg
