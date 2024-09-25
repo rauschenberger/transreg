@@ -3,7 +3,7 @@
 [![R-CMD-check](https://github.com/rauschenberger/transreg/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/rauschenberger/transreg/actions/workflows/R-CMD-check.yaml)
 [![Codecov test coverage](https://codecov.io/gh/rauschenberger/transreg/graph/badge.svg)](https://app.codecov.io/gh/rauschenberger/transreg)
 
-## Penalised regression with multiple sets of prior effects
+# Penalised regression with multiple sets of prior effects
 
 Improves the predictive performance of ridge and lasso regression exploiting one or more sources of prior information on the importance and direction of effects.
 
@@ -25,10 +25,6 @@ remotes::install_github("rauschenberger/transreg") # fork
 remotes::install_gitlab("bds/transreg",host="gitlab.lcsb.uni.lu") # mirror
 ```
 
-## Reproducibility
-
-The code for reproducing the simulations and applications shown in the manuscript is available in a vignette (<https://lcsb-bds.github.io/transreg/articles/analysis.html>). After installing the package with `remotes::install_github("lcsb-bds/transreg",build_vignettes=TRUE)` and restarting R, the vignette can also be loaded with `vignette(topic="analysis",package="transreg")`.
-
 ## Reference
 
 Armin Rauschenberger 
@@ -41,6 +37,10 @@ and Enrico Glaab
 [![EG](https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png)](https://orcid.org/0000-0003-3977-7469) (2023).
 "Penalized regression with multiple sets of prior effects".
 *Bioinformatics* 39(12):btad680. [doi: 10.1093/bioinformatics/btad680](https://doi.org/10.1093/bioinformatics/btad680).
+
+## Reproducibility
+
+The code for reproducing the simulations and applications shown in the manuscript is available in a vignette (<https://lcsb-bds.github.io/transreg/articles/analysis.html>). After installing the package with `remotes::install_github("lcsb-bds/transreg",build_vignettes=TRUE)` and restarting R, the vignette can also be loaded with `vignette(topic="analysis",package="transreg")`.
 
 [![CRAN version](https://www.r-pkg.org/badges/version/transreg)](https://CRAN.R-project.org/package=transreg)
 [![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/transreg)](https://CRAN.R-project.org/package=transreg)
