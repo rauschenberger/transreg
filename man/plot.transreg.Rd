@@ -15,30 +15,32 @@
 }
 \value{
 Returns four plots.
-\itemize{
-\item top-left:
+
+* top-left:
 Calibrated prior effects (\eqn{y}-axis) against
 original prior effects (\eqn{x}-axis).
 Each line is for one source of prior effects,
-with the colour given by \code{\link[grDevices:palette]{grDevices::palette()}}
+with the colour given by [grDevices::palette()]
 (black: 1, red: 2, green: 3, blue: 4, ...).
-\item top-right:
+
+* top-right:
 Estimated coefficients with transfer learning (\eqn{y}-axis)
 against estimated coefficients without transfer learning (\eqn{x}-axis).
 Each point represents one feature.
-\item bottom-left:
+
+* bottom-left:
 Estimated weights for sources of prior effects
 (labels 1 to \eqn{k}),
 and either
-estimated weights for \code{lambda.min} and \code{lambda.1se} models
+estimated weights for `lambda.min` and `lambda.1se` models
 (standard stacking)
 or estimated weights for features
 (simultaneous stacking).
-\item bottom-right:
+
+* bottom-right:
 Absolute deviance residuals (\eqn{y}-axis)
 against fitted values (\eqn{x}-axis).
 Each point represents one sample.
-}
 }
 \description{
 Plot transreg-object
@@ -69,14 +71,14 @@ and
 \href{https://orcid.org/0000-0003-3977-7469}{Enrico Glaab}
 (2023).
 "Penalised regression with multiple sets of prior effects".
-\emph{Bioinformatics} 39(12):btad680.
+*Bioinformatics* 39(12):btad680.
 \doi{10.1093/bioinformatics/btad680}.
 (Click
 \href{https://academic.oup.com/bioinformatics/article-pdf/39/12/btad680/54035939/btad680.pdf}{here}
 to access PDF.)
 }
 \seealso{
-Methods for objects of class \link{transreg}
-include \code{\link[=coef.transreg]{coef}}
+Methods for objects of class [transreg]
+include \code{\link[=coef.transreg]{coef}} 
 and \code{\link[=predict.transreg]{predict}}.
 }

@@ -7,7 +7,7 @@
 \method{coef}{transreg}(object, stack = NULL, ...)
 }
 \arguments{
-\item{object}{object of class \code{transreg}}
+\item{object}{object of class `transreg`}
 
 \item{stack}{character "sta" (standard stacking) or "sim" (simultaneous stacking)}
 
@@ -16,12 +16,12 @@
 \value{
 Returns estimated coefficients.
 The output is a list with two slots:
-slot \code{alpha} with the estimated intercept (scalar),
-and slot \code{beta} with the estimated slopes (vector).
+slot `alpha` with the estimated intercept (scalar),
+and slot `beta` with the estimated slopes (vector).
 }
 \description{
 Extracts coefficients
-from an object of class \link{transreg}.
+from an object of class [transreg].
 }
 \examples{
 #--- simulation ---
@@ -51,14 +51,14 @@ and
 \href{https://orcid.org/0000-0003-3977-7469}{Enrico Glaab}
 (2023).
 "Penalised regression with multiple sets of prior effects".
-\emph{Bioinformatics} 39(12):btad680.
+*Bioinformatics* 39(12):btad680.
 \doi{10.1093/bioinformatics/btad680}.
 (Click
 \href{https://academic.oup.com/bioinformatics/article-pdf/39/12/btad680/54035939/btad680.pdf}{here}
 to access PDF.)
 }
 \seealso{
-Methods for objects of class \link{transreg}
-include \code{\link[=coef.transreg]{coef}}
+Methods for objects of class [transreg]
+include \code{\link[=coef.transreg]{coef}} 
 and \code{\link[=predict.transreg]{predict}}.
 }

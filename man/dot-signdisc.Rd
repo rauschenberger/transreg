@@ -20,7 +20,7 @@ and \eqn{k} columns (sources of co-data)}
 or "poisson" (\eqn{y}: non-negative integers);}
 
 \item{foldid}{fold identifiers: vector of length \eqn{n}
-with entries from 1 to \code{nfolds}}
+with entries from 1 to `nfolds`}
 
 \item{nfolds}{number of folds: positive integer}
 

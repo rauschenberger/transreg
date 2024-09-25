@@ -38,7 +38,7 @@ or "poisson" (\eqn{y}: non-negative integers);}
 number between 0 and 1}
 
 \item{foldid}{fold identifiers: vector of length \eqn{n}
-with entries from 1 to \code{nfolds}}
+with entries from 1 to `nfolds`}
 
 \item{nfolds}{number of folds: positive integer}
 
@@ -60,51 +60,53 @@ with entries from 1 to \code{nfolds}}
 \item{parallel}{logical (see cv.glmnet)}
 }
 \value{
-Returns an object of class \code{transreg}.
+Returns an object of class `transreg`.
 Rather than accessing its slots (see list below),
 it is recommended to use methods like
-\code{\link[=coef.transreg]{coef.transreg()}} and \code{\link[=predict.transreg]{predict.transreg()}}.
-\itemize{
-\item slot \code{base}:
-Object of class \code{glmnet}.
+[coef.transreg()] and [predict.transreg()].
+
+* slot `base`:
+Object of class `glmnet`.
 Regression of outcome on features (without prior effects),
 with \eqn{1 + p} estimated coefficients
 (intercept + features).
-\item slot \code{meta.sta}:
-\code{NULL} or object of class \code{glmnet}.
+
+* slot `meta.sta`:
+`NULL` or object of class `glmnet`.
 Regression of outcome on cross-validated linear predictors
 from prior effects and estimated effects,
 with \eqn{1 + k + 2} estimated coefficients
 (intercept + sources of co-data + lambda_min and lambda_1se).
-\item slot \code{meta.sim}:
-\code{NULL} or object of class \code{glmnet}.
+
+* slot `meta.sim`:
+`NULL` or object of class `glmnet`.
 Regression of outcome on meta-features
 (cross-validated linear predictors from prior effects)
 and original features,
 with \eqn{1 + k + p} estimated coefficients
 (intercept + sources of co-data + features).
-\item slot \code{prior.calib}:
+
+* slot `prior.calib`:
 Calibrated prior effects.
 Matrix with \eqn{p} rows and \eqn{k} columns.
-\item slot \code{data}:
+
+* slot `data`:
 Original data.
-List with slots \code{y}, \code{X} and \code{prior} (see arguments).
-\item slot \code{info}:
+List with slots `y`, `X` and `prior` (see arguments).
+
+* slot `info`:
 Information on call.
 Data frame with entries
-\eqn{n}, \eqn{p}, \eqn{k}, \code{family}, \code{alpha}, \code{scale} and \code{stack}
+\eqn{n}, \eqn{p}, \eqn{k}, `family`, `alpha`, `scale` and `stack`
 (see details and arguments).
-}
 }
 \description{
 Implements penalised regression with multiple sets of prior effects
 }
 \details{
-\itemize{
-\item \eqn{n}: sample size
-\item \eqn{p}: number of features
-\item \eqn{k}: number of sources
-}
+* \eqn{n}: sample size
+* \eqn{p}: number of features
+* \eqn{k}: number of sources
 }
 \examples{
 #--- simulation ---
@@ -161,14 +163,14 @@ and
 \href{https://orcid.org/0000-0003-3977-7469}{Enrico Glaab}
 (2023).
 "Penalised regression with multiple sets of prior effects".
-\emph{Bioinformatics} 39(12):btad680.
+*Bioinformatics* 39(12):btad680.
 \doi{10.1093/bioinformatics/btad680}.
 (Click
 \href{https://academic.oup.com/bioinformatics/article-pdf/39/12/btad680/54035939/btad680.pdf}{here}
 to access PDF.)
 }
 \seealso{
-Methods for objects of class \link{transreg}
-include \code{\link[=coef.transreg]{coef}}
+Methods for objects of class [transreg]
+include \code{\link[=coef.transreg]{coef}} 
 and \code{\link[=predict.transreg]{predict}}.
 }

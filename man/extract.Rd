@@ -26,7 +26,7 @@
 .which.stack(object, stack)
 }
 \arguments{
-\item{object}{object of class \code{transreg}}
+\item{object}{object of class `transreg`}
 
 \item{newx}{features:
 matrix with \eqn{n} rows (samples) and \eqn{p} columns (variables)}
@@ -37,30 +37,30 @@ matrix with \eqn{n} rows (samples) and \eqn{p} columns (variables)}
 }
 \description{
 Internal functions called by
-\code{\link[=coef.transreg]{coef.transreg()}}, \code{\link[=predict.transreg]{predict.transreg()}} and \code{\link[=weights.transreg]{weights.transreg()}},
+[coef.transreg()], [predict.transreg()] and [weights.transreg()], 
 depending on choice between
 standard stacking
 and simultaneous stacking.
 }
 \section{Functions}{
 \itemize{
-\item \code{.predict.sta()}: called by \code{predict.transreg} if \code{stack="sta"}
+\item \code{.predict.sta()}: called by `predict.transreg` if `stack="sta"`
 
-\item \code{.predict.sim()}: called by \code{predict.transreg} if \code{stack="sim"}
+\item \code{.predict.sim()}: called by `predict.transreg` if `stack="sim"`
 
-\item \code{.coef.sta()}: called by \code{coef.transreg} if \code{stack="sta"}
+\item \code{.coef.sta()}: called by `coef.transreg` if `stack="sta"`
 
-\item \code{.coef.sim()}: called by \code{coef.transreg} if \code{stack="sim"}
+\item \code{.coef.sim()}: called by `coef.transreg` if `stack="sim"`
 
-\item \code{.weights.sta()}: called by \code{weights.transreg} if \code{stack="sta"}
+\item \code{.weights.sta()}: called by `weights.transreg` if `stack="sta"`
 
-\item \code{.weights.sim()}: called by \code{weights.transreg} if \code{stack="sim"}
+\item \code{.weights.sim()}: called by `weights.transreg` if `stack="sim"`
 
-\item \code{.which.stack()}: called by \code{coef.transreg}, \code{predict.transreg} and \code{weights.transreg}
+\item \code{.which.stack()}: called by `coef.transreg`, `predict.transreg` and `weights.transreg`
 
 }}
 \seealso{
-Use \code{\link[=coef.transreg]{coef}},
+Use \code{\link[=coef.transreg]{coef}}, 
 \code{\link[=predict.transreg]{predict}}
 and \code{\link[=weights.transreg]{weights}}.
 }

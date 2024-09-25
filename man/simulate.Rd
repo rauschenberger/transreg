@@ -48,5 +48,5 @@ Function for reproducing 'internal' simulation study.
 See vignette.
 }
 \seealso{
-Use \code{\link[glmtrans:models]{glmtrans::models()}} for reproducing 'external' simulation study.
+Use [glmtrans::models()] for reproducing 'external' simulation study.
 }

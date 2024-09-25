@@ -72,7 +72,7 @@ number between 0 and 1}
 \item{seed}{random seed}
 
 \item{cores}{number of cores for parallel computing
-(requires R package \code{doMC})}
+(requires R package `doMC`)}
 
 \item{xrnet}{compare with xrnet: logical}
 }
@@ -82,5 +82,5 @@ and \eqn{k}-fold cross-validation (application).
 See vignette.
 }
 \seealso{
-\code{\link[=transreg]{transreg()}}
+[transreg()]
 }

@@ -53,21 +53,21 @@ or "poisson" (\eqn{y}: non-negative integers);}
 }
 \description{
 Internal functions called by
-\code{\link[=transreg]{transreg()}},
+[transreg()],
 depending on choice between
 exponential and isotonic calibration.
 }
 \section{Functions}{
 \itemize{
-\item \code{.exp.multiple()}: called by \code{transreg} if \code{scale="exp"}
+\item \code{.exp.multiple()}: called by `transreg` if `scale="exp"`
 
-\item \code{.iso.multiple()}: called by \code{transreg} if \code{scale="iso"}
+\item \code{.iso.multiple()}: called by `transreg` if `scale="iso"`
 
-\item \code{.iso.fast.single()}: called by \code{transreg} if \code{scale="iso"} (via \code{.iso.multiple})
+\item \code{.iso.fast.single()}: called by `transreg` if `scale="iso"` (via `.iso.multiple`)
 
-\item \code{.iso.slow.single()}: replaced by \code{.iso.fast.single}
+\item \code{.iso.slow.single()}: replaced by `.iso.fast.single`
 
 }}
 \seealso{
-Use \code{\link[=transreg]{transreg()}} for model fitting.
+Use [transreg()] for model fitting.
 }

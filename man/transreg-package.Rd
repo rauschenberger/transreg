@@ -5,16 +5,16 @@
 \alias{transreg-package}
 \title{Penalised regression with multiple sets of prior effects}
 \description{
-The R package \code{transreg} implements penalised regression
+The R package `transreg` implements penalised regression
 with multiple sets of prior effects.
 }
 \details{
-Use function \code{\link[=transreg]{transreg()}} for model fitting.
-Type \code{library(transreg)} and then \code{?transreg} or
-\code{help("transreg")} to open its help file.
+Use function [transreg()] for model fitting.
+Type `library(transreg)` and then `?transreg` or
+`help("transreg")` to open its help file.
 
 See the vignette for further examples.
-Type \code{vignette("transreg")} or \code{browseVignettes("transreg")}
+Type `vignette("transreg")` or `browseVignettes("transreg")`
 to open the vignette.
 }
 \examples{
@@ -31,7 +31,7 @@ and
 \href{https://orcid.org/0000-0003-3977-7469}{Enrico Glaab}
 (2023).
 "Penalised regression with multiple sets of prior effects".
-\emph{Bioinformatics} 39(12):btad680.
+*Bioinformatics* 39(12):btad680.
 \doi{10.1093/bioinformatics/btad680}.
 (Click
 \href{https://academic.oup.com/bioinformatics/article-pdf/39/12/btad680/54035939/btad680.pdf}{here}
