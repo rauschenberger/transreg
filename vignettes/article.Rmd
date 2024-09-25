@@ -1,12 +1,10 @@
 ---
 title: "Article"
-output: html_document
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{article}
   %\VignetteEncoding{UTF-8}
-  %\VignetteEngine{knitr::knitr}
-header-includes:
-  - \usepackage{amsmath}
+  %\VignetteEngine{knitr::rmarkdown}
 ---
 
 # Penalised regression with multiple sources of prior effects
