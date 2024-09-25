@@ -89,7 +89,7 @@ number between 0 and 1</p></dd>
 
 <dt id="arg-foldid">foldid<a class="anchor" aria-label="anchor" href="#arg-foldid"></a></dt>
 <dd><p>fold identifiers: vector of length \(n\)
-with entries from 1 to <code>nfolds</code></p></dd>
+with entries from 1 to `nfolds`</p></dd>
 
 
 <dt id="arg-nfolds">nfolds<a class="anchor" aria-label="anchor" href="#arg-nfolds"></a></dt>
@@ -129,46 +129,46 @@ with entries from 1 to <code>nfolds</code></p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Returns an object of class <code>transreg</code>.
+    <p>Returns an object of class `transreg`.
 Rather than accessing its slots (see list below),
 it is recommended to use methods like
-<code><a href="coef.transreg.html">coef.transreg()</a></code> and <code><a href="predict.transreg.html">predict.transreg()</a></code>.</p><ul><li><p>slot <code>base</code>:
-Object of class <code>glmnet</code>.
+[coef.transreg()] and [predict.transreg()].</p>
+<p>* slot `base`:
+Object of class `glmnet`.
 Regression of outcome on features (without prior effects),
 with \(1 + p\) estimated coefficients
-(intercept + features).</p></li>
-<li><p>slot <code>meta.sta</code>:
-<code>NULL</code> or object of class <code>glmnet</code>.
+(intercept + features).</p>
+<p>* slot `meta.sta`:
+`NULL` or object of class `glmnet`.
 Regression of outcome on cross-validated linear predictors
 from prior effects and estimated effects,
 with \(1 + k + 2\) estimated coefficients
-(intercept + sources of co-data + lambda_min and lambda_1se).</p></li>
-<li><p>slot <code>meta.sim</code>:
-<code>NULL</code> or object of class <code>glmnet</code>.
+(intercept + sources of co-data + lambda_min and lambda_1se).</p>
+<p>* slot `meta.sim`:
+`NULL` or object of class `glmnet`.
 Regression of outcome on meta-features
 (cross-validated linear predictors from prior effects)
 and original features,
 with \(1 + k + p\) estimated coefficients
-(intercept + sources of co-data + features).</p></li>
-<li><p>slot <code>prior.calib</code>:
+(intercept + sources of co-data + features).</p>
+<p>* slot `prior.calib`:
 Calibrated prior effects.
-Matrix with \(p\) rows and \(k\) columns.</p></li>
-<li><p>slot <code>data</code>:
+Matrix with \(p\) rows and \(k\) columns.</p>
+<p>* slot `data`:
 Original data.
-List with slots <code>y</code>, <code>X</code> and <code>prior</code> (see arguments).</p></li>
-<li><p>slot <code>info</code>:
+List with slots `y`, `X` and `prior` (see arguments).</p>
+<p>* slot `info`:
 Information on call.
 Data frame with entries
-\(n\), \(p\), \(k\), <code>family</code>, <code>alpha</code>, <code>scale</code> and <code>stack</code>
-(see details and arguments).</p></li>
-</ul></div>
+\(n\), \(p\), \(k\), `family`, `alpha`, `scale` and `stack`
+(see details and arguments).</p>
+    </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-
-<ul><li><p>\(n\): sample size</p></li>
-<li><p>\(p\): number of features</p></li>
-<li><p>\(k\): number of sources</p></li>
-</ul></div>
+    <p>* \(n\): sample size
+* \(p\): number of features
+* \(k\): number of sources</p>
+    </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
     <p><a href="https://orcid.org/0000-0001-6498-4801" class="external-link">Armin Rauschenberger</a>,
@@ -178,7 +178,7 @@ and
 <a href="https://orcid.org/0000-0003-3977-7469" class="external-link">Enrico Glaab</a>
 (2023).
 "Penalised regression with multiple sets of prior effects".
-<em>Bioinformatics</em> 39(12):btad680.
+*Bioinformatics* 39(12):btad680.
 <a href="https://doi.org/10.1093/bioinformatics/btad680" class="external-link">doi:10.1093/bioinformatics/btad680</a>
 .
 (Click
@@ -187,7 +187,7 @@ to access PDF.)</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p>Methods for objects of class transreg
+    <div class="dont-index"><p>Methods for objects of class [transreg]
 include <code><a href="coef.transreg.html">coef</a></code>
 and <code><a href="predict.transreg.html">predict</a></code>.</p></div>
     </div>

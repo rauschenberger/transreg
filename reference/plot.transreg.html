@@ -62,29 +62,30 @@
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Returns four plots.</p><ul><li><p>top-left:
+    <p>Returns four plots.</p>
+<p>* top-left:
 Calibrated prior effects (\(y\)-axis) against
 original prior effects (\(x\)-axis).
 Each line is for one source of prior effects,
-with the colour given by <code><a href="https://rdrr.io/r/grDevices/palette.html" class="external-link">grDevices::palette()</a></code>
-(black: 1, red: 2, green: 3, blue: 4, ...).</p></li>
-<li><p>top-right:
+with the colour given by [grDevices::palette()]
+(black: 1, red: 2, green: 3, blue: 4, ...).</p>
+<p>* top-right:
 Estimated coefficients with transfer learning (\(y\)-axis)
 against estimated coefficients without transfer learning (\(x\)-axis).
-Each point represents one feature.</p></li>
-<li><p>bottom-left:
+Each point represents one feature.</p>
+<p>* bottom-left:
 Estimated weights for sources of prior effects
 (labels 1 to \(k\)),
 and either
-estimated weights for <code>lambda.min</code> and <code>lambda.1se</code> models
+estimated weights for `lambda.min` and `lambda.1se` models
 (standard stacking)
 or estimated weights for features
-(simultaneous stacking).</p></li>
-<li><p>bottom-right:
+(simultaneous stacking).</p>
+<p>* bottom-right:
 Absolute deviance residuals (\(y\)-axis)
 against fitted values (\(x\)-axis).
-Each point represents one sample.</p></li>
-</ul></div>
+Each point represents one sample.</p>
+    </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
     <p><a href="https://orcid.org/0000-0001-6498-4801" class="external-link">Armin Rauschenberger</a>,
@@ -94,7 +95,7 @@ and
 <a href="https://orcid.org/0000-0003-3977-7469" class="external-link">Enrico Glaab</a>
 (2023).
 "Penalised regression with multiple sets of prior effects".
-<em>Bioinformatics</em> 39(12):btad680.
+*Bioinformatics* 39(12):btad680.
 <a href="https://doi.org/10.1093/bioinformatics/btad680" class="external-link">doi:10.1093/bioinformatics/btad680</a>
 .
 (Click
@@ -103,7 +104,7 @@ to access PDF.)</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p>Methods for objects of class <a href="transreg.html">transreg</a>
+    <div class="dont-index"><p>Methods for objects of class [transreg]
 include <code><a href="coef.transreg.html">coef</a></code>
 and <code><a href="predict.transreg.html">predict</a></code>.</p></div>
     </div>
