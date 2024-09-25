@@ -1,5 +1,5 @@
 ---
-title: "Article"
+title: Penalised regression with prior effects
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{article}
