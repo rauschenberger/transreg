@@ -5,7 +5,7 @@
 
 # Penalised regression with multiple sets of prior effects
 
-Improves the predictive performance of ridge and lasso regression exploiting one or more sources of prior information on the importance and direction of effects.
+Improves the predictive performance of ridge and lasso regression exploiting one or more sources of prior information on the importance and direction of effects ("transfer learning").
 
 ## Installation
 
