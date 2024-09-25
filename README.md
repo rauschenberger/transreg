@@ -1,7 +1,7 @@
 
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/rauschenberger/transreg?svg=true)](https://ci.appveyor.com/project/rauschenberger/transreg)
-[![R-CMD-check](https://github.com/LCSB-BDS/transreg/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/LCSB-BDS/transreg/actions/workflows/R-CMD-check.yaml)
-[![Codecov test coverage](https://codecov.io/gh/LCSB-BDS/transreg/graph/badge.svg)](https://app.codecov.io/gh/LCSB-BDS/transreg)
+[![R-CMD-check](https://github.com/rauschenberger/transreg/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/rauschenberger/transreg/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/rauschenberger/transreg/graph/badge.svg)](https://app.codecov.io/gh/rauschenberger/transreg)
 
 ## Penalised regression with multiple sets of prior effects
 
