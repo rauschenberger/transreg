@@ -31,8 +31,8 @@ and
 \href{https://orcid.org/0000-0003-3977-7469}{Enrico Glaab}
 (2023).
 "Penalised regression with multiple sets of prior effects".
-*Bioinformatics* 39(12):btad680.
-\doi{10.1093/bioinformatics/btad680}.
+\emph{Bioinformatics} 39(12):btad680.
+\href{https://doi.org/10.1093/bioinformatics/btad680}{doi: 10.1093/bioinformatics/btad680}.
 (Click
 \href{https://academic.oup.com/bioinformatics/article-pdf/39/12/btad680/54035939/btad680.pdf}{here}
 to access PDF.)
@@ -40,7 +40,8 @@ to access PDF.)
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://lcsb-bds.github.io/transreg/}
+  \item \url{https://rauschenberger.github.io/transreg/}
+  \item Report bugs at \url{https://github.com/rauschenberger/transreg}
 }
 
 }
