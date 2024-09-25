@@ -5,8 +5,9 @@ Authors@R: person(given="Armin",family="Rauschenberger",email="armin.rauschenber
 Description: Improves the predictive performance of ridge and lasso regression exploiting one or more sources of prior information on the importance and direction of effects (Rauschenberger and others 2023, <doi:10.1093/bioinformatics/btad680>). For running the vignette, install 'fwelnet' from 'GitHub' <https://github.com/kjytay/fwelnet>.
 Imports: glmnet, starnet, joinet
 Suggests: knitr, testthat, rmarkdown, markdown, mvtnorm, remotes, glmtrans, xrnet, ecpc, fwelnet, doMC, palasso, xtable, devtools, CVXR
-VignetteBuilder: knitr
 License: GPL-3
 Encoding: UTF-8
+VignetteBuilder: knitr
 RoxygenNote: 7.3.2
-URL: https://lcsb-bds.github.io/transreg/
+URL: https://rauschenberger.github.io/transreg/
+BugReports: https://github.com/rauschenberger/palasso
