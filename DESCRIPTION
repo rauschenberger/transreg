@@ -5,7 +5,6 @@ Description: Improves the predictive performance of ridge and lasso regression e
 Depends: R (>= 3.0.0)
 Imports: glmnet, starnet, joinet
 Suggests: knitr, testthat, rmarkdown, markdown, mvtnorm, remotes, glmtrans, xrnet, ecpc, fwelnet, doMC, palasso, xtable, devtools, CVXR
-Additional_repositories: https://github.com/kjytay
 Authors@R: person(given="Armin",family="Rauschenberger",email="armin.rauschenberger@uni.lu",role=c("aut","cre"),comment=c(ORCID="0000-0001-6498-4801"))
 License: GPL-3
 Encoding: UTF-8
