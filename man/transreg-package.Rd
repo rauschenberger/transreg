@@ -40,8 +40,9 @@ to access PDF.)
 \seealso{
 Useful links:
 \itemize{
+  \item \url{https://github.com/rauschenberger/transreg}
   \item \url{https://rauschenberger.github.io/transreg/}
-  \item Report bugs at \url{https://github.com/rauschenberger/transreg}
+  \item Report bugs at \url{https://github.com/rauschenberger/transreg/issues}
 }
 
 }
