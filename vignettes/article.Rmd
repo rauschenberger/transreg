@@ -32,4 +32,4 @@ Rauschenberger et al. (2023).
 "Penalized regression with multiple sources of prior effects".
 *Bioinformatics* 39(12):btad680.
 [doi: 10.1093/bioinformatics/btad680](https://doi.org/10.1093/bioinformatics/btad680).
-(Click [here](https://academic.oup.com/bioinformatics/pdf-lookup/doi/10.1093/bioinformatics/btad680) to access PDF.)
+(Click [here](https://orbilu.uni.lu/bitstream/10993/53227/1/transreg.pdf) to access PDF.)
