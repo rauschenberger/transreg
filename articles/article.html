@@ -6,17 +6,23 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Penalised regression with prior effects • transreg</title>
-<script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- mathjax math --><script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js" integrity="sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI=" crossorigin="anonymous"></script><script>
+  window.MathJax = {
+    chtml: {
+      fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
+    }
+  };
+</script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Penalised regression with prior effects">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+    <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
 
     <a class="navbar-brand me-2" href="../index.html">transreg</a>
 
@@ -64,21 +70,17 @@
 <div class="section level2">
 <h2 id="penalised-regression-with-multiple-sources-of-prior-effects">Penalised regression with multiple sources of prior effects<a class="anchor" aria-label="anchor" href="#penalised-regression-with-multiple-sources-of-prior-effects"></a>
 </h2>
-<p><strong>Armin
-Rauschenberger</strong><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mspace width="0.222em"></mspace><mrow><mn>1</mn><mo>,</mo><mo>*</mo></mrow></msup><annotation encoding="application/x-tex">~^{1,*}</annotation></semantics></math><a href="https://orcid.org/0000-0001-6498-4801" class="external-link"><img src="https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png" alt="AR"></a>, <strong>Zied
-Landoulsi</strong><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mspace width="0.222em"></mspace><mn>1</mn></msup><annotation encoding="application/x-tex">~^{1}</annotation></semantics></math><a href="https://orcid.org/0000-0002-2327-3904" class="external-link"><img src="https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png" alt="ZL"></a>, <strong>Mark A. van de
-Wiel</strong><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mspace width="0.222em"></mspace><mrow><mn>2</mn><mo>,</mo><mo>†</mo></mrow></msup><annotation encoding="application/x-tex">~^{2,\dagger}</annotation></semantics></math><a href="https://orcid.org/0000-0003-4780-8472" class="external-link"><img src="https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png" alt="MvdW"></a>, and <strong>Enrico
-Glaab</strong><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mspace width="0.222em"></mspace><mrow><mn>1</mn><mo>,</mo><mo>†</mo></mrow></msup><annotation encoding="application/x-tex">~^{1,\dagger}</annotation></semantics></math><a href="https://orcid.org/0000-0003-3977-7469" class="external-link"><img src="https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png" alt="EG"></a></p>
-<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi></mi><mn>1</mn></msup><annotation encoding="application/x-tex">^1</annotation></semantics></math>Luxembourg
-Centre for Systems Biomedicine (LCSB), University of Luxembourg,
-Esch-sur-Alzette, Luxembourg.</p>
-<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi></mi><mn>2</mn></msup><annotation encoding="application/x-tex">^2</annotation></semantics></math>Department
-of Epidemiology and Data Science (EDS), Amsterdam University Medical
-Centers (Amsterdam UMC), Amsterdam, The Netherlands.</p>
-<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi></mi><mo>*</mo></msup><annotation encoding="application/x-tex">^{*}</annotation></semantics></math>To
-whom correspondence should be addressed.</p>
-<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi></mi><mo>†</mo></msup><annotation encoding="application/x-tex">^{\dagger}</annotation></semantics></math>Mark
-A. van de Wiel and Enrico Glaab share senior authorship.</p>
+<p><strong>Armin Rauschenberger</strong><span class="math inline">\(~^{1,*}\)</span> <a href="https://orcid.org/0000-0001-6498-4801" class="external-link"><img src="https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png" alt="AR"></a>, <strong>Zied Landoulsi</strong><span class="math inline">\(~^{1}\)</span> <a href="https://orcid.org/0000-0002-2327-3904" class="external-link"><img src="https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png" alt="ZL"></a>, <strong>Mark A. van de Wiel</strong><span class="math inline">\(~^{2,\dagger}\)</span> <a href="https://orcid.org/0000-0003-4780-8472" class="external-link"><img src="https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png" alt="MvdW"></a>, and <strong>Enrico Glaab</strong><span class="math inline">\(~^{1,\dagger}\)</span> <a href="https://orcid.org/0000-0003-3977-7469" class="external-link"><img src="https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png" alt="EG"></a></p>
+<p><span class="math inline">\(^1\)</span>Luxembourg Centre for Systems
+Biomedicine (LCSB), University of Luxembourg, Esch-sur-Alzette,
+Luxembourg.</p>
+<p><span class="math inline">\(^2\)</span>Department of Epidemiology and
+Data Science (EDS), Amsterdam University Medical Centers (Amsterdam
+UMC), Amsterdam, The Netherlands.</p>
+<p><span class="math inline">\(^{*}\)</span>To whom correspondence
+should be addressed.</p>
+<p><span class="math inline">\(^{\dagger}\)</span>Mark A. van de Wiel
+and Enrico Glaab share senior authorship.</p>
 </div>
 <div class="section level2">
 <h2 id="abstract">Abstract<a class="anchor" aria-label="anchor" href="#abstract"></a>
@@ -113,7 +115,7 @@ to access PDF.)</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer>
