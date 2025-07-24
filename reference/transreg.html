@@ -214,9 +214,9 @@ and <code><a href="predict.transreg.html">predict</a></code>.</p></div>
 <span class="r-in"><span><span class="va">one</span> <span class="op">&lt;-</span> <span class="fu">transreg</span><span class="op">(</span>y<span class="op">=</span><span class="va">y_lin</span>,X<span class="op">=</span><span class="va">X</span>,prior<span class="op">=</span><span class="va">prior1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">two</span> <span class="op">&lt;-</span> <span class="fu">transreg</span><span class="op">(</span>y<span class="op">=</span><span class="va">y_lin</span>,X<span class="op">=</span><span class="va">X</span>,prior<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">prior1</span>,<span class="va">prior2</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/weights.html" class="external-link">weights</a></span><span class="op">(</span><span class="va">one</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.6724394</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.6676555</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/weights.html" class="external-link">weights</a></span><span class="op">(</span><span class="va">two</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.6208604 0.5642326</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.4261894 0.5231864</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="co">#--- linear vs logistic regression ---</span></span></span>
